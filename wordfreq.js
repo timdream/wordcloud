@@ -8,7 +8,7 @@ var WordFreq = function (settings) {
 
 	var worker,
 	options = {
-		root: '',
+		worker: 'wordfreq.worker.js',
 		processCJK: true,
 		processEnglish: true,
 		de_commword: true,
@@ -93,7 +93,7 @@ var WordFreq = function (settings) {
 		if (typeof settings[opt] === 'undefined') settings[opt] = options[opt];
 	}
 
-	worker = new Worker(settings.root + 'wordfreq.worker.js');
+	worker = new Worker(settings.worker);
 
 	return {
 		processText: processText,

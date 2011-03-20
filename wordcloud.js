@@ -18,7 +18,7 @@ jQuery(function ($) {
 		$error = $('#error'),
 		$loadingText = $('#loading > p'),
 		$errorText = $('#error > p'),
-		wordfreq = WordFreq({root: '../'}),
+		wordfreq = WordFreq({worker: '../wordfreq.worker.js'}),
 		theme = [
 			{
 				fontFamily: '"Myriad Pro", "Lucida Grande", Helvetica, "Heiti TC", "微軟正黑體", "Arial Unicode MS", "Droid Fallback Sans", sans-serif',
