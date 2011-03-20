@@ -125,7 +125,7 @@ jQuery(function ($) {
 						gridSize: gridSize,
 						weightFactor: weightFactor, //$c[0].offsetHeight*$c[0].offsetWidth/vol*0.5,
 						wordList: list,
-						abortThreshold: 500,
+						abortThreshold: 1000,
 						abort: changeUIState.too_slow
 					});
 				},
