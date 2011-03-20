@@ -150,7 +150,7 @@ jQuery(function ($) {
 		too_slow: function () {
 			$toggleUI.hide();
 			$loading.fadeOut(100);
-			$('too_slow').show();
+			$('#too_slow').show();
 			return false;
 		}
 	};
