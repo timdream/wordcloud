@@ -55,12 +55,9 @@ var WordFreq = function (settings) {
 			if (words[word] < settings.mincount) continue;
 			if (reps[word]) {
 				var maxRep, c = 0;
-				if (typeof reps[word].hasOwnProperty !== 'function') {
-					maxRep = 'hasOwnProperty'; // this happened to a JS blog ...
-				} else {
-					for (var rep in reps[word]) if (reps[word].hasOwnProperty(rep)) {
-						if (reps[word][rep] > c) maxRep = rep;
-					}
+				// https://gist.github.com/878204 by monoceroi, thanks!
+				for (var rep in reps[word]) if (Object.hasOwnProperty.call(reps[word], rep)) {
+					if (reps[word][rep] > c) maxRep = rep;
 				}
 			}
 			list.push([maxRep || word, words[word]]);
