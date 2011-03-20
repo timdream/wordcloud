@@ -174,6 +174,7 @@ jQuery(function ($) {
 
 	function handleHash() {
 		if (window.location.hash) {
+			if (window._gaq) _gaq.push(['_trackEvent', 'Word Cloud', 'hashchange: ' + window.location.hash]);
 			$c.wordCloud(); // stop current wordCloud;
 			switch (window.location.hash.substr(1, 4)) {
 				case 'feed':
