@@ -1,6 +1,36 @@
+/*!
 
+	WordFreq text analyzer
+	run articles through N-gram and Porter Stemmer in Web Workers,
+	retrive list of words, or phrases.
 
-//"use strict";
+	Currently supports Chinese (using N-gram) and English (using Porter Stemmer)
+
+	usage:
+		var wordfreq = WordFreq(options); // init
+		wordfreq.processText(text, callback); // run text with WordFreq, save the result, then execute callback() when complete
+		wordfreq.terminate // stop the Web Worker
+		wordfreq.empty // empty results saved
+		wordfreq.getList // get a list of words from results
+		wordfreq.getSortedList // get a list of words, sorted by the number of appearance.
+		wordfreq.analyizeVolume // (experimental) return a number that indicate the volume of words
+
+	options: 
+		worker:  // path to worker.js relative to the document (not JS), subject to same origin policy.
+		processCJK: // process Chinese or not
+		processEnglish: // process English or not
+		de_commword: // exclude stop words
+		de_repetition: // for Chinese, remove phrases with smaller number of words that has same count of a longer phrase encapsulate it.
+		unigram: // run Chiese with uni-gram.
+		bigram: // run Chiese with bi-gram.
+		trigram:
+		four_gram:
+		five_gram:
+		six_gram:
+		mincount: // minimal count for a word to be included in the list
+*/
+
+"use strict";
 
 var WordFreq = function (settings) {
 
