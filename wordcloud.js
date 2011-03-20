@@ -86,9 +86,9 @@ jQuery(function ($) {
 					[t('startList_2'), t('startList_2C')],
 					[t('startList_3'), t('startList_3C')],
 					[t('startList_4'), t('startList_4C')]
-				],
-				abortThreshold: 200,
-				abort: changeUIState.too_slow
+				]//,
+				//abortThreshold: 200,
+				//abort: changeUIState.too_slow
 			});
 			return false;
 		},
@@ -124,9 +124,9 @@ jQuery(function ($) {
 						fontFamily: theme[themeid].fontFamily,
 						gridSize: gridSize,
 						weightFactor: weightFactor, //$c[0].offsetHeight*$c[0].offsetWidth/vol*0.5,
-						wordList: list,
-						abortThreshold: 1000,
-						abort: changeUIState.too_slow
+						wordList: list//,
+						//abortThreshold: 1000,
+						//abort: changeUIState.too_slow
 					});
 				},
 				0
@@ -146,13 +146,13 @@ jQuery(function ($) {
 			$errorText.text(text);
 			$error.fadeIn(100);
 			return false;
-		},
-		too_slow: function () {
+		}//,
+		/*too_slow: function () {
 			$toggleUI.hide();
 			$loading.fadeOut(100);
 			$('#too_slow').show();
 			return false;
-		}
+		}*/
 	};
 
 	// post text processing functions
@@ -497,9 +497,9 @@ jQuery(function ($) {
 						[t('readyList_2', wordLength, maxCount), t('readyList_2C')],
 						[t('readyList_3', wordLength, maxCount), t('readyList_3C')],
 						[t('readyList_4', wordLength, maxCount), t('readyList_4C')]
-					],
-					abortThreshold: 200,
-					abort: changeUIState.too_slow
+					]//,
+					//abortThreshold: 200,
+					//abort: changeUIState.too_slow
 				});
 			}
 		);
