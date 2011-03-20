@@ -1,0 +1,289 @@
+html, body {
+	border: none;
+	margin: none;
+	padding: none;
+	overflow: hidden;
+	width: 100%;
+	height: 100%;
+	background-color: #353130;
+}
+
+body, input, select, button {
+	font: 1em sans-serif;
+	color: #000;
+}
+
+a {
+	color: #333;
+}
+
+.center_msg {
+	position: absolute;
+	top: 50%; left: 50%;
+	width: 200px; height: 100px;
+	margin-left: -100px; margin-top: -50px;
+	text-align: center;
+	border: 1px solid #ccc;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	background-color: #fff;
+	-webkit-box-shadow: 0 0 20px #ccc;
+	-moz-box-shadow: 0 0 20px #ccc;
+	box-shadow: 0 0 20px #ccc;
+	opacity: 0.9;
+}
+
+#loading {
+	background: #fff url('./beachball.gif') center center no-repeat;
+}
+
+#not_support {
+	width: 240px; height: 200px;
+	margin-left: -125px; margin-top: -110px;
+	padding: 10px;
+	text-align: left;
+}
+
+.center_btn {
+	position: absolute;
+	display: none;
+	top: 50%; left: 50%;
+	width: 450px; height: 250px;
+	margin-left: -225px; margin-top: -125px;
+	text-align: center;
+	border: 1px solid #ccc;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	text-indent: -10000px;
+}
+
+.center_btn:hover {
+	-webkit-box-shadow: 0 0 10px #000;
+	-moz-box-shadow: 0 0 10px #000;
+	box-shadow: 0 0 10px #000;
+}
+
+.center_btn:active {
+	-webkit-box-shadow: 0 0 10px #000 inset;
+	-moz-box-shadow: 0 0 10px #000 inset;
+	box-shadow: 0 0 10px #000 inset;
+}
+
+.error {
+	display: none;
+	border: 1px solid #c00;	
+}
+
+#canvas {
+	position: absolute;
+	top: 0; left: 0;
+	width: 100%; height: 100%;
+}
+
+#controls {
+	display: none;
+	top: 80px;
+}
+
+#help {
+	top: 33px;
+}
+
+#language {
+	bottom: 10px;
+}
+
+#language li {
+	padding-left: 18px
+}
+
+.left_tool {
+	position: absolute;
+	left: 0;
+	border: 1px solid #ccc;
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+	opacity: 0.8;
+	background-color: #fff;
+	white-space: nowrap;
+	overflow: hidden;
+	width: 100px;
+}
+
+.right_tool {
+	position: absolute;
+	right: 0;
+	border: 1px solid #ccc;
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+	opacity: 0.8;
+	background-color: #fff;
+	white-space: nowrap;
+	overflow: hidden;
+	width: 100px;
+}
+
+.left_tool:hover, .right_tool:hover {
+	opacity: 1.0;
+}
+
+.left_tool > ul {
+	list-style: none;
+	margin: 0; padding: 0;
+}
+
+.left_tool > ul > li > a {
+	text-decoration: none;
+	color: #333;
+	font-size: 0.9em;
+}
+
+.left_tool > ul > li > a > .famfamfam_sprite {
+	float: left;
+	margin: 0 4px;
+}
+
+#social {
+	width: 90px;
+	height: 90px;
+	bottom: 10px;
+}
+
+#title {
+	position: absolute;
+	top: 0; left: 10%; width: 80%; height: 20px;
+	margin: 0; padding: 5px 10px;
+	border: 1px solid #ccc;
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+	opacity: 0.8;
+	background-color: #fff;
+	overflow: hidden;
+	display: none;
+}
+
+#title > .famfamfam_sprite {
+	float: left;
+	margin-right: 4px;
+}
+
+#title:hover {
+	opacity: 1;
+}
+
+.panel {
+	position: absolute;
+	top: 50%; left: 50%;
+	width: 540px; height: 400px;
+	margin-left: -270px; margin-top: -200px;
+	padding: 0;
+	border: 1px solid #ccc;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	background-color: #fff;
+	display: none;
+	-webkit-box-shadow: 0 0 10px #000;
+	-moz-box-shadow: 0 0 10px #000;
+	box-shadow: 0 0 10px #000;
+}
+
+.panel h2 {
+	background-color: #e0e0e0;
+	margin: 0;
+	padding: 10px;
+	position: absolute;
+	top: 0; left: 0; right: 0;
+	font-size: 1.5em; height: 28px;
+	-webkit-box-shadow: 0 0 20px #ccc inset;
+	-moz-box-shadow: 0 0 20px #ccc inset;
+	box-shadow: 0 0 20px #ccc inset;
+	-moz-border-radius-topleft: 10px;
+	-moz-border-radius-topright: 10px;	
+	-webkit-border-top-left-radius: 10px;
+	-webkit-border-top-right-radius: 10px;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+}
+
+.panel_left {
+	margin: 0;
+	position: absolute;
+	top: 48px; bottom: 0;
+	left: 0; width: 150px;
+	background-color: #e8e8e8;
+}
+
+.menu label {
+	display: block;
+}
+
+.panel_left label {
+	padding: 5px;
+	border-bottom: 1px solid #ccc;
+}
+
+.panel_left label.checked {
+	-webkit-box-shadow: 0 0 10px #ccc inset;
+	-moz-box-shadow: 0 0 10px #ccc inset;
+	box-shadow: 0 0 10px #ccc inset;
+	background-color: #fff;	
+}
+
+/*.panel_left label:first-child {
+	border-top: 1px solid #ccc;
+}*/
+
+.panel_left label > input {
+	display: none;
+}
+
+.panel button {
+	font-size: 2em;
+	font-weight: bold;
+	position: absolute;
+	bottom: 10px; right: 10px;
+}
+
+.entry {
+	display: none;
+	position: absolute;
+	top: 48px; bottom: 0;
+	left: 150px; right: 0;
+	padding: 10px;
+}
+
+.entry label > span {
+	display: block;
+}
+
+.entry input {
+	max-width: 100%;
+}
+
+#facebook_like {
+	position: absolute;
+	bottom: 10px; right: 20px;
+}
+
+
+.famfamfam_sprite {display: block; background: transparent url('famfamfam_sprites.png') no-repeat; text-indent: -10000px; float: right; }
+.disk { background-position: 0 0; width: 16px; height: 16px}
+.award_star_bronze_1 { background-position: -18px 0; width: 16px; height: 16px}
+.feed { background-position: -36px 0; width: 16px; height: 16px}
+.page_world { background-position: -54px 0; width: 16px; height: 16px}
+.drive { background-position: -72px 0; width: 16px; height: 16px}
+.arrow_undo { background-position: 0 -18px; width: 16px; height: 16px}
+.arrow_refresh { background-position: -18px -18px; width: 16px; height: 16px}
+.application_double { background-position: -36px -18px; width: 16px; height: 16px}
+.accept { background-position: -54px -18px; width: 16px; height: 16px}
+.stop { background-position: -72px -18px; width: 16px; height: 16px}
+.cross { background-position: 0 -36px; width: 16px; height: 16px}
+.arrow_out { background-position: -18px -36px; width: 16px; height: 16px}
+.arrow_in { background-position: -36px -36px; width: 16px; height: 16px}
+.comment { background-position: -54px -36px; width: 16px; height: 16px}
+.comments { background-position: -72px -36px; width: 16px; height: 16px}
+.help { background-position: 0 -54px; width: 16px; height: 16px}
+.color_wheel { background-position: -18px -54px; width: 16px; height: 16px}
