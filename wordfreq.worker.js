@@ -22,7 +22,11 @@ var englishStopWords = [
 	'www','the'
 ];
 var cjkStopWords = [
-	'([^\u76ee])\u7684' // chinese 'de'
+	'([^\u76ee])\u7684', // chinese 'de'
+	'\u3092', // wo
+	'\u3067\u3059', // desu
+	'\u3059\u308b', //suru
+	'\u306e' //no
 ];
 
 onmessage = function (ev) {
@@ -51,7 +55,9 @@ onmessage = function (ev) {
 		}
 	
 		// TBD: Cannot match CJK characters beyond BMP, e.g. \u20000-\u2A6DF at plane B.
-		text = text.replace(/[^\u4E00-\u9FFF\u3400-\u4DBF]+/gm, '\n');
+		// Han: \u4E00-\u9FFF\u3400-\u4DBF
+		// Kana: \u3041-\u309f\u30a0-\u30ff
+		text = text.replace(/[^\u4E00-\u9FFF\u3400-\u4DBF\u3041-\u309f\u30a0-\u30ff]+/gm, '\n');
 	
 		var reg = /./g,
 		reuni = /^.$/,
