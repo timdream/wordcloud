@@ -21,6 +21,9 @@ var englishStopWords = [
 	'who','will','with',
 	'www','the'
 ];
+var cjkStopWords = [
+	'([^\u76ee])\u7684' // chinese 'de'
+];
 
 onmessage = function (ev) {
 	var words = {},
@@ -40,7 +43,11 @@ onmessage = function (ev) {
 
 	function processCJK (text) {
 		if (settings.de_commword) {
-			text = text.replace(/\u7684/g, '\n');
+			cjkStopWords.forEach(
+				function (w) {
+					text = text.replace(new RegExp(w, 'g'), '$1\n');
+				}
+			);
 		}
 	
 		// TBD: Cannot match CJK characters beyond BMP, e.g. \u20000-\u2A6DF at plane B.
@@ -84,7 +91,7 @@ onmessage = function (ev) {
 	}
 	
 	function processEnglish(text) {
-		text.replace(/[^A-Za-zéÉ'’]+/gm, '\n').replace(/['’](s|ll|d)\b/g, '').split('\n').forEach(
+		text.replace(/[^A-Za-zéÉ'’]+/gm, '\n').replace(/['\u2019](s|ll|d)?\b/g, '').split('\n').forEach(
 			function (word) {
 				if (!word) return;
 				if (word.length < 2) return;

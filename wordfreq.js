@@ -132,4 +132,4 @@ var WordFreq = function (settings) {
 	};
 };
 
-WordFreq.supported = (window.Worker && Array.prototype.push && Array.prototype.indexOf);
+WordFreq.supported = (window.Worker && Array.prototype.push && Array.prototype.indexOf && Array.prototype.forEach);
