@@ -26,7 +26,8 @@ var cjkStopWords = [
 	'\u3092', // wo
 	'\u3067\u3059', // desu
 	'\u3059\u308b', //suru
-	'\u306e' //no
+	'\u306e', //no
+	'\u308c\u3089' //rera
 ];
 
 onmessage = function (ev) {
