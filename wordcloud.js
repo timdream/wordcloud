@@ -61,6 +61,7 @@ jQuery(function ($) {
 	if (
 		!$.wordCloudSupported
 		|| !WordFreq.supported
+		|| !$.getContentSupported
 		|| !Array.prototype.forEach
 		|| !Array.prototype.pop
 		|| !Array.prototype.push
@@ -68,6 +69,10 @@ jQuery(function ($) {
 	) {
 		$('#not_support').show();
 		return;
+	}
+	
+	if (!$.getContent.fileSupported) {
+		$('input[name="source"][value="file"]').parent('label').hide();
 	}
 
 	var changeUIState = {
@@ -155,21 +160,6 @@ jQuery(function ($) {
 		}*/
 	};
 
-	// post text processing functions
-	
-	var postProcessFeedByDomain = {
-		'pixnet.net': function (str) {
-			return str.replace(/\(.+?\.\.\.\)/g, '');
-		},
-		'wretch.cc': function (str) {
-			return str.replace(/本篇文章引用自此/g, '');
-		}
-	};
-		
-	function pass (str) {
-		return str;
-	}	
-
 	// handleHash
 
 	function handleHash() {
@@ -180,24 +170,26 @@ jQuery(function ($) {
 				case 'feed':
 				updateTitle('feed', window.location.hash.substr(6));
 				changeUIState.loading(t('downloading'));
-				getFeedText(
+				$.getContent(
 					window.location.hash.substr(6),
-					postProcessFeedByDomain[
-						window.location.hash.substr(6).match(/(\w+.\w+)\//)[1]
-					] || pass,
-					processingFeed,
-					handleText
+					{
+						type: 'feed',
+						beforeComplete: processingFeed,
+						complete: handleText
+					}
 				);
 				return;
 				break;
 				case 'html':
 				updateTitle('html', window.location.hash.substr(6));
 				changeUIState.loading(t('downloading'));
-				getHTMLText(
+				$.getContent(
 					window.location.hash.substr(6),
-					pass,
-					processingHTML,
-					handleText
+					{
+						type: 'html',
+						beforeComplete: processingHTML,
+						complete: handleText
+					}
 				);
 				return;
 				break;
@@ -205,17 +197,20 @@ jQuery(function ($) {
 				var f = $('#file')[0];
 				if (!f.files || !f.files.length) {
 					// not really getting files, show panel
-					$('input[value=file]').attr('checked', true);
+					if ($.getContent.fileSupported) $('input[value=file]').attr('checked', true);
 					window.location.hash = '#';
 					//changeUIState.source();
 				} else {
 					updateTitle('file', f.files[0].name);
 					changeUIState.loading(t('reading'));
-					getFileContent(
+					$.getContent(
 						f.files,
-						pass,
-						readingFile,
-						handleText
+						{
+							type: 'file.text',
+							beforeComplete: readingFile,
+							complete: handleText,
+							encoding: $('#encoding').val()
+						}
 					);
 				}
 				break;
@@ -331,103 +326,6 @@ jQuery(function ($) {
 			return false;
 		}
 	);
-	
-	// get remote resource functions
-	
-	function getFeedText(url, processText, beforeComplete, complete) {
-		$.getJSON(
-			'https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&callback=?&scoring=h&num=-1&q=' + processURL(url),
-			function (data, status) {
-				if (!data.responseData) {
-					complete('');
-					return;
-				}
-				beforeComplete(data.responseData.feed.title);
-				var text = [];
-				data.responseData.feed.entries.forEach(
-					function (entry) {
-						text.push(processText(entry.title));
-						text.push(processText(entry.content).replace(/<[^>]+?>|\(.+?\.\.\.\)|\&\w+\;|<script.+?\/script\>/ig, ''));
-					}
-				);
-				text = text.join('\n');
-				setTimeout(
-					function () {
-						complete(text);
-					},
-					0
-				);
-			}
-		);
-	};
-
-	function getHTMLText(url, processText, beforeComplete, complete) {
-		$.getJSON(
-			'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D%22' + processURL(url) + '%22&format=json&diagnostics=true&callback=?',
-			function (data, status) {
-				if (!data.query.results) {
-					complete('');
-					return;
-				}
-				beforeComplete();
-				var text = [];
-				
-				function parseElementObject(obj) {
-					// TBD, properly exclude script
-					for (var key in obj) if (obj.hasOwnProperty(key)) {
-						if (key === 'script' || key === 'style') continue;
-						else if (key === 'content') text.push(obj[key]);
-						else if (typeof obj[key] === 'object' && key !== 'script' && key !== 'style') parseElementObject(obj[key]);
-					}
-				}
-				
-				parseElementObject(data.query.results);
-				text = text.join('\n');
-				setTimeout(
-					function () {
-						complete(text);
-					},
-					0
-				);
-			}
-		);		
-	}
-
-	function getFileContent(files, processText, beforeComplete, complete) {
-		var text = '', i = files.length - 1;
-		function handleFile() {
-			var reader = new FileReader(),
-			file = files[i];
-			reader.onloadend = function (ev) {
-				text += processText(ev.target.result.replace(/<[^>]+?>/g, ''));
-				if (!i--) {
-					setTimeout(
-						function () {
-							complete(processText(ev.target.result.replace(/<[^>]+?>|<script.+?\/script\>/ig, '')));
-						},
-						0
-					);
-				} else {
-					handleFile();
-				}
-			}
-			reader.onerror = function () {
-				if (!i--) {
-					setTimeout(
-						function () {
-							complete(text);
-						},
-						0
-					);
-				} else {
-					handleFile();
-				}
-			};
-			reader.readAsText(file, $('#encoding').val());
-		};
-		beforeComplete();
-		handleFile();
-	}
 
 	// helper function
 	
