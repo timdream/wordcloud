@@ -85,6 +85,7 @@ jQuery(function ($) {
 				wordColor: theme[themeid].wordColor,
 				backgroundColor: theme[themeid].backgroundColor,
 				fontFamily: theme[themeid].fontFamily,
+				rotateRatio: 0,
 				wait: 50,
 				wordList: [
 					[t('startList_1'), t('startList_1C')],
@@ -390,6 +391,7 @@ jQuery(function ($) {
 					wordColor: theme[themeid].wordColor,
 					backgroundColor: theme[themeid].backgroundColor,
 					fontFamily: theme[themeid].fontFamily,
+					rotateRatio: 0,
 					wordList: [
 						[t('readyList_1', wordLength, maxCount), t('readyList_1C')],
 						[t('readyList_2', wordLength, maxCount), t('readyList_2C')],
