@@ -21,6 +21,23 @@ jQuery(function ($) {
 		wordfreq = WordFreq({worker: '../wordfreq.worker.js'}),
 		theme = [
 			{
+				fontFamily: '"Trebuchet MS", "Heiti TC", "微軟正黑體", "Arial Unicode MS", "Droid Fallback Sans", sans-serif',
+				wordColor: 'random-dark',
+				backgroundColor: '#eee'  //opaque white
+			},
+			{
+				// http://ethantw.net/projects/lab/css-reset/
+				fontFamily: 'Baskerville, "Times New Roman", "華康儷金黑 Std", "華康儷宋 Std",  DFLiKingHeiStd-W8, DFLiSongStd-W5, "Hiragino Mincho Pro", "LiSong Pro Light", "新細明體", serif',
+				wordColor: 'random-light',
+				backgroundColor: '#000'
+			},
+			{
+				// http://ethantw.net/projects/lab/css-reset/
+				fontFamily: 'Baskerville, "Times New Roman", "華康儷金黑 Std", "華康儷宋 Std",  DFLiKingHeiStd-W8, DFLiSongStd-W5, "Hiragino Mincho Pro", "LiSong Pro Light", "新細明體", serif',
+				wordColor: '#fff',
+				backgroundColor: '#000'
+			},
+			{
 				fontFamily: '"Myriad Pro", "Lucida Grande", Helvetica, "Heiti TC", "微軟正黑體", "Arial Unicode MS", "Droid Fallback Sans", sans-serif',
 				wordColor: 'rgba(255,255,255,0.8)',
 				backgroundColor: '#353130'
@@ -29,12 +46,6 @@ jQuery(function ($) {
 				fontFamily: '"Trebuchet MS", "Heiti TC", "微軟正黑體", "Arial Unicode MS", "Droid Fallback Sans", sans-serif',
 				wordColor: 'rgba(0,0,0,0.7)',
 				backgroundColor: 'rgba(255, 255, 255, 1)'  //opaque white
-			},
-			{
-				// http://ethantw.net/projects/lab/css-reset/
-				fontFamily: 'Baskerville, "Times New Roman", "華康儷金黑 Std", "華康儷宋 Std",  DFLiKingHeiStd-W8, DFLiSongStd-W5, "Hiragino Mincho Pro", "LiSong Pro Light", "標楷體", serif',
-				wordColor: '#fff',
-				backgroundColor: '#000'
 			}
 		],
 		list, weightFactor, gridSize, themeid = 0;
