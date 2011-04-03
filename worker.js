@@ -8,7 +8,9 @@ if (!window.Worker || window.forceIframeWorker) {
 		worker._iframeEl.style.visibility = 'hidden';
 		worker._iframeEl.style.width = '1px';
 		worker._iframeEl.style.height = '1px';
-		worker._iframeEl.onload = function () {
+		worker._iframeEl.onload = worker._iframeEl.onreadystatechange = function () {
+			if (this.readyState && this.readyState !== "loaded" && this.readyState !== "complete") return;
+			worker._iframeEl.onload = worker._iframeEl.onreadystatechange = null;
 			var w = this.contentWindow,
 			doc = this.contentWindow.document;
 			
