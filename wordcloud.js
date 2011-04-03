@@ -288,6 +288,17 @@ jQuery(function ($) {
 		changeSource
 	);
 	
+	// Do this manually for Mobile Safari as a workaround
+	$s.parent('label').bind(
+		'click',
+		function () {
+			var $input = $(this).find('input');
+			$input.attr('checked', true);
+			changeSource.apply($input[0]);
+			return false;
+		}
+	);
+	
 	$('#source_panel_form').bind(
 		'submit',
 		function () {
