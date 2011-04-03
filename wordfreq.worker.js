@@ -1,6 +1,9 @@
 
 "use strict";
 
+// For simulated worker in IE
+var send = (typeof workerPostMessage !== 'undefined')?workerPostMessage:postMessage;
+
 // http://tartarus.org/~martin/PorterStemmer/js.txt
 // Porter stemmer in Javascript
 // Release 1 be 'andargor', Jul 2004
@@ -111,5 +114,5 @@ onmessage = function (ev) {
 	if (settings.processCJK) processCJK(text);
 	if (settings.processEnglish) processEnglish(text);
 
-	postMessage({words:words, reps:reps});
+	send({words:words, reps:reps});
 };

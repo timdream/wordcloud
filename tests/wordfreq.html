@@ -57,11 +57,15 @@
 <textarea id="result" readonly="true" cols="80" rows="30">
 </textarea>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+<script type="text/javascript" src="../worker.js"></script>
 <script type="text/javascript" src="../wordfreq.js"></script>
 <script type="text/javascript">
 jQuery(function ($) {
 
 	$('#supported').addClass((WordFreq.supported?'':'not_') + 'support');
+
+	window.Worker.iframeURI = '../worker.iframe.html';
+	window.Worker.baseURI = 'tests/';
 
 	var $r = $('#result');
 	function start() {

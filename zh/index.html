@@ -135,9 +135,14 @@
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
 <script type="text/javascript" src="../jquery.wordcloud.js"></script>
 <script type="text/javascript" src="../jquery.getcontent.js"></script>
+<script type="text/javascript" src="../worker.js"></script>
 <script type="text/javascript" src="../wordfreq.js"></script>
 <script type="text/javascript" src="../wordcloud.js"></script>
 <script type="text/javascript">
+
+window.Worker.iframeURI = '../worker.iframe.html';
+window.Worker.baseURI = 'zh/';
+
 var T = {
 	title: '$1 的文字雲',
 	downloading: '下載中 ...',
