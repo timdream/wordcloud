@@ -72,7 +72,7 @@ jQuery(function ($) {
 	if (
 		!$.wordCloudSupported
 		|| !WordFreq.supported
-		|| !$.getContentSupported
+		|| !$.getContent.feedSupported
 		|| !Array.prototype.forEach
 		|| !Array.prototype.pop
 		|| !Array.prototype.push
