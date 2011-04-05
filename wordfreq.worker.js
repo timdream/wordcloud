@@ -101,9 +101,14 @@ onmessage = function (ev) {
 	}
 	
 	function processEnglish(text) {
-		text.replace(/[^A-Za-zéÉ'’]+/gm, '\n').replace(/['\u2019](s|ll|d)?\b/g, '').split('\n').forEach(
+		text
+		.replace(/[^A-Za-zéÉ'’_\-0-9@\.]+/gm, '\n')
+		.replace(/^([^\.]+)\.$/gm, '$1')
+		.replace(/[\'\u2019](s|ll|d)?$/gm, '')
+		.split('\n').forEach(
 			function (word) {
 				if (!word) return;
+				if (/^[0-9\.@\-]+$/.test(word)) return;
 				if (word.length < 2) return;
 				if (settings.de_commword && englishStopWords.indexOf(word.toLowerCase()) !== -1) return;
 				handleWord(stemmer(word).toLowerCase(), word);
