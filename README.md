@@ -1,9 +1,6 @@
 HTML5 Word Cloud
 ================
 
-Word Cloud on HTML5 canvas, inspired by HTML5 Word Cloud
-================
-
 Word Cloud on HTML5 canvas, inspired by 
 [Wordle](http://www.wordle.net/).
 
