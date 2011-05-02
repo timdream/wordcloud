@@ -7,6 +7,7 @@
 </head>
 <body>
 <canvas id="canvas" class="toggleUI"></canvas>
+<div id="fb-root"></div>
 <div id="loading" class="center_msg">
 	<p>載入中 ...</p>
 </div>
@@ -74,6 +75,7 @@
 		<label><input type="radio" name="source" value="blog:wretch"/> 無名小站部落格</label>
 		<label><input type="radio" name="source" value="blog:plurk"/> 噗浪</label>
 		<label><input type="radio" name="source" value="blog:twitter"/> Twitter</label>
+		<label><input type="radio" name="source" value="fbok"/> Facebook</label>
 	</p>
 	<hr />
 	<div id="demo_entry" class="entry">
@@ -108,6 +110,9 @@
 		<p><label><span>網址：</span><input type="url" size="40" id="html_url" /></label></p>
 		<p>僅能處理被搜尋引擎分析過的公開網頁。</p>
 	</div>
+    <div id="fbok_entry" class="entry">
+        <p>讀取中…</p>
+    </div>
 	<button type="submit" id="source_panel_finish">開始</button>
 	</form>
 </div>
@@ -139,6 +144,7 @@
 <script type="text/javascript" src="../worker.js"></script>
 <script type="text/javascript" src="../wordfreq.js"></script>
 <script type="text/javascript" src="../wordcloud.js"></script>
+<script src="http://connect.facebook.net/zh_TW/all.js"></script>
 <script type="text/javascript">
 
 window.Worker.iframeURI = '../worker.iframe.html';
@@ -152,6 +158,9 @@ var T = {
 	analyzing: '分析中 ...',
 	errorReading: '讀取失敗，請稍後再試。',
 	errorWordCount: '取得詞彙數量太少，請選其他內容。',
+    clickToAnalyzer: '按『開始』分析內容',
+    needLogin: '<a id="fb_login" href="#">登入 facebook</a>取得分析內容',
+    needWaiting: '取得 Facebook 留言約費時半分鐘，',
 	startList_1: 'HTML5 文字雲',
 	startList_1C: 60,
 	startList_2: 'Word Cloud',

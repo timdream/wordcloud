@@ -11,6 +11,8 @@ function t(id) {
 	return s;
 }
 
+var FB_app_id = '';
+
 jQuery(function ($) {
 	var $c = $('#canvas'),
 		$toggleUI = $('.toggleUI'),
@@ -18,6 +20,7 @@ jQuery(function ($) {
 		$error = $('#error'),
 		$loadingText = $('#loading > p'),
 		$errorText = $('#error > p'),
+        fbUser = null,
 		wordfreq = WordFreq({worker: '../wordfreq.worker.js'}),
 		theme = [
 			{
@@ -225,7 +228,23 @@ jQuery(function ($) {
 						}
 					);
 				}
+                return;
 				break;
+                case 'fbok':
+                if(fbUser) {
+                    updateTitle('Facebook', 'facebook');
+                    changeUIState.loading(t('downloading'));
+                    $.getContent(
+                        fbUser.id,
+                        {
+                            type: 'fbok',
+                            beforeComplete: processingFb,
+                            complete: handleText
+                        }
+                    );
+                }
+                return;
+                break;
 				//default:
 				//do nothing
 				//break;
@@ -234,6 +253,13 @@ jQuery(function ($) {
 			changeUIState.source();
 		}
 	}
+
+    FB.init({
+        appId : FB_app_id,
+        status: true,
+        cookie: true,
+        xfbml: true
+    });
 
 	window.onhashchange = handleHash;
 	if (window.location.hash) handleHash(); // only load when hash exists
@@ -281,6 +307,17 @@ jQuery(function ($) {
 		$(this).parent().addClass('checked').siblings().removeClass('checked');
 		$('#' + type + '_entry').show();
 		$('.feed_type_name').text($(this).parent('label').text());
+
+        if (type == "fbok") {
+            FB.getLoginStatus(function(response) {
+                if (response.session) {
+                    getFbUser();
+                }
+                else {
+                    showFbLogin();
+                }
+            });
+        }
 	};
 	
 	$s.bind(
@@ -345,6 +382,10 @@ jQuery(function ($) {
 					if (!$('#html_url').val()) return false;
 					window.location.hash = '#html:' + $('#html_url').val();
 				break;
+                case 'fbok':
+                    if (!fbUser) return false;
+                    window.location.hash = '#fbok';
+                break;
 			}
 			return false;
 		}
@@ -363,7 +404,7 @@ jQuery(function ($) {
 	function updateTitle(type, title) {
 		$('#title')
 		.empty()
-		.append('<span class="famfamfam_sprite ' + {feed:'feed', html:'drive_world', file:'drive'}[type] + '"></span>')
+		.append('<span class="famfamfam_sprite ' + {feed:'feed', html:'drive_world', file:'drive', facebook:'facebook'}[type] + '"></span>')
 		.append($('<span />').text(t('title', title)));
 	}
 
@@ -376,6 +417,11 @@ jQuery(function ($) {
 		if (title) updateTitle('html', data.responseData.feed.title);
 		changeUIState.loading(t('processing'));
 	};
+
+    function processingFb(title) {
+        updateTitle('facebook', 'facebook');
+        changeUIState.loading(t('reading'));
+    };
 
 	function readingFile() {
 		changeUIState.loading(t('reading'));
@@ -426,6 +472,29 @@ jQuery(function ($) {
 			}
 		);
 	};
+
+    // Facebook functions
+
+    function getFbUser() {
+        FB.api('/me', function(response) {
+            $('#fbok_entry').html("<p>" + t('needWaiting') + t('clickToAnalyzer') + "</p>");
+            fbUser = response;
+        });
+    };
+
+    function showFbLogin() {
+        $('#fbok_entry').html("<p>" + t('needLogin') + "</p>");
+        $('#fb_login').click(function(event) {
+            FB.login(function(response) {
+                if (response.session) {
+                    getFbUser();
+                }
+                else {
+                }
+            }, {perms:'read_stream'});
+        });
+    };
+
 
 	// panel functions
 

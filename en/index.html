@@ -7,6 +7,7 @@
 </head>
 <body>
 <canvas id="canvas" class="toggleUI"></canvas>
+<div id="fb-root"></div>
 <div id="loading" class="center_msg">
 	<p>Loading ...</p>
 </div>
@@ -71,6 +72,7 @@
 		<!--<label><input type="radio" name="source" value="wiki" /> Wikipedia</label>-->
 		<label><input type="radio" name="source" value="blog:blogger" /> Blogger</label>
 		<label><input type="radio" name="source" value="blog:twitter"/> Twitter</label>
+        <label><input type="radio" name="source" value="fbok"/> Facebook</label>
 	</p>
 	<hr />
 	<div id="demo_entry" class="entry">
@@ -105,6 +107,9 @@
 		<p><label><span>URL:</span><input type="url" size="40" id="html_url" /></label></p>
 		<p>Only public webpages that has been indexed by search engines can be accessed.</p>
 	</div>
+    <div id="fbok_entry" class="entry">
+        <p>Loading...</p>
+    </div>
 	<button type="submit" id="source_panel_finish">Start</button>
 	</form>
 </div>
@@ -136,6 +141,7 @@
 <script type="text/javascript" src="../worker.js"></script>
 <script type="text/javascript" src="../wordfreq.js"></script>
 <script type="text/javascript" src="../wordcloud.js"></script>
+<script src="http://connect.facebook.net/en_US/all.js"></script>
 <script type="text/javascript">
 
 window.Worker.iframeURI = '../worker.iframe.html';
@@ -149,6 +155,9 @@ var T = {
 	analyzing: 'Analyzing ...',
 	errorReading: 'Reading error, please try again later.',
 	errorWordCount: 'Not enough word/phrases to show.',
+    clickToAnalyzer: 'Click Start to execute analyzer',
+    needLogin: '<a id="fb_login" href="#">Login facebook</a> to get your feed',
+    needWaiting: 'Get facebook feeds require half minute, ',
 	startList_1: 'HTML5 Word Cloud',
 	startList_1C: 45,
 	startList_2: '文字雲',
