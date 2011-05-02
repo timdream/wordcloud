@@ -33,7 +33,7 @@ var cjkStopWords = [
 	'\u308c\u3089' //rera
 ];
 
-onmessage = function (ev) {
+var onmessage = function (ev) {
 	var words = {},
 	reps = {},
 	settings = ev.data.settings,
