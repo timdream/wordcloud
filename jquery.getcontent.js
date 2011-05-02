@@ -71,6 +71,21 @@ $.getContent = function (source, options) {
 			}
 		);		
 	},
+    getFbText = function () {
+        settings.beforeComplete();
+        FB.api('/me/feed', {limit: 250}, function(response) {
+            var text = [];
+            response.data.forEach(
+                function (entry) {
+                    if (entry.message != undefined && entry.from.id == source) {
+                        text.push(entry.message);
+                    }
+                }
+            );
+            text = text.join('\n');
+            settings.complete(text);
+        });
+    },
 	parseYQLElementObject = function (text, obj) {
 		// TBD, properly exclude script
 		for (var key in obj) if (obj.hasOwnProperty(key)) {
@@ -144,6 +159,9 @@ $.getContent = function (source, options) {
 		case 'file.html':
 		return getFileText(true);
 		break;
+        case 'fbok':
+        return getFbText();
+        break;
 	}
 };
 
