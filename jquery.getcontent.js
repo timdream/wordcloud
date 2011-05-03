@@ -159,7 +159,7 @@ $.getContent = function (source, options) {
 		case 'file.html':
 		return getFileText(true);
 		break;
-        case 'fbok':
+        case 'facebook':
         return getFbText();
         break;
 	}

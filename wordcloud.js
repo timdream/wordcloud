@@ -230,14 +230,14 @@ jQuery(function ($) {
 				}
                 return;
 				break;
-                case 'fbok':
+                case 'face': // "facebook" XD
                 if(fbUser) {
                     updateTitle('Facebook', 'facebook');
                     changeUIState.loading(t('downloading'));
                     $.getContent(
                         fbUser.id,
                         {
-                            type: 'fbok',
+                            type: 'facebook',
                             beforeComplete: processingFb,
                             complete: handleText
                         }
@@ -384,7 +384,7 @@ jQuery(function ($) {
 				break;
                 case 'fbok':
                     if (!fbUser) return false;
-                    window.location.hash = '#fbok';
+                    window.location.hash = '#facebook:me';
                 break;
 			}
 			return false;
