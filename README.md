@@ -19,7 +19,7 @@ This program is composed of three libraries, two of them have
 dependency of jQuery thus they are warped as jQuery plug-ins:
 
 1. `jquery.getcontent.js` which access remote or local content though 
-   Google Feed API, YQL data.html (experimental), and FileReader API.
+   Google Feed API, YQL data.html (experimental), Facebook Javascript SDK, and FileReader API.
 2. `wordfreq.js` which count the phrases/words by running N-gram 
    analysis (for Chinese) and [Porter Stemming Algorithm](http://tartarus.org/~martin/PorterStemmer/) 
    (for English) in Web Workers.
@@ -34,6 +34,10 @@ Following external libraries are included:
 1. Porter Stemming Algorithm in Javascript as mentioned above.
 2. [Simulated Web Workers](https://github.com/timdream/simworker) (`worker.js`) 
    to provide a simulated web workers interface in IEs and Mobile Safari.
+
+## Contributors
+
+* [Yuren Ju](https://github.com/yurenju/wordcloud) for Facebook Status fetching
 
 ## Q&amp;A
 
