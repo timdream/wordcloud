@@ -232,7 +232,7 @@ jQuery(function ($) {
 				break;
                 case 'face': // "facebook" XD
                 if(fbUser) {
-                    updateTitle('Facebook', 'facebook');
+			        updateTitle('facebook', 'Facebook: ' + fbUser.name);
                     changeUIState.loading(t('downloading'));
                     $.getContent(
                         fbUser.id,
@@ -422,7 +422,6 @@ jQuery(function ($) {
 	};
 
     function processingFb(title) {
-        updateTitle('facebook', 'facebook');
         changeUIState.loading(t('reading'));
     };
 

@@ -270,21 +270,26 @@ a {
 }
 
 
-.famfamfam_sprite {display: block; background: transparent url('famfamfam_sprites.png') no-repeat; text-indent: -10000px; float: right; }
-.disk { background-position: 0 0; width: 16px; height: 16px}
-.award_star_bronze_1 { background-position: -18px 0; width: 16px; height: 16px}
-.feed { background-position: -36px 0; width: 16px; height: 16px}
-.page_world { background-position: -54px 0; width: 16px; height: 16px}
-.drive { background-position: -72px 0; width: 16px; height: 16px}
-.arrow_undo { background-position: 0 -18px; width: 16px; height: 16px}
-.arrow_refresh { background-position: -18px -18px; width: 16px; height: 16px}
-.application_double { background-position: -36px -18px; width: 16px; height: 16px}
-.accept { background-position: -54px -18px; width: 16px; height: 16px}
-.stop { background-position: -72px -18px; width: 16px; height: 16px}
-.cross { background-position: 0 -36px; width: 16px; height: 16px}
-.arrow_out { background-position: -18px -36px; width: 16px; height: 16px}
-.arrow_in { background-position: -36px -36px; width: 16px; height: 16px}
-.comment { background-position: -54px -36px; width: 16px; height: 16px}
-.comments { background-position: -72px -36px; width: 16px; height: 16px}
-.help { background-position: 0 -54px; width: 16px; height: 16px}
-.color_wheel { background-position: -18px -54px; width: 16px; height: 16px}
+.famfamfam_sprite {display: block; background: transparent url('famfamfam_sprites.png') no-repeat; text-indent: -10000px; float: right; width: 16px; height: 16px;}
+.disk { background-position: 0 0; }
+.award_star_bronze_1 { background-position: -18px 0; }
+.feed { background-position: -36px 0; }
+.page_world { background-position: -54px 0; }
+.drive { background-position: -72px 0; }
+.arrow_undo { background-position: 0 -18px; }
+.arrow_refresh { background-position: -18px -18px; }
+.application_double { background-position: -36px -18px; }
+.accept { background-position: -54px -18px; }
+.stop { background-position: -72px -18px; }
+.cross { background-position: 0 -36px; }
+.arrow_out { background-position: -18px -36px; }
+.arrow_in { background-position: -36px -36px; }
+.comment { background-position: -54px -36px; }
+.comments { background-position: -72px -36px; }
+.help { background-position: 0 -54px; }
+.color_wheel { background-position: -18px -54px; }
+
+.facebook {
+	background: transparent url('http://wwww.facebook.com/favicon.ico') center center no-repeat;
+	
+}
