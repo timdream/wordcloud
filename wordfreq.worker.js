@@ -42,11 +42,11 @@ onmessage = function (ev) {
 	text = ev.data.text;
 
 	function handleWord (word, rep) {
-		if (!words[word]) words[word] = 1;
+		if (typeof words[word] !== 'number') words[word] = 1;
 		else words[word]++;
 		if (rep) {
-			if (!reps[word]) reps[word] = {};
-			if (!reps[word][rep]) reps[word][rep] = 1;
+			if (typeof reps[word] !== 'object') reps[word] = {};
+			if (typeof reps[word][rep] !== 'number') reps[word][rep] = 1;
 			else reps[word][rep]++;
 		}
 	}

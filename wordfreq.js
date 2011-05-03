@@ -56,7 +56,7 @@ var WordFreq = function (settings) {
 	processText = function (text, callback) {
 		worker.onmessage = function (ev) {
 			for (var word in ev.data.words) if (ev.data.words.hasOwnProperty(word)) {
-				if (!words[word]) words[word] = ev.data.words[word];
+				if (typeof words[word] !== 'number') words[word] = ev.data.words[word];
 				else words[word] += ev.data.words[word];
 				if (ev.data.reps[word]) {
 					if (!reps[word]) reps[word] = ev.data.reps[word];
@@ -83,14 +83,19 @@ var WordFreq = function (settings) {
 		var list = [];
 		for (var word in words) if (words.hasOwnProperty(word)) {
 			if (words[word] < settings.mincount) continue;
-			if (reps[word]) {
-				var maxRep, c = 0;
+			var maxRep;
+			if (typeof reps[word] === 'object') {
+				var c = 0;
 				// https://gist.github.com/878204 by monoceroi, thanks!
 				for (var rep in reps[word]) if (Object.hasOwnProperty.call(reps[word], rep)) {
-					if (reps[word][rep] > c) maxRep = rep;
+					if (typeof reps[word][rep] === 'number' && reps[word][rep] > c) {
+						maxRep = rep;
+						c = reps[word][rep];
+					}
 				}
 			}
 			list.push([maxRep || word, words[word]]);
+			maxRep = false;
 		}
 		return list;
 	},
