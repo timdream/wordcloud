@@ -242,12 +242,15 @@ jQuery(function ($) {
                             complete: handleText
                         }
                     );
+                } else {
+                	// Not logged in
+					window.location.hash = '#';
                 }
                 return;
                 break;
-				//default:
-				//do nothing
-				//break;
+				default:
+				window.location.hash = '#';
+				break;
 			}
 		} else {
 			changeUIState.source();
