@@ -69,7 +69,9 @@
 var FB_app_id = '';
 
 jQuery(function ($) {
-    fbUser = null,
+
+    var fbUser = null;
+
     FB.init({
         appId : FB_app_id,
         status: true,
@@ -183,6 +185,7 @@ jQuery(function ($) {
                     }, {perms:'read_stream'});
                 }
             });
+            return false;
         }
     );
 
