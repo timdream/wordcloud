@@ -167,11 +167,13 @@ $.getContent = function (source, options) {
 
 $.getContent.feedSupported = !!Array.prototype.forEach;
 $.getContent.htmlSupported = true;
+$.getContent.fbSupported = true;
 $.getContent.fileSupported = !!window.FileReader;
 $.getContentSupported = (
 	$.getContent.feedSupported
 	&& $.getContent.htmlSupported
 	&& $.getContent.fileSupported
+	&& $.getContent.fbSupported
 );
 
 })(jQuery);

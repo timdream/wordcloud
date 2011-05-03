@@ -22,6 +22,7 @@
 <p id="feedSupported">$.getContent.feedSupported</p>
 <p id="htmlSupported">$.getContent.htmlSupported</p>
 <p id="fileSupported" >$.getContent.fileSupported</p>
+<p id="fbSupported" >$.getContent.fbSupported</p>
 <p id="supported">$.getContentSupported</p>
 <h2>$.getContent(feed);</h2>
 <form method="get" action="#" id="feed">
@@ -51,16 +52,35 @@
 	<input type="submit" value="test" />
 	</p>
 </form>
+<h2>$.getContent(facebook);</h2>
+<form method="get" action="#" id="facebook">
+	<p>
+    <div id='fb-root'></div>
+	<input type="submit" value="test" />
+	</p>
+</form>
 <textarea id="result" readonly="true" cols="80" rows="30">
 </textarea>
+<script src="http://connect.facebook.net/en_US/all.js"></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
 <script type="text/javascript" src="../jquery.getcontent.js"></script>
 <script type="text/javascript">
+
+var FB_app_id = '';
+
 jQuery(function ($) {
+    fbUser = null,
+    FB.init({
+        appId : FB_app_id,
+        status: true,
+        cookie: true,
+        xfbml: true
+    });
 
 	$('#feedSupported').addClass(($.getContent.feedSupported?'':'not_') + 'support');
 	$('#htmlSupported').addClass(($.getContent.htmlSupported?'':'not_') + 'support');
 	$('#fileSupported').addClass(($.getContent.fileSupported?'':'not_') + 'support');
+	$('#fbSupported').addClass(($.getContent.fbSupported?'':'not_') + 'support');
 	$('#supported').addClass(($.getContentSupported?'':'not_') + 'support');
 
 	var $r = $('#result');
@@ -146,6 +166,45 @@ jQuery(function ($) {
 			return false;
 		}
 	);
+    $('#facebook').bind(
+        'submit',
+        function () {
+            FB.getLoginStatus(function(response) {
+                if(response.session) {
+                    getFbUser();
+                }
+                else {
+                    FB.login(function(response) {
+                        if(response) {
+                            getFbUser();
+                        }
+                        else {
+                        }
+                    }, {perms:'read_stream'});
+                }
+            });
+        }
+    );
+
+    function getFbUser() {
+        FB.api('/me', function(response) {
+            fbUser = response;
+            try {
+                $.getContent(
+                    fbUser.id,
+                    {
+                        type: 'fbok',
+                        beforeComplete: beforeComplete,
+                        complete: complete
+                    }
+                );
+            } catch (e) {error(e); }
+            start();
+            return false;
+        });
+    };
+
+
 });
 </script>
 </body>
