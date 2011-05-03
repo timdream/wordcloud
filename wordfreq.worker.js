@@ -1,5 +1,7 @@
 
-"use strict";
+// Remove "use stricts"; as it will break Chrome
+// See https://code.google.com/p/chromium/issues/detail?id=81371
+//"use strict";
 
 // For simulated worker in IE
 var send = (typeof workerPostMessage !== 'undefined')?workerPostMessage:postMessage;
@@ -33,7 +35,7 @@ var cjkStopWords = [
 	'\u308c\u3089' //rera
 ];
 
-var onmessage = function (ev) {
+onmessage = function (ev) {
 	var words = {},
 	reps = {},
 	settings = ev.data.settings,
