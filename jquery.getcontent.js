@@ -73,17 +73,31 @@ $.getContent = function (source, options) {
 	},
 	getFbText = function () {
 		settings.beforeComplete();
-		var query = FB.Data.query('select message from status where uid = {0}', source);
-		query.wait(
-			function(rows) {
-				var text = [];
-				rows.forEach(
+		var text = [],
+		statusQuery = FB.Data.query('select message from status where uid = {0}', source),
+		noteQuery = FB.Data.query('select content,title from note where uid = {0}', source),
+		linkQuery = FB.Data.query('select owner_comment from link where owner = {0}', source);
+
+		FB.Data.waitOn(
+			[statusQuery, noteQuery, linkQuery],
+			function() {
+				statusQuery.value.forEach(
 					function (row) {
 						text.push(row.message);
 					}
 				);
-				text = text.join('\n');
-				settings.complete(text);
+				noteQuery.value.forEach(
+					function (row) {
+						text.push(row.content);
+						text.push(row.title);
+					}
+				);
+				linkQuery.value.forEach(
+					function (row) {
+						text.push(row.owner_comment);
+					}
+				);
+				settings.complete(text.join('\n'));
 			}
 		);
 	},
