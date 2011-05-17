@@ -69,23 +69,24 @@ $.getContent = function (source, options) {
 					0
 				);
 			}
-		);		
+		);
 	},
-    getFbText = function () {
-        settings.beforeComplete();
-        FB.api('/me/feed', {limit: 250}, function(response) {
-            var text = [];
-            response.data.forEach(
-                function (entry) {
-                    if (entry.message != undefined && entry.from.id == source) {
-                        text.push(entry.message);
-                    }
-                }
-            );
-            text = text.join('\n');
-            settings.complete(text);
-        });
-    },
+	getFbText = function () {
+		settings.beforeComplete();
+		var query = FB.Data.query('select message from status where uid = {0}', source);
+		query.wait(
+			function(rows) {
+				var text = [];
+				rows.forEach(
+					function (row) {
+						text.push(row.message);
+					}
+				);
+				text = text.join('\n');
+				settings.complete(text);
+			}
+		);
+	},
 	parseYQLElementObject = function (text, obj) {
 		// TBD, properly exclude script
 		for (var key in obj) if (obj.hasOwnProperty(key)) {
@@ -167,7 +168,7 @@ $.getContent = function (source, options) {
 
 $.getContent.feedSupported = !!Array.prototype.forEach;
 $.getContent.htmlSupported = true;
-$.getContent.fbSupported = true;
+$.getContent.fbSupported = !!Array.prototype.forEach;
 $.getContent.fileSupported = !!window.FileReader;
 $.getContentSupported = (
 	$.getContent.feedSupported
