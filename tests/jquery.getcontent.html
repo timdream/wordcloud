@@ -72,6 +72,10 @@ jQuery(function ($) {
 
     var fbUser = null;
 
+	if (!FB_app_id) {
+		alert('Add your own Facebook App ID to enable Facebook status fetching.');
+	}
+
     FB.init({
         appId : FB_app_id,
         status: true,
