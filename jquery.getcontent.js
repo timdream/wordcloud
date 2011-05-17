@@ -22,7 +22,7 @@ $.getContent = function (source, options) {
 	},
 	getFeedText = function () {
 		return $.getJSON(
-			'https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&callback=?&scoring=h&num=' + settings.num.toString(10) + '&q=' + source,
+			'https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&callback=?&scoring=h&num=' + settings.num.toString(10) + '&q=' + encodeURIComponent(source),
 			function (data, status) {
 				if (!data.responseData) {
 					settings.complete('');
@@ -51,7 +51,7 @@ $.getContent = function (source, options) {
 	},
 	getHTMLText = function () {
 		$.getJSON(
-			'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D%22' + source + '%22&format=json&diagnostics=true&callback=?',
+			'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D%22' + encodeURIComponent(source) + '%22&format=json&diagnostics=true&callback=?',
 			function (data, status) {
 				if (!data.query.results) {
 					settings.complete('');
