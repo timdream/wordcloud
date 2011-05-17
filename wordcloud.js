@@ -479,13 +479,13 @@ jQuery(function ($) {
 
     function getFbUser() {
         FB.api('/me', function(response) {
-            $('#fbok_entry').html("<p>" + t('needWaiting') + t('clickToAnalyzer') + "</p>");
+            $('#fbok_entry').html("<p>" + t('fbReady') + "</p>");
             fbUser = response;
         });
     };
 
     function showFbLogin() {
-        $('#fbok_entry').html("<p>" + t('needLogin') + "</p>");
+        $('#fbok_entry').html("<p>" + t('fbNeedLogin') + "</p>");
         $('#fb_login').click(function(event) {
             FB.login(function(response) {
                 if (response.session) {
