@@ -7,8 +7,11 @@ $.getContent = function (source, options) {
 		beforeComplete: $.noop,
 		complete: $.noop,
 		encoding: 'UTF-8', // Text encoding
-		num: -1 // feed num
+		num: -1, // feed num
+		timeout: 25 * 1000
 	},
+	timer,
+	canceled = false,
 	processFeedByDomain = {
 		'pixnet.net': function (str, strType) {
 			return str.replace(/\(.+?\.\.\.\)/g, '');
@@ -20,16 +23,25 @@ $.getContent = function (source, options) {
 	pass = function (str, strType) {
 		return str;
 	},
+	beforeComplete = function (str) {
+		if (canceled) return;
+		settings.beforeComplete(str);
+	},
+	complete = function (str) {
+		if (canceled) return;
+		clearTimeout(timer);
+		settings.complete(str);
+	},
 	getFeedText = function () {
 		return $.getJSON(
 			'https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&callback=?&scoring=h&num=' + settings.num.toString(10) + '&q=' + encodeURIComponent(source),
 			function (data, status) {
 				if (!data.responseData) {
-					settings.complete('');
+					complete('');
 					return;
 				}
 
-				settings.beforeComplete(data.responseData.feed.title);
+				beforeComplete(data.responseData.feed.title);
 				var text = [],
 				process = processFeedByDomain[source.match(/(\w+.\w+)\//)[1].toLowerCase()] || pass;
 
@@ -42,7 +54,7 @@ $.getContent = function (source, options) {
 				text = text.join('\n');
 				setTimeout(
 					function () {
-						settings.complete(text);
+						complete(text);
 					},
 					0
 				);
@@ -54,17 +66,17 @@ $.getContent = function (source, options) {
 			'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D%22' + encodeURIComponent(source) + '%22&format=json&diagnostics=true&callback=?',
 			function (data, status) {
 				if (!data.query.results) {
-					settings.complete('');
+					complete('');
 					return;
 				}
-				settings.beforeComplete();
+				beforeComplete('');
 				var text = [];
 				
 				parseYQLElementObject(text, data.query.results);
 				text = text.join('\n');
 				setTimeout(
 					function () {
-						settings.complete(text);
+						complete(text);
 					},
 					0
 				);
@@ -72,7 +84,6 @@ $.getContent = function (source, options) {
 		);
 	},
 	getFbText = function () {
-		settings.beforeComplete();
 		var text = [],
 		statusQuery = FB.Data.query('select message from status where uid = {0}', source),
 		noteQuery = FB.Data.query('select content,title from note where uid = {0}', source),
@@ -81,6 +92,7 @@ $.getContent = function (source, options) {
 		FB.Data.waitOn(
 			[statusQuery, noteQuery, linkQuery],
 			function() {
+				beforeComplete('');
 				statusQuery.value.forEach(
 					function (row) {
 						text.push(row.message);
@@ -97,7 +109,13 @@ $.getContent = function (source, options) {
 						text.push(row.owner_comment);
 					}
 				);
-				settings.complete(text.join('\n'));
+				text = text.join('\n');
+				setTimeout(
+					function () {
+						complete(text);
+					},
+					0
+				);
 			}
 		);
 	},
@@ -111,7 +129,7 @@ $.getContent = function (source, options) {
 	},
 	getFileText = function (stripHTML) {
 		// we read and process file one at a time, no place to fire beforeComplete()
-		settings.beforeComplete();
+		beforeComplete();
 		var text = [], i = source.length - 1;
 		handleFile(text, i, stripHTML);
 	},
@@ -123,7 +141,7 @@ $.getContent = function (source, options) {
 				text = text.join('\n');
 				setTimeout(
 					function () {
-						settings.complete(text);
+						complete(text);
 					},
 					0
 				);
@@ -160,6 +178,16 @@ $.getContent = function (source, options) {
 		source = source.replace(/^feed:/i, 'http:');
 	}
 
+	if (settings.timeout > 0) {
+		timer = setTimeout(
+			function () {
+				canceled = true;
+				settings.complete('');
+			},
+			settings.timeout
+		);
+	}
+
 	switch (settings.type) {
 		case 'feed':
 		return getFeedText();
@@ -176,6 +204,9 @@ $.getContent = function (source, options) {
 		break;
         case 'facebook':
         return getFbText();
+        break;
+        default:
+        complete('');
         break;
 	}
 };
