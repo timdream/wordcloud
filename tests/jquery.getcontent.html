@@ -52,10 +52,17 @@
 	<input type="submit" value="test" />
 	</p>
 </form>
-<h2>$.getContent(facebook);</h2>
+<h2>$.getContent(facebook:me);</h2>
 <form method="get" action="#" id="facebook">
 	<p>
     <div id='fb-root'></div>
+	<input type="submit" value="test" />
+	</p>
+</form>
+<h2>$.getContent(facebook:id);</h2>
+<form method="get" action="#" id="facebook_id">
+	<p>
+	<label>ID: <input type="text" id="facebook_id_uid" size="20" value="109362359103769" /></label>
 	<input type="submit" value="test" />
 	</p>
 </form>
@@ -69,8 +76,6 @@
 var FB_app_id = '';
 
 jQuery(function ($) {
-
-    var fbUser = null;
 
 	if (!FB_app_id) {
 		alert('Add your own Facebook App ID to enable Facebook status fetching.');
@@ -174,43 +179,78 @@ jQuery(function ($) {
 	);
     $('#facebook').bind(
         'submit',
-        function () {
-            FB.getLoginStatus(function(response) {
-                if(response.session) {
-                    getFbUser();
-                }
-                else {
-                    FB.login(function(response) {
-                        if(response) {
-                            getFbUser();
-                        }
-                        else {
-                        }
-                    }, {perms:'read_stream'});
-                }
-            });
-            return false;
+		function () {
+			FB.getLoginStatus(function(response) {
+				if(response.session) {
+					test_facebook(response);
+				} else {
+					FB.login(
+						function(response) {
+							if(response) {
+								test_facebook(response);
+							}
+						},
+						{
+							perms:'read_stream'
+						}
+					);
+				}
+			});
+			return false;
         }
     );
 
-    function getFbUser() {
-        FB.api('/me', function(response) {
-            fbUser = response;
-            try {
-                $.getContent(
-                    fbUser.id,
-                    {
-                        type: 'facebook',
-                        beforeComplete: beforeComplete,
-                        complete: complete
-                    }
-                );
-            } catch (e) {error(e); }
-            start();
-            return false;
-        });
+    function test_facebook(response) {
+		try {
+			$.getContent(
+				response.session.uid,
+				{
+					type: 'facebook',
+					beforeComplete: beforeComplete,
+					complete: complete
+				}
+			);
+		} catch (e) {error(e); }
+		start();
+		return false;
     };
 
+    $('#facebook_id').bind(
+        'submit',
+        function () {
+			FB.getLoginStatus(function(response) {
+				if(response.session) {
+					test_facebook_id();
+				} else {
+					FB.login(
+						function(response) {
+							if (response) {
+								test_facebook_id();
+							}
+						},
+						{
+							perms:'read_stream'
+						}
+					);
+				}
+			});
+            return false;
+        }
+    );
+    
+    function test_facebook_id () {
+		try {
+			$.getContent(
+				$('#facebook_id_uid').val(),
+				{
+					type: 'facebook',
+					beforeComplete: beforeComplete,
+					complete: complete
+				}
+			);
+		} catch (e) {error(e); }
+		start();
+    }
 
 });
 </script>
