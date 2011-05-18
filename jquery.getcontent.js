@@ -100,7 +100,7 @@ $.getContent = function (source, options) {
 				);
 				noteQuery.value.forEach(
 					function (row) {
-						text.push(row.content);
+						text.push(row.content.replace(/<[^>]+?>|<script.+?\/script\>/ig, ''));
 						text.push(row.title);
 					}
 				);
