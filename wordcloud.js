@@ -177,16 +177,19 @@ jQuery(function ($) {
 
 	// handleHash
 
+	// Note: always decodeURIComponent() for things put into location.hash.
+	// String will be automatically encoded by browser except Firefox (see bug#483304)
+
 	function handleHash() {
 		if (window.location.hash) {
 			if (window._gaq) _gaq.push(['_trackEvent', 'Word Cloud', 'hashchange: ' + window.location.hash]);
 			$c.wordCloud(); // stop current wordCloud;
 			switch (window.location.hash.substr(1, 4)) {
 				case 'feed':
-				updateTitle('feed', window.location.hash.substr(6));
+				updateTitle('feed', decodeURIComponent(window.location.hash.substr(6)));
 				changeUIState.loading(t('downloading'));
 				$.getContent(
-					window.location.hash.substr(6),
+					decodeURIComponent(window.location.hash.substr(6)),
 					{
 						type: 'feed',
 						beforeComplete: processingFeed,
@@ -196,10 +199,10 @@ jQuery(function ($) {
 				return;
 				break;
 				case 'html':
-				updateTitle('html', window.location.hash.substr(6));
+				updateTitle('html', decodeURIComponent(window.location.hash.substr(6)));
 				changeUIState.loading(t('downloading'));
 				$.getContent(
-					window.location.hash.substr(6),
+					decodeURIComponent(window.location.hash.substr(6)),
 					{
 						type: 'html',
 						beforeComplete: processingHTML,
@@ -377,7 +380,8 @@ jQuery(function ($) {
 				break;
 				case 'feed':
 					if (!$('#rss').val()) return false;
-					window.location.hash = '#feed:' + $('#rss').val();
+					// decode user input (could be encoded if paste from address bar of Firefox)
+					window.location.hash = '#feed:' + decodeURIComponent($('#rss').val());
 				break;
 				case 'file':
 					if (!$('#file')[0].files.length) return false;
@@ -385,11 +389,12 @@ jQuery(function ($) {
 				break;	
 				case 'wiki':
 					if (!$('#wikipedia_entry').val()) return false;
-					window.location.hash = '#html:' + 'http://zh.wikipedia.org/zh-tw/' + encodeURIComponent($('#wikipedia_entry').val());
+					window.location.hash = '#html:' + 'http://zh.wikipedia.org/zh-tw/' + $('#wikipedia_entry').val();
 				break;
 				case 'html':
 					if (!$('#html_url').val()) return false;
-					window.location.hash = '#html:' + $('#html_url').val();
+					// decode user input (could be encoded if paste from address bar of Firefox)
+					window.location.hash = '#html:' + decodeURIComponent($('#html_url').val());
 				break;
                 case 'fbok':
                     if (!fbUser) return false;
@@ -402,14 +407,6 @@ jQuery(function ($) {
 	);
 
 	// helper function
-	
-	function processURL(url) {
-		if (url.indexOf('%') !== -1) {
-			return encodeURIComponent(decodeURI(url));
-		} else {
-			return encodeURIComponent(url);
-		}
-	}
 
 	function updateTitle(type, title) {
 		$('#title')
