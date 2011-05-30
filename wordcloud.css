@@ -177,8 +177,8 @@ a {
 .panel {
 	position: absolute;
 	top: 50%; left: 50%;
-	width: 540px; height: 400px;
-	margin-left: -270px; margin-top: -200px;
+	width: 540px; height: 450px;
+	margin-left: -270px; margin-top: -225px;
 	padding: 0;
 	border: 1px solid #ccc;
 	-webkit-border-radius: 10px;

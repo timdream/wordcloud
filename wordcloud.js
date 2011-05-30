@@ -411,7 +411,7 @@ jQuery(function ($) {
 	function updateTitle(type, title) {
 		$('#title')
 		.empty()
-		.append('<span class="famfamfam_sprite ' + {feed:'feed', html:'drive_world', file:'drive', facebook:'facebook'}[type] + '"></span>')
+		.append('<span class="famfamfam_sprite ' + {feed:'feed', html:'page_world', file:'drive', facebook:'facebook'}[type] + '"></span>')
 		.append($('<span />').text(t('title', title)));
 	}
 
