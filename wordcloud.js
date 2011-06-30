@@ -454,7 +454,7 @@ jQuery(function ($) {
 					return;
 				}
 
-				weightFactor = $c[0].offsetHeight * $c[0].offsetWidth / list[0][1] / 3500;
+				weightFactor = Math.sqrt($c[0].offsetHeight * $c[0].offsetWidth / wordfreq.analyizeVolume()) * 1;
 				gridSize = 8;
 
 				var wordLength = list.length.toString(10),
