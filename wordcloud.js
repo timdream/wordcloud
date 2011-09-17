@@ -12,6 +12,8 @@ function t(id) {
 }
 
 var FB_app_id = '';
+var googleAPIKey = '';
+var googleClientId = '';
 
 jQuery(function ($) {
 	var $c = $('#canvas'),
@@ -235,7 +237,7 @@ jQuery(function ($) {
 				break;
                 case 'face': // "facebook" XD
                 var uid = window.location.hash.substr(10);
-                if(fbUser) {
+                if (fbUser) {
                 	if (uid === fbUser.id || uid === 'me') { // TBD: accept Facebook username in hash
 				        updateTitle('facebook', 'Facebook: ' + fbUser.name);
 				        uid = fbUser.id;
@@ -257,6 +259,38 @@ jQuery(function ($) {
                 }
                 return;
                 break;
+                case 'goog': // "googleplus"
+                var userid = window.location.hash.substr(12);
+                if (userid === 'me') {
+            		if (!GO2.isLoggedIn()) {
+            			window.location.hash = '#';
+            			return;
+            		}
+                	GO2.getToken(
+                		function (token) {
+							$.getContent(
+								userid,
+								{
+									type: 'googleplus',
+									beforeComplete: processingGooglePlus,
+									complete: handleText,
+									googleOAuthKey: token
+								}
+							);
+                		}
+                	);
+                } else {
+					$.getContent(
+						userid,
+						{
+							type: 'googleplus',
+							beforeComplete: processingGooglePlus,
+                            complete: handleText,
+							googleAPIKey: googleAPIKey
+						}
+					);
+                }
+                break;
 				default:
 				window.location.hash = '#';
 				break;
@@ -272,6 +306,10 @@ jQuery(function ($) {
         cookie: true,
         xfbml: true
     });
+
+	GO2.init(
+		googleClientId
+	);
 
 	window.onhashchange = handleHash;
 	if (window.location.hash) handleHash(); // only load when hash exists
@@ -427,6 +465,10 @@ jQuery(function ($) {
 
     function processingFb(title) {
         changeUIState.loading(t('reading'));
+    };
+
+    function processingGooglePlus(title) {
+        changeUIState.loading(t('processing'));
     };
 
 	function readingFile() {
