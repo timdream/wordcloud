@@ -6,6 +6,8 @@ $.getContent = function (source, options) {
 		type: 'auto',
 		beforeComplete: $.noop,
 		complete: $.noop,
+		googleOAuthKey: '',
+		googleAPIKey: '',
 		encoding: 'UTF-8', // Text encoding
 		num: -1, // feed num
 		timeout: 25 * 1000
@@ -119,6 +121,38 @@ $.getContent = function (source, options) {
 			}
 		);
 	},
+	getGooglePlusText = function () {
+		if (source === 'me' && settings.googleOAuthKey === '') complete(''); // 'me' need key
+		var url = 'https://www.googleapis.com/plus/v1/people/' + source + '/activities/public?maxResults=100&alt=json&pp=1&callback=?';
+		if (settings.googleAPIKey) url += '&key=' + settings.googleAPIKey;
+		if (settings.googleOAuthKey) url += '&access_token=' + settings.googleOAuthKey;
+
+		$.getJSON(
+			url,
+			function (data, status) {
+				if (data.error || !data.title) {
+					complete('');
+					return;
+				}
+
+				beforeComplete(data.title);
+				var text = [];
+				data.items.forEach(
+					function (item) {
+						text.push(item.object.content.replace(/<[^>]+?>|\(.+?\.\.\.\)|\&\w+\;|<script.+?\/script\>/ig, ''));
+					}
+				);
+
+				text = text.join('\n');
+				setTimeout(
+					function () {
+						complete(text);
+					},
+					0
+				);
+			}
+		);
+	},
 	parseYQLElementObject = function (text, obj) {
 		// TBD, properly exclude script
 		for (var key in obj) if (obj.hasOwnProperty(key)) {
@@ -204,6 +238,9 @@ $.getContent = function (source, options) {
 		break;
         case 'facebook':
         return getFbText();
+        break;
+        case 'googleplus':
+        return getGooglePlusText(); 
         break;
         default:
         complete('');
