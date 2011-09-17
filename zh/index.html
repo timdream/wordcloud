@@ -76,6 +76,7 @@
 		<label><input type="radio" name="source" value="blog:plurk"/> 噗浪</label>
 		<label><input type="radio" name="source" value="blog:twitter"/> Twitter</label>
 		<label><input type="radio" name="source" value="fbok"/> Facebook</label>
+		<label><input type="radio" name="source" value="goog"/> Google+</label>
 	</p>
 	<hr />
 	<div id="demo_entry" class="entry">
@@ -113,6 +114,10 @@
 	</div>
     <div id="fbok_entry" class="entry">
         <p>讀取中…</p>
+    </div>
+    <div id="goog_entry" class="entry">
+		<p><label><input type="radio" name="goog_type" id="goog_type_me" checked="checked" /> 我的文章</label></p>
+		<p><input type="radio" name="goog_type" id="goog_type_userid" /> <label>個人頁面網址：<input type="url" size="30" id="goog_url" /></label></p>
     </div>
 	<button type="submit" id="source_panel_finish">開始</button>
 	</form>

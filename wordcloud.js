@@ -374,7 +374,14 @@ jQuery(function ($) {
 		'click',
 		changeSource
 	);
-	
+
+	$('#goog_url').bind(
+		'click',
+		function () {
+			$('#goog_type_userid').attr('checked', true);
+		}
+	);
+
 	// Do this manually for Mobile Safari as a workaround
 	$s.parent('label').bind(
 		'click',
@@ -439,6 +446,26 @@ jQuery(function ($) {
                     window.location.hash = '#facebook:me';
 					//window.location.hash = '#facebook:' + fbUser.id; // hide the feature for now
                 break;
+				case 'goog':
+					if ($('#goog_type_me')[0].checked) {
+						if (GO2.isLoggedIn()) {
+							window.location.hash = '#googleplus:me';
+						} else {
+							GO2.getToken(
+								function (token) {
+									window.location.hash = '#googleplus:me';
+								}
+							);
+						}
+					} else if (
+						$('#goog_type_userid')[0].checked
+						&& /^https?:\/\/plus\.google\.com\/\d+/i.test($('#goog_url').val())
+					) {
+						window.location.hash = '#googleplus:'
+						+ $.trim($('#goog_url').val()).replace(/^https?:\/\/plus\.google\.com\/(\d+).*$/i, '$1');
+					}
+	                return false;
+	            break;
 			}
 			return false;
 		}

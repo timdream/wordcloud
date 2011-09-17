@@ -73,6 +73,7 @@
 		<label><input type="radio" name="source" value="blog:blogger" /> Blogger</label>
 		<label><input type="radio" name="source" value="blog:twitter"/> Twitter</label>
         <label><input type="radio" name="source" value="fbok"/> Facebook</label>
+		<label><input type="radio" name="source" value="goog"/> Google+</label>
 	</p>
 	<hr />
 	<div id="demo_entry" class="entry">
@@ -109,6 +110,10 @@
 	</div>
     <div id="fbok_entry" class="entry">
         <p>Loading...</p>
+    </div>
+    <div id="goog_entry" class="entry">
+		<p><label><input type="radio" name="goog_type" id="goog_type_me" checked="checked" /> My Posts</label></p>
+		<p><input type="radio" name="goog_type" id="goog_type_userid" /> <label>Profile URL:<input type="url" size="30" id="goog_url" /></label></p>
     </div>
 	<button type="submit" id="source_panel_finish">Start</button>
 	</form>
