@@ -268,6 +268,8 @@ jQuery(function ($) {
             		}
                 	GO2.getToken(
                 		function (token) {
+							updateTitle('googleplus', 'Google+');
+							changeUIState.loading(t('downloading'));
 							$.getContent(
 								userid,
 								{
@@ -280,6 +282,8 @@ jQuery(function ($) {
                 		}
                 	);
                 } else {
+					updateTitle('googleplus', 'Google+ ID#' + userid);
+					changeUIState.loading(t('downloading'));
 					$.getContent(
 						userid,
 						{
@@ -476,7 +480,7 @@ jQuery(function ($) {
 	function updateTitle(type, title) {
 		$('#title')
 		.empty()
-		.append('<span class="famfamfam_sprite ' + {feed:'feed', html:'page_world', file:'drive', facebook:'facebook'}[type] + '"></span>')
+		.append('<span class="famfamfam_sprite ' + {feed:'feed', html:'page_world', file:'drive', facebook:'facebook', googleplus:'googleplus'}[type] + '"></span>')
 		.append($('<span />').text(t('title', title)));
 	}
 
@@ -495,6 +499,7 @@ jQuery(function ($) {
     };
 
     function processingGooglePlus(title) {
+		if (title) updateTitle('googleplus', title);
         changeUIState.loading(t('processing'));
     };
 
