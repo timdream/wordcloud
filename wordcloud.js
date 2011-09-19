@@ -452,15 +452,25 @@ jQuery(function ($) {
                 break;
 				case 'goog':
 					if ($('#goog_type_me')[0].checked) {
-						if (GO2.isLoggedIn()) {
-							window.location.hash = '#googleplus:me';
-						} else {
-							GO2.getToken(
-								function (token) {
-									window.location.hash = '#googleplus:me';
-								}
-							);
-						}
+						GO2.getToken(
+							function (token) {
+								// attempt to get user id into hash
+								var url = 'https://www.googleapis.com/plus/v1/people/me?pp=1&callback=?';
+								url += '&access_token=' + encodeURIComponent(token);
+								if (googleAPIKey) url += '&key=' + encodeURIComponent(googleAPIKey);
+
+								$.getJSON(
+									url,
+									function (data, status) {
+										if (data.error || !data.id) {
+											window.location.hash = '#googleplus:me';
+											return;
+										}
+										window.location.hash = '#googleplus:' + data.id;
+									}
+								);
+							}
+						);
 					} else if (
 						$('#goog_type_userid')[0].checked
 						&& /^https?:\/\/plus\.google\.com\/\d+/i.test($('#goog_url').val())
