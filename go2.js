@@ -6,7 +6,7 @@
 (function (w) {
 
 	if (window.opener && window.opener.GO2) {
-		if (window.location.hash.indexOf('access_token')) {
+		if (window.location.hash.indexOf('access_token') !== -1) {
 			window.opener.GO2.receiveToken(
 				window.location.hash.replace(/^.*access_token=([^&]+).*$/, '$1'),
 				parseInt(window.location.hash.replace(/^.*expires_in=([^&]+).*$/, '$1'))
@@ -22,7 +22,7 @@
 
 	var client_id,
 	scope = 'https://www.googleapis.com/auth/plus.me',
-	redirect_uri = window.location.href.substr(0, window.location.href.length - window.location.hash.length),
+	redirect_uri = window.location.href.substr(0, window.location.href.length - window.location.hash.length).replace(/#$/, ''),
 	access_token,
 	callbackWaitForToken;
 
@@ -64,10 +64,10 @@
 				callbackWaitForToken = callback;
 				window.open(
 					'https://accounts.google.com/o/oauth2/auth'
-					+ '?client_id=' + client_id
-					+ '&redirect_uri=' + redirect_uri
-					+ '&scope=' + scope
-					+ '&response_type=token',
+					+ '?response_type=token'
+					+ '&redirect_uri=' + encodeURIComponent(redirect_uri)
+					+ '&scope=' + encodeURIComponent(scope)
+					+ '&client_id=' + encodeURIComponent(client_id),
 					'Google OAuth 2.0 Login window',
 					'width=400,height=360'
 				);
