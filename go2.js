@@ -5,19 +5,24 @@
 
 (function (w) {
 
-	if (window.opener && window.opener.GO2) {
-		if (window.location.hash.indexOf('access_token') !== -1) {
-			window.opener.GO2.receiveToken(
-				window.location.hash.replace(/^.*access_token=([^&]+).*$/, '$1'),
-				parseInt(window.location.hash.replace(/^.*expires_in=([^&]+).*$/, '$1'))
-			);		
-			window.close();
-		}
+	var windowName = 'google_oauth2_login_popup';
 
-		if (window.location.search.indexOf('error=')) {
-			window.opener.GO2.receiveToken('ERROR');
-			window.close();
+	if (window.name === windowName) {
+		if (
+			window.opener &&
+			window.opener.GO2
+		) {
+			if (window.location.hash.indexOf('access_token') !== -1) {
+				window.opener.GO2.receiveToken(
+					window.location.hash.replace(/^.*access_token=([^&]+).*$/, '$1'),
+					parseInt(window.location.hash.replace(/^.*expires_in=([^&]+).*$/, '$1'))
+				);
+			}
+			if (window.location.search.indexOf('error=')) {
+				window.opener.GO2.receiveToken('ERROR');
+			}
 		}
+		window.close();
 	}
 
 	var client_id,
@@ -68,7 +73,7 @@
 					+ '&redirect_uri=' + encodeURIComponent(redirect_uri)
 					+ '&scope=' + encodeURIComponent(scope)
 					+ '&client_id=' + encodeURIComponent(client_id),
-					'Google OAuth 2.0 Login window',
+					windowName,
 					'width=400,height=360'
 				);
 			} else {
