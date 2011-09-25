@@ -1,5 +1,22 @@
-// Simple Google API OAuth 2.0 Client flow lib
-// Get access token and pass to callback
+/* Simple Google API OAuth 2.0 Client flow library
+
+  Author: timdream
+
+  Usage:
+  GO2.init(client_id, scope, redirect_uri)
+    Initialize the library. 
+    redirect_uri is optional, should be any page on the current domain with this library.
+    Default to the current page (window.location.href).
+    This function should be put before Analytics so that the second click won't result a page view register.
+  GO2.getToken(callback)
+    Send access token to the callback function as the first argument.
+    If not logged in this triggers login popup and execute login after logged in.
+    Be sure to call this function in user-triggered event (such as click) to prevent popup blocker.
+    If not sure do use isLoggedIn() below to check first.
+  GO2.isLoggedIn()
+    boolean
+
+*/
 
 "use strict";
 
