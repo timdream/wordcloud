@@ -529,36 +529,43 @@ jQuery(function ($) {
 		wordfreq.processText(
 			text,
 			function () {
-				changeUIState.ready();
+				wordfreq.getSortedList(
+					function (l) {
+						if (l.length < 5) {
+							changeUIState.error(t('errorWordCount'));
+							return;
+						}
 
-				list = wordfreq.getSortedList();
+						list = l;
+						wordfreq.analyizeVolume(
+							function (volume) {
+								changeUIState.ready();
 
-				if (list.length < 5) {
-					changeUIState.error(t('errorWordCount'));
-					return;
-				}
+								weightFactor = Math.sqrt($c[0].offsetHeight * $c[0].offsetWidth / volume) * 1;
+								gridSize = 8;
 
-				weightFactor = Math.sqrt($c[0].offsetHeight * $c[0].offsetWidth / wordfreq.analyizeVolume()) * 1;
-				gridSize = 8;
+								var wordLength = list.length.toString(10),
+								maxCount = list[0][1].toString(10);
 
-				var wordLength = list.length.toString(10),
-				maxCount = list[0][1].toString(10);
+								$c.wordCloud({
+									wordColor: theme[themeid].wordColor,
+									backgroundColor: theme[themeid].backgroundColor,
+									fontFamily: theme[themeid].fontFamily,
+									rotateRatio: 0,
+									wordList: [
+										[t('readyList_1', wordLength, maxCount), t('readyList_1C')],
+										[t('readyList_2', wordLength, maxCount), t('readyList_2C')],
+										[t('readyList_3', wordLength, maxCount), t('readyList_3C')],
+										[t('readyList_4', wordLength, maxCount), t('readyList_4C')]
+									]//,
+									//abortThreshold: 200,
+									//abort: changeUIState.too_slow
+								});
+							}
+						);
+					}
+				);
 
-
-				$c.wordCloud({
-					wordColor: theme[themeid].wordColor,
-					backgroundColor: theme[themeid].backgroundColor,
-					fontFamily: theme[themeid].fontFamily,
-					rotateRatio: 0,
-					wordList: [
-						[t('readyList_1', wordLength, maxCount), t('readyList_1C')],
-						[t('readyList_2', wordLength, maxCount), t('readyList_2C')],
-						[t('readyList_3', wordLength, maxCount), t('readyList_3C')],
-						[t('readyList_4', wordLength, maxCount), t('readyList_4C')]
-					]//,
-					//abortThreshold: 200,
-					//abort: changeUIState.too_slow
-				});
 			}
 		);
 	};

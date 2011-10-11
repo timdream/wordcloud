@@ -175,7 +175,7 @@ jQuery(function ($) {
 		'submit',
 		function () {
 			try {
-				done(wordfreq.empty());
+				wordfreq.empty(done);
 			} catch (e) { error(e); }
 			return false;
 		}
@@ -184,7 +184,7 @@ jQuery(function ($) {
 		'submit',
 		function () {
 			try {
-				done(wordfreq.getList());
+				wordfreq.getList(done);
 			} catch (e) { error(e); }
 			return false;
 		}
@@ -193,7 +193,7 @@ jQuery(function ($) {
 		'submit',
 		function () {
 			try {
-				done(wordfreq.getSortedList());
+				wordfreq.getSortedList(done);
 			} catch (e) { error(e); }
 			return false;
 		}

@@ -33,93 +33,168 @@ var cjkStopWords = [
 	'\u308c\u3089' //rera
 ];
 
-// Use keyword self to explicitly reference to the global object, as a workaround to Chrome 11
-// See https://code.google.com/p/chromium/issues/detail?id=81371
-self.onmessage = function (ev) {
-	var words = {},
-	reps = {},
-	settings = ev.data.settings,
-	text = ev.data.text;
 
-	function handleWord (word, rep) {
-		if (typeof words[word] !== 'number') words[word] = 1;
-		else words[word]++;
-		if (rep) {
-			if (typeof reps[word] !== 'object') reps[word] = {};
-			if (typeof reps[word][rep] !== 'number') reps[word][rep] = 1;
-			else reps[word][rep]++;
+var pool = {
+	words: {},
+	reps: {}
+},
+settings = {},
+getList = function () {
+	var list = [];
+	for (var word in pool.words) {
+		if (pool.words[word] < settings.mincount) continue;
+		var maxRep;
+		if (typeof pool.reps[word] === 'object') {
+			var c = 0;
+			for (var rep in pool.reps[word]) {
+				if (typeof pool.reps[word][rep] === 'number' && pool.reps[word][rep] > c) {
+					maxRep = rep;
+					c = pool.reps[word][rep];
+				}
+			}
 		}
+		list.push([maxRep || word, pool.words[word]]);
+		maxRep = false;
 	}
-
-	function processCJK (text) {
-		if (settings.de_commword) {
-			cjkStopWords.forEach(
-				function (w) {
-					text = text.replace(new RegExp(w, 'g'), '$1\n');
+	return list;
+},
+tasks = {
+	init: function (ev) {
+		settings = ev.data.settings;
+	},
+	processText : function (ev) {
+		var words = {},
+		reps = {},
+		text = ev.data.text;
+	
+		function handleWord (word, rep) {
+			if (typeof words[word] !== 'number') words[word] = 1;
+			else words[word]++;
+			if (rep) {
+				if (typeof reps[word] !== 'object') reps[word] = {};
+				if (typeof reps[word][rep] !== 'number') reps[word][rep] = 1;
+				else reps[word][rep]++;
+			}
+		}
+	
+		function processCJK (text) {
+			if (settings.de_commword) {
+				cjkStopWords.forEach(
+					function (w) {
+						text = text.replace(new RegExp(w, 'g'), '$1\n');
+					}
+				);
+			}
+		
+			// TBD: Cannot match CJK characters beyond BMP, e.g. \u20000-\u2A6DF at plane B.
+			// Han: \u4E00-\u9FFF\u3400-\u4DBF
+			// Kana: \u3041-\u309f\u30a0-\u30ff
+			text = text.replace(/[^\u4E00-\u9FFF\u3400-\u4DBF\u3041-\u309f\u30a0-\u30ff]+/gm, '\n');
+		
+			var reg = /./g,
+			reuni = /^.$/,
+			rebi = /^.{2}$/,
+			re3 = /^.{3}$/,
+			re4 = /^.{4}$/,
+			re5 = /^.{5}$/;
+		
+			text.replace(
+				reg,
+				function (str, offset, text) {
+					if (settings.unigram) handleWord(str);
+					if (settings.bigram && reuni.test(text[offset+1])) handleWord(str + text[offset+1]);
+					if (settings.trigram && rebi.test(text.substr(offset+1, 2))) handleWord(str + text.substr(offset+1, 2));
+					if (settings.four_gram && re3.test(text.substr(offset+1, 3))) handleWord(str + text.substr(offset+1, 3));
+					if (settings.five_gram && re4.test(text.substr(offset+1, 4))) handleWord(str + text.substr(offset+1, 4));
+					if (settings.six_gram && re5.test(text.substr(offset+1, 5))) handleWord(str + text.substr(offset+1, 5));
+				}
+			);
+		
+			if (settings.de_repetition) {
+				// Not doing hasOwnProperty() coz this is a standalone worker js
+				for (var word in words) /* if (words.hasOwnProperty(word)) */ {
+					if (word.length === 1) return;
+					var l = word.length-1;
+					while (l) {
+						var i = word.length-l;
+						while (i >= 0) {
+							var substr = word.substr(i, l);
+							if (words[substr] && words[substr] === words[word]) words[substr] = -1; 
+							i--;
+						}
+						l--;
+					}
+				}
+			}
+		}
+		
+		function processEnglish(text) {
+			text
+			.replace(/[^A-Za-zéÉ'’_\-0-9@\.]+/gm, '\n')
+			.replace(/^([^\.]+)\.$/gm, '$1')
+			.replace(/[\'\u2019](s|ll|d)?$/gm, '')
+			.split('\n').forEach(
+				function (word) {
+					if (!word) return;
+					if (/^[0-9\.@\-]+$/.test(word)) return;
+					if (word.length < 2) return;
+					if (settings.de_commword && englishStopWords.indexOf(word.toLowerCase()) !== -1) return;
+					handleWord(stemmer(word).toLowerCase(), word);
 				}
 			);
 		}
-	
-		// TBD: Cannot match CJK characters beyond BMP, e.g. \u20000-\u2A6DF at plane B.
-		// Han: \u4E00-\u9FFF\u3400-\u4DBF
-		// Kana: \u3041-\u309f\u30a0-\u30ff
-		text = text.replace(/[^\u4E00-\u9FFF\u3400-\u4DBF\u3041-\u309f\u30a0-\u30ff]+/gm, '\n');
-	
-		var reg = /./g,
-		reuni = /^.$/,
-		rebi = /^.{2}$/,
-		re3 = /^.{3}$/,
-		re4 = /^.{4}$/,
-		re5 = /^.{5}$/;
-	
-		text.replace(
-			reg,
-			function (str, offset, text) {
-				if (settings.unigram) handleWord(str);
-				if (settings.bigram && reuni.test(text[offset+1])) handleWord(str + text[offset+1]);
-				if (settings.trigram && rebi.test(text.substr(offset+1, 2))) handleWord(str + text.substr(offset+1, 2));
-				if (settings.four_gram && re3.test(text.substr(offset+1, 3))) handleWord(str + text.substr(offset+1, 3));
-				if (settings.five_gram && re4.test(text.substr(offset+1, 4))) handleWord(str + text.substr(offset+1, 4));
-				if (settings.six_gram && re5.test(text.substr(offset+1, 5))) handleWord(str + text.substr(offset+1, 5));
-			}
-		);
-	
-		if (settings.de_repetition) {
-			// Not doing hasOwnProperty() coz this is a standalone worker js
-			for (var word in words) /* if (words.hasOwnProperty(word)) */ {
-				if (word.length === 1) return;
-				var l = word.length-1;
-				while (l) {
-					var i = word.length-l;
-					while (i >= 0) {
-						var substr = word.substr(i, l);
-						if (words[substr] && words[substr] === words[word]) words[substr] = -1; 
-						i--;
-					}
-					l--;
-				}
-			}
-		}
-	}
-	
-	function processEnglish(text) {
-		text
-		.replace(/[^A-Za-zéÉ'’_\-0-9@\.]+/gm, '\n')
-		.replace(/^([^\.]+)\.$/gm, '$1')
-		.replace(/[\'\u2019](s|ll|d)?$/gm, '')
-		.split('\n').forEach(
-			function (word) {
-				if (!word) return;
-				if (/^[0-9\.@\-]+$/.test(word)) return;
-				if (word.length < 2) return;
-				if (settings.de_commword && englishStopWords.indexOf(word.toLowerCase()) !== -1) return;
-				handleWord(stemmer(word).toLowerCase(), word);
-			}
-		);
-	}
-	
-	if (settings.processCJK) processCJK(text);
-	if (settings.processEnglish) processEnglish(text);
+		
+		if (settings.processCJK) processCJK(text);
+		if (settings.processEnglish) processEnglish(text);
 
-	send({words:words, reps:reps});
+		for (var word in words)  {
+			if (typeof pool.words[word] !== 'number') pool.words[word] = words[word];
+			else pool.words[word] += words[word];
+			if (reps[word]) {
+				if (!pool.reps[word]) pool.reps[word] = reps[word];
+				// else TBD
+			}
+		};
+		send({returnData: pool.words, callbackId: ev.data.callbackId});
+	},
+	empty: function (ev) {
+		pool.words = {};
+		pool.reps = {};
+		send({returnData: pool.words, callbackId: ev.data.callbackId});
+	},
+	getList: function (ev) {
+		send({returnData: getList(), callbackId: ev.data.callbackId});
+	},
+	getSortedList: function (ev) {
+		send(
+			{
+				returnData: getList().sort(
+					function (a, b) {
+						if (a[1] > b[1]) return -1;
+						if (a[1] < b[1]) return 1;
+						var t = [a[0], b[0]];
+						t = t.sort();
+						if (t[0] !== a[0]) return 1;
+						return 0;
+					}
+				),
+				callbackId: ev.data.callbackId
+			}
+		);
+	},
+	analyizeVolume: function (ev) {
+		var v = 0;
+
+		for (var word in pool.words) {
+			if (pool.words[word] < settings.mincount) continue;
+			v += word.length*pool.words[word]*pool.words[word];
+		}
+		send({returnData: v, callbackId: ev.data.callbackId});
+	}
+};
+
+// Use keyword self to explicitly reference to the global object, as a workaround to Chrome 11
+// See https://code.google.com/p/chromium/issues/detail?id=81371
+self.onmessage = function (ev) {
+	tasks[ev.data.task].call(this, ev);
 };
