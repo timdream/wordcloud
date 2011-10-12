@@ -137,6 +137,7 @@ jQuery(function ($) {
 			resetCanvasSize();
 			$('#title').show();
 			$('#controls').show();
+			$('#interactive').show();
 			$c.show();
 			setTimeout(
 				function () {
@@ -352,7 +353,84 @@ jQuery(function ($) {
 			$('#help_panel').hide();
 		}
 	);
+
+	// sharer
 	
+	$('#interactive .facebook').bind(
+		'click',
+		function (ev) {
+			ev.preventDefault();
+			FB.login( // call login no matter connected or not, make sure we logged in.
+				function(response) {
+					if (response.session) {
+						FB.ui(
+							{
+								method: 'feed',
+								link: window.location.href,
+								//picture: '',  $c[0].toDataURL(), // won't work, always defaults to og image
+								name: $('#title').text(),
+								caption: document.title,
+								description: (function () {
+									var i = 0, s = [], n = 20;
+									do {
+										s[i] = list[i][0];
+									} while (++i < n);
+
+									return T.listHeading + s.slice(0,n).join(T.listComma) + ((list.length > n)?T.listEllipsis:'')
+								}())
+							},
+							$.noop
+						);
+					}
+				}
+			);
+		}
+	);
+	
+	$('#interactive .twitter').bind(
+		'click',
+		function (ev) {
+			ev.preventDefault();
+			window.open(
+				'https://twitter.com/home/?status='
+				+ encodeURIComponent(
+					window.location.href + ' '
+					+ $('#title').text() + ' '
+					+ (function () {
+						var i = 0, s = [], n = 10;
+						do {
+							s[i] = list[i][0];
+						} while (++i < n);
+
+						return T.listHeading + s.slice(0,n).join(T.listComma) + ((list.length > n)?T.listEllipsis:'')
+					}())
+					+ ' #HTML5WordCloud'
+				)
+			);
+		}
+	);
+
+	$('#interactive .plurk').bind(
+		'click',
+		function (ev) {
+			ev.preventDefault();
+			window.open(
+				'http://plurk.com/?status='
+				+ encodeURIComponent(
+					window.location.href
+					+ ' ('+ $('#title').text() + ') '
+					+ (function () {
+						var i = 0, s = [], n = 10;
+						do {
+							s[i] = list[i][0];
+						} while (++i < n);
+
+						return T.listHeading + s.slice(0,n).join(T.listComma) + ((list.length > n)?T.listEllipsis:'')
+					}())
+				)
+			);
+		}
+	);
 	// interaction within source panel
 	
 	var $s = $('input[name=source]');
