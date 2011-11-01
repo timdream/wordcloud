@@ -304,12 +304,14 @@ jQuery(function ($) {
 		}
 	}
 
-    FB.init({
-        appId : FB_app_id,
-        status: true,
-        cookie: true,
-        xfbml: true
-    });
+	if (FB) {
+		FB.init({
+			appId : FB_app_id,
+			status: true,
+			cookie: true,
+			xfbml: true
+		});
+	}
 
 	GO2.init(
 		googleClientId
@@ -362,7 +364,7 @@ jQuery(function ($) {
 		$('#' + type + '_entry').show();
 		$('.feed_type_name').text($(this).parent('label').text());
 
-        if (type == "fbok") {
+        if (type === "fbok" && FB) {
             FB.getLoginStatus(function(response) {
                 if (response.session) {
                     getFbUser();
