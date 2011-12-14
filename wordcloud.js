@@ -307,6 +307,7 @@ jQuery(function ($) {
 
 	if (FB) {
 		FB.init({
+		  oauth: true,
 			appId : FB_app_id,
 			status: true,
 			cookie: true,
@@ -355,14 +356,14 @@ jQuery(function ($) {
 	);
 
 	// sharer
-	
+
 	$('#interactive .facebook').bind(
 		'click',
 		function (ev) {
 			ev.preventDefault();
 			FB.login( // call login no matter connected or not, make sure we logged in.
 				function(response) {
-					if (response.session) {
+					if (response.authResponse) {
 						FB.ui(
 							{
 								method: 'feed',
@@ -444,7 +445,7 @@ jQuery(function ($) {
 
         if (type === "fbok" && FB) {
             FB.getLoginStatus(function(response) {
-                if (response.session) {
+                if (response.authResponse) {
                     getFbUser();
                 }
                 else {
@@ -515,7 +516,7 @@ jQuery(function ($) {
 				case 'file':
 					if (!$('#file')[0].files.length) return false;
 					window.location.hash = '#file';
-				break;	
+				break;
 				case 'wiki':
 					if (!$('#wikipedia_entry').val()) return false;
 					window.location.hash = '#html:' + 'http://zh.wikipedia.org/zh-tw/' + $('#wikipedia_entry').val();
@@ -663,12 +664,12 @@ jQuery(function ($) {
         $('#fbok_entry').html("<p>" + t('fbNeedLogin') + "</p>");
         $('#fb_login').click(function(event) {
             FB.login(function(response) {
-                if (response.session) {
+                if (response.authResponse) {
                     getFbUser();
                 }
                 else {
                 }
-            }, {perms:'read_stream'});
+            }, {scope:'read_stream'});
         });
     };
 

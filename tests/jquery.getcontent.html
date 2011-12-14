@@ -107,6 +107,7 @@ jQuery(function ($) {
 	}
 
     FB.init({
+        oauth: true,
         appId : FB_app_id,
         status: true,
         cookie: true,
@@ -210,7 +211,7 @@ jQuery(function ($) {
         'submit',
 		function () {
 			FB.getLoginStatus(function(response) {
-				if(response.session) {
+				if(response.authResponse) {
 					test_facebook(response);
 				} else {
 					FB.login(
@@ -220,7 +221,7 @@ jQuery(function ($) {
 							}
 						},
 						{
-							perms:'read_stream'
+							scope:'read_stream'
 						}
 					);
 				}
@@ -232,14 +233,14 @@ jQuery(function ($) {
     function test_facebook(response) {
 		try {
 			$.getContent(
-				response.session.uid,
+				response.authResponse.userID,
 				{
 					type: 'facebook',
 					beforeComplete: beforeComplete,
 					complete: complete
 				}
 			);
-		} catch (e) {error(e); }
+		} catch (e) {error(e); return;}
 		start();
 		return false;
     };
@@ -248,17 +249,17 @@ jQuery(function ($) {
         'submit',
         function () {
 			FB.getLoginStatus(function(response) {
-				if(response.session) {
+				if(response.authResponse) {
 					test_facebook_id();
 				} else {
 					FB.login(
 						function(response) {
-							if (response) {
+							if (response.authResponse) {
 								test_facebook_id();
 							}
 						},
 						{
-							perms:'read_stream'
+							scope:'read_stream'
 						}
 					);
 				}
