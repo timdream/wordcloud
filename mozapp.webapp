@@ -3,8 +3,8 @@
   "name": "HTML5 Word Cloud",
   "description": "An HTML5 information visualization toy that fetches textual contents from APIs, retrieves words and terms, and paints.",
   "icons": {
-    "48": "/mozapp/icon-48.png",
-    "128": "/mozapp/icon-128.png"
+    "48": "/wordcloud/mozapp/icon-48.png",
+    "128": "/wordcloud/mozapp/icon-128.png"
   },
   "developer": {
     "name": "timdream",
