@@ -10,6 +10,7 @@
     "name": "timdream",
     "url": "http://timc.idv.tw/"
   },
+  "launch_path": "/wordcloud/",
   "installs_allowed_from": [
     "*"
   ],
