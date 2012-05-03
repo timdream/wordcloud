@@ -58,7 +58,7 @@ jQuery(function ($) {
 	function resetCanvasSize() {
 		var width = document.body.offsetWidth,
 		height = document.body.offsetHeight;
-		
+
 		$c.attr(
 			{
 				height: height,
@@ -86,7 +86,7 @@ jQuery(function ($) {
 		$('#not_support').show();
 		return;
 	}
-	
+
 	if (!$.getContent.fileSupported) {
 		$('input[name="source"][value="file"]').parent('label').hide();
 	}
@@ -332,14 +332,14 @@ jQuery(function ($) {
 			changeUIState.source();
 		}
 	);
-	
+
 	$('.ready').bind(
 		'click',
 		changeUIState.draw
 	);
-	
+
 	// Help/about panel
-	
+
 	$('.help').bind(
 		'click',
 		function () {
@@ -347,7 +347,7 @@ jQuery(function ($) {
 			return false;
 		}
 	);
-	
+
 	$('#help_panel button').bind(
 		'click',
 		function () {
@@ -387,7 +387,7 @@ jQuery(function ($) {
 			);
 		}
 	);
-	
+
 	$('#interactive .twitter').bind(
 		'click',
 		function (ev) {
@@ -449,9 +449,9 @@ jQuery(function ($) {
   }
 
 	// interaction within source panel
-	
+
 	var $s = $('input[name=source]');
-	
+
 	function changeSource() {
 		var type = this.value.substr(0,4);
 		$('.entry').hide();
@@ -470,7 +470,7 @@ jQuery(function ($) {
             });
         }
 	};
-	
+
 	$s.bind(
 		'click',
 		changeSource
@@ -493,7 +493,7 @@ jQuery(function ($) {
 			return false;
 		}
 	);
-	
+
 	$('#source_panel_form').bind(
 		'submit',
 		function () {
@@ -701,7 +701,7 @@ jQuery(function ($) {
 		}
 	);
 
-	
+
 	$('.larger').bind(
 		'click',
 		function () {
@@ -730,7 +730,7 @@ jQuery(function ($) {
 			return false;
 		}
 	);
-	
+
 	$('.thicker').bind(
 		'click',
 		function () {
@@ -739,7 +739,7 @@ jQuery(function ($) {
 			return false;
 		}
 	);
-	
+
 	$('.save').bind(
 		'click',
 		function () {
