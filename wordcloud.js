@@ -432,6 +432,22 @@ jQuery(function ($) {
 			);
 		}
 	);
+
+	if (!navigator.mozApps || !navigator.mozApps.getInstalled) {
+	  $('#interactive .mozapp').parent().hide();
+	} else {
+    $('#interactive .mozapp').bind(
+      'click',
+      function (ev) {
+        ev.preventDefault();
+        // XXX: must be an absolute URL
+        var url = window.location.href.replace(/#.*$/, '') + '../mozapp.webapp';
+        var req = navigator.mozApps.install(url);
+        //req.onsuccess =
+      }
+    );
+  }
+
 	// interaction within source panel
 	
 	var $s = $('input[name=source]');
