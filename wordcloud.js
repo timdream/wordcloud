@@ -535,7 +535,16 @@ jQuery(function ($) {
 				break;
 				case 'wiki':
 					if (!$('#wikipedia_entry').val()) return false;
-					window.location.hash = '#html:' + 'http://zh.wikipedia.org/zh-tw/' + $('#wikipedia_entry').val();
+					var lang = $('html').attr('lang');
+					switch (lang) {
+						case 'en':
+							window.location.hash = '#html:' + 'http://en.wikipedia.org/wiki/' + $('#wikipedia_entry').val();
+							break;
+
+						default:
+							window.location.hash = '#html:' + 'http://zh.wikipedia.org/zh-tw/' + $('#wikipedia_entry').val();
+							break;
+					}
 				break;
 				case 'html':
 					if (!$('#html_url').val()) return false;
