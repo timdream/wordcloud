@@ -1,3 +1,6 @@
+**Note**: This project is in the process being split into multiple git library projects, one being [wordcloud2.js](https://github.com/timdream/wordcloud2.js) and the other being [wordfreq](https://github.com/timdream/wordfreq). 
+The application will be written once the work on the libararies completes.
+
 HTML5 Word Cloud
 ================
 
