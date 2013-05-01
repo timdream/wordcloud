@@ -1,0 +1,9 @@
+[submodule "assets/wordfreq"]
+	path = assets/wordfreq
+	url = git://github.com/timdream/wordfreq.git
+[submodule "assets/wordcloud2.js"]
+	path = assets/wordcloud2.js
+	url = git://github.com/timdream/wordcloud2.js.git
+[submodule "assets/go2"]
+	path = assets/go2
+	url = git://github.com/timdream/google-oauth2-web-client.git
