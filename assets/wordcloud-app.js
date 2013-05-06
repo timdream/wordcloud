@@ -5,6 +5,7 @@ var WordCloudApp = function WordCloudApp() {
   if (!WordFreq.isSupported ||
       !WordCloud.isSupported ||
       !Object.keys ||
+      !Array.prototype.map ||
       !Array.prototype.forEach ||
       !Array.prototype.indexOf ||
       !Function.prototype.bind ||
@@ -244,7 +245,7 @@ WordCloudApp.prototype.route = function wca_route() {
     this.views.loading.updateLabel(
       this.fetchers[dataType].LABEL_VERB);
     this.currentFetcher = this.fetchers[dataType];
-    this.fetchers[dataType].getData(data);
+    this.fetchers[dataType].getData(dataType, data);
   } else {
     // Can't handle such data. Reset the URL hash.
     this.reset();
@@ -553,7 +554,7 @@ DashboardView.prototype.handleEvent = function dv_handleEvent(evt) {
       break;
 
     case 'edit':
-      // XXX: to be implemented
+      app.switchUIState(app.UI_STATE_LIST_DIALOG);
       break;
 
     case 'size+':
@@ -601,6 +602,52 @@ DashboardView.prototype.handleEvent = function dv_handleEvent(evt) {
     case 'twitter':
       // XXX: to be implemented
       break;
+  }
+};
+
+var ListDialogView = function ListDialogView(opts) {
+  this.load(opts, {
+    name: 'list-dialog',
+    element: 'wc-list-dialog',
+    textElement: 'wc-list-edit',
+    doneBtnElement: 'wc-list-done-btn'
+  });
+
+  this.doneBtnElement.addEventListener('click', this);
+};
+ListDialogView.prototype = new View();
+ListDialogView.prototype.beforeShow = function ldv_beforeShow() {
+  this.textElement.value = this.app.data.list.map(function mapItem(item) {
+    return item[1] + '\t' + item[0];
+  }).join('\n');
+};
+ListDialogView.prototype.afterShow = function ldv_afterShow() {
+  this.textElement.focus();
+};
+ListDialogView.prototype.afterHide = function ldv_afterHide() {
+  this.textElement.value = '';
+};
+ListDialogView.prototype.handleEvent = function ldv_handleEvent(evt) {
+  this.submit();
+};
+ListDialogView.prototype.submit = function ldv_submit() {
+  var el = this.textElement;
+  var hash;
+  if (window.btoa) {
+    // Protect the encoded string with base64 to workaround Safari bug,
+    // which improve sharability of the URL.
+    hash = '#base64-list:' +
+      window.btoa(unescape(encodeURIComponent(el.value)));
+  } else {
+    hash = '#list:' + encodeURIComponent(el.value);
+  }
+
+  if (hash !== window.location.hash) {
+    this.app.pushUrlHash(hash);
+  } else {
+    // It's useless to push the same hash here;
+    // Let's close ourselves.
+    this.app.switchUIState(this.app.UI_STATE_DASHBOARD);
   }
 };
 
@@ -713,7 +760,7 @@ TextFetcher.prototype = new Fetcher();
 TextFetcher.prototype.stop = function tf_stop() {
   clearTimeout(this.timer);
 };
-TextFetcher.prototype.getData = function tf_getData(data) {
+TextFetcher.prototype.getData = function tf_getData(dataType, data) {
   // Make sure we call the handler methods as async callback.
   this.timer = setTimeout((function tf_gotData() {
     this.app.handleData(data);
@@ -727,7 +774,7 @@ Base64Fetcher.prototype = new Fetcher();
 Base64Fetcher.prototype.stop = function bf_stop() {
   clearTimeout(this.timer);
 };
-Base64Fetcher.prototype.getData = function bf_getData(data) {
+Base64Fetcher.prototype.getData = function bf_getData(dataType, data) {
   var text = decodeURIComponent(escape(window.atob(data)));
   // Make sure we call the handler methods as async callback.
   this.timer = setTimeout((function bf_gotData() {
@@ -746,7 +793,7 @@ FileFetcher.prototype.stop = function ff_stop() {
   this.reader.abort();
   this.reader = null;
 };
-FileFetcher.prototype.getData = function ff_getData(data) {
+FileFetcher.prototype.getData = function ff_getData(dataType, data) {
   var filePanelView = this.app.views['source-dialog'].panels['file'];
   var fileElement = filePanelView.fileElement;
   if (!fileElement.files.length) {
@@ -765,4 +812,30 @@ FileFetcher.prototype.getData = function ff_getData(data) {
     this.app.handleData(text);
   }).bind(this);
   reader.readAsText(file, filePanelView.encodingElement.value || 'UTF-8');
+};
+
+var ListFetcher = function ListFetcher() {
+  this.types = ['list', 'base64-list'];
+};
+ListFetcher.prototype = new Fetcher();
+ListFetcher.prototype.stop = function lf_stop() {
+  clearTimeout(this.timer);
+};
+ListFetcher.prototype.getData = function lf_getData(dataType, data) {
+  var text = (dataType === 'base64-list') ?
+    decodeURIComponent(escape(window.atob(data))) : data;
+
+  var vol = 0;
+  var list = text.split('\n').map(function mapItem(line) {
+    var item = line.split('\t').reverse();
+    item[1] = parseInt(item[1], 10);
+
+    vol += item[0].length * item[1] * item[1];
+    return item;
+  });
+
+  // Make sure we call the handler methods as async callback.
+  this.timer = setTimeout((function bf_gotData() {
+    this.app.handleList(list, vol);
+  }).bind(this), 0);
 };

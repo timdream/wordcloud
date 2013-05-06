@@ -100,7 +100,7 @@
           <div class="btn-group">
             <button data-canvas-ctl data-action="refresh" class="btn disabled hide-label" title="Refresh"><i class="icon-refresh"></i><span>Refresh</span></button>
             <button data-canvas-ctl data-action="theme" class="btn disabled" title="Switch Theme"><i class="icon-gift"></i><span>Theme</span></button>
-            <button data-action="edit" class="btn disabled" title="Back"><i class="icon-edit"></i><span>Edit List</span></button>
+            <button data-canvas-ctl data-action="edit" class="btn disabled" title="Back"><i class="icon-edit"></i><span>Edit List</span></button>
           </div>
 
           <div class="btn-group">
@@ -128,6 +128,17 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <div id="wc-list-dialog" class="modal" hidden>
+    <div class="modal-body">
+      <label for="wc-list-edit">Modify List</label>
+        <textarea id="wc-list-edit" class="input-block-level" rows="14"></textarea>
+        <span class="help-block">For advance usage, <a href="http://timdream.org/wordcloud2.js/">wordcloud2.js</a> page provide finer control over resulting canvas. You could copy the list here.</span>
+    </div>
+    <div class="modal-footer">
+      <button id="wc-list-done-btn" class="btn btn-primary">Done</button>
     </div>
   </div>
 

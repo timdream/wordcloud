@@ -15,9 +15,11 @@
   app.addView(new CanvasView());
   app.addView(new LoadingView());
   app.addView(new DashboardView());
+  app.addView(new ListDialogView());
   app.addView(sourceDialogView);
 
   app.addFetcher(new TextFetcher());
   app.addFetcher(new Base64Fetcher());
   app.addFetcher(new FileFetcher());
+  app.addFetcher(new ListFetcher());
 })();
