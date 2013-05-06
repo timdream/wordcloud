@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset=UTF-8>
+  <title>HTML5 Word Cloud</title>
+  <!-- Le styles -->
+  <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap-responsive.min.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="./assets/wordcloud.css">
+
+  <script defer type="text/javascript"
+    src="./assets/go2/src/google-oauth2.js"></script>
+  <script defer type="text/javascript"
+    src="./assets/wordfreq/src/wordfreq.js"></script>
+  <script defer type="text/javascript"
+    src="./assets/wordcloud2.js/src/wordcloud2.js"></script>
+  <script defer type="text/javascript"
+    src="./assets/wordcloud-app.js"></script>
+  <script defer type="text/javascript"
+    src="./assets/start.js"></script>
+
+</head>
+<body>
+
+  <canvas id="wc-canvas"></canvas>
+
+  <div id="wc-loading">
+    <div class="wc-icon">
+      <span class="wc-icon-cloud"></span>
+    </div>
+    <div id="wc-loading-label" class="lead"></div>
+  </div>
+
+  <div id="wc-source-dialog" class="modal" hidden>
+    <div class="modal-header">
+      <h3>HTML5 Word Cloud</h3>
+    </div>
+    <div class="modal-body">
+      <div class="row-fluid">
+        <div class="span3">
+          <ul id="wc-source-menu" class="nav nav-tabs nav-stacked">
+            <li hidden>
+              <a href="#" data-panel="example">Examples</a>
+            </li>
+            <li hidden>
+              <a href="#" data-panel="cp">Copy &amp; Paste</a></li>
+            <li hidden>
+              <a href="#" data-panel="file">File</a></li>
+          </ul>
+        </div>
+        <div id="wc-source-panels" class="span9">
+
+          <form id="wc-panel-example" hidden>
+            <label class="radio">
+              <input disabled type="radio" name="example"
+                value="feed:http://www.nytimes.com/services/xml/rss/nyt/GlobalHome.xml" checked>
+              New York Times News Feed (Global Edition)
+            </label>
+            <label class="radio">
+              <input disabled type="radio" name="example"
+                value="feed:http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml">
+              New York Times News Feed (U.S.)
+            </label>
+          </form>
+
+          <form id="wc-panel-cp" hidden>
+            <label for="wc-panel-cp-textarea">Paste the text below</label>
+            <textarea id="wc-panel-cp-textarea" class="input-block-level" rows="10"></textarea>
+            <span class="help-block">The text will be processed locally without being uploaded.</span>
+          </form>
+
+          <form id="wc-panel-file" hidden>
+            <label for="wc-panel-file-file">File</label>
+            <a class="btn file-wrapper">
+              <span>Browse</span>
+              <input type="file" accept="text/plain" id="wc-panel-file-file">
+            </a><span id="wc-panel-file-file-label"></span>
+            <span class="help-block">Plain text only. Will be processed locally without being uploaded.</span>
+            <label for="wc-panel-file-encoding">Character Encoding</label>
+            <input type="text" id="wc-panel-file-encoding" value="UTF-8">
+            <span class="help-block">UTF-8 is the usual value.</span>
+          </form>
+
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button id="wc-source-start-btn" class="btn btn-primary">Start</button>
+    </div>
+  </div>
+
+  <div id="wc-dashboard" hidden>
+    <div class="container">
+      <div class="navbar">
+        <div class="navbar-inner">
+          <div class="btn-group">
+            <button data-action="back" class="btn" title="Back"><i class="icon-chevron-left"></i><span>Back</span></button>
+          </div>
+
+          <div class="btn-group">
+            <button data-canvas-ctl data-action="refresh" class="btn disabled hide-label" title="Refresh"><i class="icon-refresh"></i><span>Refresh</span></button>
+            <button data-canvas-ctl data-action="theme" class="btn disabled" title="Switch Theme"><i class="icon-gift"></i><span>Theme</span></button>
+            <button data-action="edit" class="btn disabled" title="Back"><i class="icon-edit"></i><span>Edit List</span></button>
+          </div>
+
+          <div class="btn-group">
+            <button data-canvas-ctl data-action="size+" class="btn disabled hide-label" title="Enlarge"><i class="icon-font"></i><span>Enlarge</span></button>
+            <button data-canvas-ctl data-action="size-" class="btn disabled hide-label" title="Shrink"><i class="icon-font smaller-icon"></i><span>Shrink</span></button>
+          </div>
+
+          <div class="btn-group">
+            <button data-canvas-ctl data-action="gap+" class="btn disabled hide-label" title="Disperse"><i class="icon-resize-full"></i><span>Disperse</span></button>
+            <button data-canvas-ctl data-action="gap-" class="btn disabled hide-label" title="Gather Up"><i class="icon-resize-small"></i><span>Gather Up</span></button>
+          </div>
+
+          <div class="pull-right">
+
+            <div class="btn-group">
+              <button data-action="facebook" class="btn disabled" title="Share on Facebook"><i class="favicons-facebook"></i></button>
+              <button data-action="plurk" class="btn disabled" title="Share on Plurk"><i class="favicons-plurk"></i></button>
+              <button data-action="twitter" class="btn disabled" title="Share on Twitter"><i class="favicons-twitter"></i></button>
+            </div>
+
+            <div class="btn-group">
+              <button data-action="save" class="btn disabled btn-primary hide-label" title="Save to disk"><i class="icon-hdd"></i><span>Save</span></button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="wc-browser-support" hidden>
+    <div class="container">
+      <div class="alert alert-block alert-error">
+        <h4>Your browser is not supported!</h4>
+        To use HTML5 Word Cloud, please use the lastest version of Firefox, Chrome, Safari, or Internet Explorer.
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,47 +1,21 @@
-**Note**: This project is in the process being split into multiple git library projects, one being [wordcloud2.js](https://github.com/timdream/wordcloud2.js) and the other being [wordfreq](https://github.com/timdream/wordfreq). 
-The application will be written once the work on the libararies completes.
+# HTML5 Word Cloud
 
-HTML5 Word Cloud
-================
+Create a tag [Wordle](http://www.wordle.net/) presentation on a HTML5 canvas element for a given article, powered by [wordfreq](https://github.com/timdream/wordfreq), remote data fetching through public APIs, and sharing tools. **Visit [the web app](http://timc.idv.tw/wordcloud/).**
 
-Word Cloud on HTML5 canvas, inspired by 
-[Wordle](http://www.wordle.net/).
+## Libraries used
 
-Author: Timothy Chien &lt;timdream@gmail.com&gt;
+Understand more on how this web application works by following the links below:
 
-URL: http://timc.idv.tw/wordcloud/
+* [wordcloud2.js](https://github.com/timdream/wordcloud2.js) - standalone library for the "word cloud" on canvas.
+* [wordfreq](https://github.com/timdream/wordfreq) - text corpus calculation in Javascript (with Web Workers)
+* [google-oauth2-web-client](https://github.com/timdream/google-oauth2-web-client) - Login with Google using OAuth2 for client-side web app
 
-## Intro
 
-HTML5 Word Cloud is inspired by Wrodle, instead of generate the image 
-on a Java Applet, this experiment is entirely on HTML5 canvas.
+## Acknowledgement
 
-## Under the hood
-
-This program is composed of three libraries, two of them have 
-dependency of jQuery thus they are warped as jQuery plug-ins:
-
-1. `jquery.getcontent.js` which access remote or local content though 
-   Google Feed API, YQL data.html (experimental), Facebook Javascript SDK, and FileReader API.
-2. `wordfreq.js` which count the phrases/words by running N-gram 
-   analysis (for Chinese) and [Porter Stemming Algorithm](http://tartarus.org/~martin/PorterStemmer/) 
-   (for English) in Web Workers.
-3. finally, `jquery.wordcloud.js` draw the phrases/words on canvas 
-   using configured parameters.
-
-Each of the libraries comes with their own tests/demos and are 
-designed to be reusable.
-
-Following external libraries are included:
-
-1. Porter Stemming Algorithm in Javascript as mentioned above.
-2. [Simulated Web Workers](https://github.com/timdream/simworker) (`worker.js`) 
-   to provide a simulated web workers interface in IEs and Mobile Safari.
+* Christopher McKenzie for Javascript implementation of [Porter Stemming Algorithm](http://tartarus.org/~martin/PorterStemmer/) (used in wordfreq)
+* [Bootstrap UI framework](http://twitter.github.io/bootstrap/) (CSS only)
 
 ## Contributors
 
-* [Yuren Ju](https://github.com/yurenju/wordcloud) for Facebook Status fetching
-
-## Q&amp;A
-
-I can be reached by e-mail.
+* [Yuren Ju](https://github.com/yurenju) for initial version of Facebook status fetching support

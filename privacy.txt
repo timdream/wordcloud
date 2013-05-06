@@ -1,8 +1,0 @@
-Privacy Policy of HTML5 Word Cloud
-==================================
-
-1. User information is processed directly in the browser,
-   the web server does not receive any user information.
-
-2. Usage data is collected through Google Analytics in the same
-   way as any usual website.

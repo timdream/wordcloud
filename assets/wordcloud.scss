@@ -1,0 +1,256 @@
+html {
+  min-height: 100%;
+  background: #fff;
+  background: linear-gradient(#b4bcbf, white) no-repeat;
+  background: -webkit-linear-gradient(#b4bcbf, white) no-repeat;
+}
+
+body {
+  font: 14px sans-serif;
+  line-height: 16px;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: #333;
+
+  perspective: 500px;
+  -webkit-perspective: 300px;
+
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: transparent;
+}
+
+$transition-time: 0.5s;
+
+#wc-canvas {
+  position: absolute;
+  top: 50%; left: 50%;
+}
+
+#wc-loading {
+  transition:
+    visibility $transition-time ease,
+    opacity $transition-time ease;
+  -webkit-transition:
+    visibility $transition-time ease,
+    opacity $transition-time ease;
+  &[hidden] {
+    display: inherit;
+    visibility: hidden;
+    opacity: 0;
+  }
+}
+
+#wc-browser-support {
+  position: absolute;
+  top: 70%; left: 0;
+  width: 100%; height: 30%;
+  z-index: 4;
+}
+
+#wc-source-dialog,
+#wc-dashboard {
+  transition:
+    visibility $transition-time ease,
+    opacity $transition-time ease,
+    transform $transition-time ease;
+  -webkit-transition:
+    visibility $transition-time ease,
+    opacity $transition-time ease,
+    -webkit-transform $transition-time ease;
+  transform-origin: center 80%;
+  -webkit-transform-origin: center 80%;
+  &[hidden] {
+    display: inherit;
+    transform: rotateX(-20deg);
+    -webkit-transform: rotateX(-20deg);
+    visibility: hidden;
+    opacity: 0;
+  }
+}
+
+/*
+Based on <i> cloud, design by daneden
+
+http://dabblet.com/gist/2945570
+https://gist.github.com/2945570
+*/
+
+@keyframes shake {
+  0%, 50% { transform: translateX(0); }
+  5%, 15%, 25%, 35%, 45% { transform: translateX(-10px); }
+  10%, 20%, 30%, 40% { transform: translateX(10px); }
+}
+
+@-webkit-keyframes shake {
+  0%, 50% { -webkit-transform: translateX(0); }
+  5%, 15%, 25%, 35%, 45% { -webkit-transform: translateX(-10px); }
+  10%, 20%, 30%, 40% { -webkit-transform: translateX(10px); }
+}
+
+$icon-width: 100px;
+$icon-height: $icon-width * .3333;
+$hoz-shift: $icon-width * 0.13;
+$shadow-length: $icon-width * 0.05;
+.wc-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: (- $icon-height / 2) 0 0 (- $icon-width / 2 + $hoz-shift / 2);
+  display: block;
+  width: $icon-width;
+  height: $icon-height;
+
+  font: $icon-width serif;
+  font-weight: bold;
+  line-height: 1em;
+  text-shadow: 0 $shadow-length $shadow-length rgba(0, 0, 0, 0.1);
+  color: #000;
+
+  &::before, &::after {
+    content: 'W';
+    position: absolute;
+    display: block;
+    top: - $icon-height * .4666;
+    overflow: hidden;
+  }
+  $word-before-part: 0.38;
+  &::before {
+    left: - $hoz-shift;
+    width: $icon-width * $word-before-part;
+  }
+  &::after {
+    right: $hoz-shift;
+    width: $icon-width * (1 - $word-before-part);
+    text-indent:
+      - $icon-width * $word-before-part;
+    z-index: 3;
+  }
+}
+.wc-icon-cloud {
+  position: absolute;
+  display: block;
+  background-color: #fff;
+  width: $icon-width;
+  height: $icon-height;
+  border-radius: $icon-height;
+  box-shadow:
+    inset 0 (- $shadow-length / 2) rgba(255, 255, 255, 0.6),
+    0 $shadow-length $shadow-length rgba(0, 0, 0, 0.1),
+    inset 0 (- $shadow-length) $shadow-length rgba(0, 100, 160, 0.1);
+
+  .error & {
+    background-color: shade(#fff, 15%);
+    box-shadow:
+      inset 0 (- $shadow-length / 2) rgba(shade(#fff, 15%), 0.6),
+      0 $shadow-length $shadow-length rgba(0, 0, 0, 0.1),
+      inset 0 (- $shadow-length) $shadow-length rgba(shade(rgb(0, 100, 160), 15%), 0.1);
+  }
+
+  :not(.error) > .wc-icon > & {
+    animation: shake 2s infinite;
+    -webkit-animation: shake 2s infinite;
+  }
+
+  z-index: 2;
+
+  &:before, &:after {
+    content: '';
+    position: absolute;
+    background-color: #fff;
+    .error & {
+      background-color: shade(#fff, 15%);
+    }
+    border-radius: 100%;
+    box-shadow:
+      0 (- $shadow-length) $shadow-length rgba(0, 0, 0, 0.05);
+  }
+  &:before {
+    width: $icon-width * .3111;
+    height: $icon-width * .3111;
+    top: - $icon-height * .4;
+    left: $icon-width * .15555;
+  }
+  &:after {
+    width: $icon-width * .5111;
+    height: $icon-width * .5111;
+    top: - $icon-height * .7333;
+    right: $icon-width * .1333;
+  }
+}
+
+#wc-loading-label {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+
+  margin-top: ($icon-width / 2);
+  text-align: center;
+}
+
+#wc-source-dialog > .modal-body {
+  min-height: 200px;
+}
+
+#wc-source-panels .btn {
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.file-wrapper {
+  position: relative;
+  overflow: hidden;
+  > input {
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: 0;
+  }
+}
+
+#wc-dashboard {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  > .container {
+    margin-top: 10px;
+  }
+
+  button.hide-label > span {
+    display: none;
+  }
+  @media (min-width: 1200px) {
+    button.hide-label > span {
+      display: inherit;
+    }
+  }
+  @media (max-width: 979px) {
+    button > span {
+      display: none;
+    }
+  }
+
+  button > span {
+    padding-left: 5px;
+  }
+}
+
+@import "favicons/*.png";
+@include all-favicons-sprites;
+
+[class^="favicons-"], [class*=" favicons-"] {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  line-height: 14px;
+  vertical-align: text-top;
+}
+
+.smaller-icon {
+  transform: scale(0.8);
+  -webkit-transform: scale(0.8);
+}
