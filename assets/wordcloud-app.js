@@ -588,7 +588,24 @@ DashboardView.prototype.handleEvent = function dv_handleEvent(evt) {
       break;
 
     case 'save':
-      // XXX: to be implemented
+      // We could use canvasElement.toBlob(callback) here,
+      // but we will miss the default action (download).
+      var url = app.views.canvas.element.toDataURL();
+      if ('download' in document.createElement('a')) {
+        el.href = url;
+
+        // Let's not keep this in the DOM forever.
+        setTimeout(function cleanUrl() {
+          el.href = '#';
+        }, 0);
+      } else {
+        evt.preventDefault();
+        // XXX: l10n
+        alert('Please right click and choose "Save As..."' +
+              ' to save the generated image.');
+        window.open(url, '_blank', 'width=500,height=300,menubar=yes');
+      }
+
       break;
 
     case 'facebook':
