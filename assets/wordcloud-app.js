@@ -449,6 +449,10 @@ var SourceDialogView = function SourceDialogView(opts) {
   this.startBtnElement.addEventListener('click', this);
 };
 SourceDialogView.prototype = new View();
+SourceDialogView.prototype.afterShow = function sdv_afterShow() {
+  if (this.currentPanel)
+    this.currentPanel.show();
+};
 SourceDialogView.prototype.handleEvent = function sd_handleEvent(evt) {
   evt.preventDefault();
   switch (evt.currentTarget) {

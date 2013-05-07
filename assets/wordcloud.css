@@ -42,12 +42,14 @@ body {
 
 #wc-source-dialog,
 #wc-dashboard {
-  transition: visibility 0.5s ease, opacity 0.5s ease, transform 0.5s ease;
-  -webkit-transition: visibility 0.5s ease, opacity 0.5s ease, -webkit-transform 0.5s ease;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  -webkit-transition: opacity 0.5s ease, -webkit-transform 0.5s ease;
   transform-origin: center 80%;
   -webkit-transform-origin: center 80%; }
   #wc-source-dialog[hidden],
   #wc-dashboard[hidden] {
+    transition: visibility 0.5s ease, opacity 0.5s ease, transform 0.5s ease;
+    -webkit-transition: visibility 0.5s ease, opacity 0.5s ease, -webkit-transform 0.5s ease;
     display: inherit;
     transform: rotateX(-20deg);
     -webkit-transform: rotateX(-20deg);

@@ -53,17 +53,27 @@ $transition-time: 0.5s;
 
 #wc-source-dialog,
 #wc-dashboard {
+  // XXX: Apply visibility transition to visible element
+  // will stop element within from getting |focus()| programmatically.
+  // Gecko: https://bugzilla.mozilla.org/show_bug.cgi?id=869512
+  // WebKit and Chromium bug not filed yet.
   transition:
-    visibility $transition-time ease,
     opacity $transition-time ease,
     transform $transition-time ease;
   -webkit-transition:
-    visibility $transition-time ease,
     opacity $transition-time ease,
     -webkit-transform $transition-time ease;
   transform-origin: center 80%;
   -webkit-transform-origin: center 80%;
   &[hidden] {
+    transition:
+      visibility $transition-time ease,
+      opacity $transition-time ease,
+      transform $transition-time ease;
+    -webkit-transition:
+      visibility $transition-time ease,
+      opacity $transition-time ease,
+      -webkit-transform $transition-time ease;
     display: inherit;
     transform: rotateX(-20deg);
     -webkit-transform: rotateX(-20deg);
