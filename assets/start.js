@@ -19,7 +19,6 @@
   app.addView(sourceDialogView);
 
   app.addFetcher(new TextFetcher());
-  app.addFetcher(new Base64Fetcher());
   app.addFetcher(new FileFetcher());
   app.addFetcher(new ListFetcher());
 })();

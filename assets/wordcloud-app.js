@@ -771,31 +771,19 @@ var Fetcher = function Fetcher() { };
 Fetcher.prototype.LABEL_VERB = LoadingView.prototype.LABEL_LOADING;
 
 var TextFetcher = function TextFetcher() {
-  this.types = ['text'];
+  this.types = ['text', 'base64'];
 };
 TextFetcher.prototype = new Fetcher();
 TextFetcher.prototype.stop = function tf_stop() {
   clearTimeout(this.timer);
 };
 TextFetcher.prototype.getData = function tf_getData(dataType, data) {
+  if (dataType === 'base64')
+    data = decodeURIComponent(escape(window.atob(data)));
+
   // Make sure we call the handler methods as async callback.
   this.timer = setTimeout((function tf_gotData() {
     this.app.handleData(data);
-  }).bind(this), 0);
-};
-
-var Base64Fetcher = function Base64Fetcher() {
-  this.types = ['base64'];
-};
-Base64Fetcher.prototype = new Fetcher();
-Base64Fetcher.prototype.stop = function bf_stop() {
-  clearTimeout(this.timer);
-};
-Base64Fetcher.prototype.getData = function bf_getData(dataType, data) {
-  var text = decodeURIComponent(escape(window.atob(data)));
-  // Make sure we call the handler methods as async callback.
-  this.timer = setTimeout((function bf_gotData() {
-    this.app.handleData(text);
   }).bind(this), 0);
 };
 
