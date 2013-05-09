@@ -15,6 +15,7 @@ Understand more on how this web application works by following the links below:
 
 * Christopher McKenzie for Javascript implementation of [Porter Stemming Algorithm](http://tartarus.org/~martin/PorterStemmer/) (used in wordfreq)
 * [Bootstrap UI framework](http://twitter.github.io/bootstrap/) (CSS only)
+* [Google Feed API](https://developers.google.com/feed/)
 
 ## Contributors
 

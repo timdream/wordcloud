@@ -177,3 +177,49 @@ test('stop()', function() {
   fetcher.getData('text', data);
   fetcher.stop();
 });
+
+
+module('FeedFetcher');
+
+test('getData(\'feed\')', function() {
+  var fetcher = new FeedFetcher();
+  var data = 'http://blog.timc.idv.tw/feed/';
+  stop();
+  fetcher.app = {
+    handleData: function gotData(data) {
+      ok(!!data, 'Received data, length: ' + data.length);
+
+      // Manually remove the callback reference.
+      window[fetcher.callbackName] = undefined;
+      start();
+    }
+  };
+  fetcher.getData('feed', data);
+});
+
+test('stop()', function() {
+  var fetcher = new FeedFetcher();
+  var data = 'http://blog.timc.idv.tw/feed/';
+  stop();
+  fetcher.app = {
+    handleData: function gotData(data) {
+      ok(false, 'handleData being called.');
+
+      // Manually remove the callback reference.
+      window[fetcher.callbackName] = undefined;
+      start();
+    }
+  };
+  setTimeout(function() {
+    ok(true, 'stop() works.');
+
+    // Manually remove the callback reference.
+    // XXX: we don't do that here because the json-p script will
+    // later generate a runtime error.
+    // window[fetcher.callbackName] = undefined;
+    start();
+  }, 10);
+  fetcher.getData('feed', data);
+  fetcher.stop();
+});
+

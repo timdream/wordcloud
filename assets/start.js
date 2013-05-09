@@ -21,4 +21,5 @@
   app.addFetcher(new TextFetcher());
   app.addFetcher(new FileFetcher());
   app.addFetcher(new ListFetcher());
+  app.addFetcher(new FeedFetcher());
 })();

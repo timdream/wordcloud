@@ -848,3 +848,80 @@ ListFetcher.prototype.getData = function lf_getData(dataType, data) {
     this.app.handleList(list, vol);
   }).bind(this), 0);
 };
+
+var FeedFetcher = function FeedFetcher() {
+  this.types = ['rss', 'feed'];
+
+  // Create a unique callback name for the instance.
+  this.callbackName =
+    this.FEED_API_CALLBACK_PREFIX +
+    Math.random().toString(36).substr(2, 8).toUpperCase();
+
+  window[this.callbackName] = (this.handleCallback).bind(this);
+
+  this.params = [
+    ['v', '1.0'],
+    ['scoring', this.FEED_API_SCORING],
+    ['num', this.FEED_API_NUM],
+    ['callback', this.callbackName]
+  ];
+};
+FeedFetcher.prototype = new Fetcher();
+FeedFetcher.prototype.FEED_API_LOAD_URL =
+  'https://ajax.googleapis.com/ajax/services/feed/load';
+FeedFetcher.prototype.FEED_API_CALLBACK_PREFIX = 'FeedFetcherCallback';
+FeedFetcher.prototype.FEED_API_NUM = '-1';
+FeedFetcher.prototype.FEED_API_SCORING = 'h';
+FeedFetcher.prototype.ENTRY_REGEXP =
+  /<[^>]+?>|\(.+?\.\.\.\)|\&\w+\;|<script.+?\/script\>/ig;
+FeedFetcher.prototype.reset =
+FeedFetcher.prototype.stop = function rf_stop() {
+  // Remove the context kept
+  this.context = undefined;
+
+  if (this.scriptElement) {
+    this.scriptElement.parentNode.removeChild(this.scriptElement);
+    this.scriptElement = null;
+  }
+};
+FeedFetcher.prototype.getData = function rf_getData(dataType, data) {
+  var params = [].concat(this.params);
+  this.context = Math.random().toString(36).substr(2, 8);
+
+  params.push(['q', data]);
+  params.push(['context', this.context]);
+
+  var url = this.FEED_API_LOAD_URL + '?' + params.map(function kv(param) {
+    return param[0] + '=' + encodeURIComponent(param[1]);
+  }).join('&');
+
+  var el = this.scriptElement = document.createElement('script');
+  el.src = url;
+
+  document.documentElement.firstElementChild.appendChild(el);
+};
+FeedFetcher.prototype.handleCallback = function rf_handleCallback(contextValue,
+                                                                 responseObject,
+                                                                 responseStatus,
+                                                                 errorDetails) {
+  // ignore the call if the context doesn't match
+  if (contextValue !== this.context)
+    return;
+
+  // Reset ourselves to prevent us from process the call again.
+  this.reset();
+
+  // Return empty text if we couldn't get the data.
+  if (responseStatus !== 200) {
+    this.app.handleData('');
+    return;
+  }
+
+  var text = [];
+  responseObject.feed.entries.forEach((function process(entry) {
+    text.push(entry.title);
+    text.push(entry.content.replace(this.ENTRY_REGEXP, ''));
+    text.push('');
+  }).bind(this));
+  this.app.handleData(text.join('\n'));
+};
