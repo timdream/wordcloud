@@ -447,6 +447,7 @@ var SourceDialogView = function SourceDialogView(opts) {
 
   this.menuElement.addEventListener('click', this);
   this.startBtnElement.addEventListener('click', this);
+  this.panelContainerElement.addEventListener('submit', this);
 };
 SourceDialogView.prototype = new View();
 SourceDialogView.prototype.afterShow = function sdv_afterShow() {
@@ -455,6 +456,11 @@ SourceDialogView.prototype.afterShow = function sdv_afterShow() {
 };
 SourceDialogView.prototype.handleEvent = function sd_handleEvent(evt) {
   evt.preventDefault();
+  if (evt.type == 'submit') {
+    this.currentPanel.submit();
+    return;
+  }
+
   switch (evt.currentTarget) {
     case this.menuElement:
       var panelName = evt.target.dataset.panel;
@@ -769,6 +775,25 @@ FilePanelView.prototype.submit = function fpv_submit() {
   }
 
   this.dialog.submit('#file');
+};
+
+var FeedPanelView = function FeedPanelView(opts) {
+  this.load(opts, {
+    name: 'feed',
+    element: 'wc-panel-feed',
+    inputElement: 'wc-panel-feed-url',
+    template: '%s'
+  });
+};
+FeedPanelView.prototype = new PanelView();
+FeedPanelView.prototype.submit = function fepv_submit() {
+  var el = this.inputElement;
+
+  if (!el.value)
+    return;
+
+  this.dialog.submit(
+    '#feed:' + this.template.replace(/%s/g, el.value));
 };
 
 var Fetcher = function Fetcher() { };

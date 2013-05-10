@@ -42,6 +42,25 @@
             <li hidden>
               <a href="#" data-panel="example">Examples</a>
             </li>
+
+            <li hidden>
+              <a href="#" data-panel="twitter">Twitter</a></li>
+            <li hidden>
+              <a href="#" data-panel="plurk">Plurk</a></li>
+            <li hidden>
+              <a href="#" data-panel="blogger">Blogger</a></li>
+            <li hidden>
+              <a href="#" data-panel="tumblr">Tumblr</a></li>
+            <li hidden>
+              <a href="#" data-panel="wordpresscom">WordPress.com</a></li>
+            <li hidden>
+              <a href="#" data-panel="pixnet">PIXNET</a></li>
+            <li hidden>
+              <a href="#" data-panel="wretchcc">Wretch</a></li>
+            <!-- In memory of Aaron Swartz -->
+            <li hidden>
+              <a href="#" data-panel="feed">RSS Feed</a></li>
+
             <li hidden>
               <a href="#" data-panel="cp">Copy &amp; Paste</a></li>
             <li hidden>
@@ -61,6 +80,57 @@
                 value="feed:http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml">
               New York Times News Feed (U.S.)
             </label>
+          </form>
+
+          <form id="wc-panel-blogger" hidden>
+            <label for="wc-panel-blogger-id">Username</label>
+            <input type="text" id="wc-panel-blogger-id" class="input-small" />
+            <span class="help-block">Some blogs doesn't provide full text feed.</span>
+          </form>
+
+          <form id="wc-panel-tumblr" hidden>
+            <label for="wc-panel-tumblr-id">Username</label>
+            <input type="text" id="wc-panel-tumblr-id" class="input-small" />
+            <span class="help-block">Some tumblrs doesn't provide full text feed.</span>
+          </form>
+
+          <form id="wc-panel-wordpresscom" hidden>
+            <label for="wc-panel-wordpresscom-id">Username</label>
+            <input type="text" id="wc-panel-wordpresscom-id" class="input-small" />
+            <span class="help-block">Some blogs doesn't provide full text feed.</span>
+          </form>
+
+          <form id="wc-panel-pixnet" hidden>
+            <label for="wc-panel-pixnet-id">Username</label>
+            <input type="text" id="wc-panel-pixnet-id" class="input-small" />
+            <span class="help-block">Some blogs doesn't provide full text feed.</span>
+          </form>
+
+          <form id="wc-panel-wretchcc" hidden>
+            <label for="wc-panel-wretchcc-id">Username</label>
+            <input type="text" id="wc-panel-wretchcc-id" class="input-small" />
+            <span class="help-block">Some blogs doesn't provide full text feed.</span>
+          </form>
+
+          <form id="wc-panel-plurk" hidden>
+            <label for="wc-panel-plurk-id">Username</label>
+            <input type="text" id="wc-panel-plurk-id"  class="input-small" />
+            <span class="help-block">Only public Plurk timeline can be accessed.</span>
+          </form>
+
+          <form id="wc-panel-twitter" hidden>
+            <label for="wc-panel-twitter-id">Username</label>
+            <div class="input-prepend">
+              <span class="add-on">@</span>
+              <input type="text" id="wc-panel-twitter-id" class="input-small" />
+            </div>
+            <span class="help-block">Only public Twitter timeline can be accessed.</span>
+          </form>
+
+          <form id="wc-panel-feed" hidden>
+            <label for="wc-panel-feed-url">Feed URL</label>
+            <input type="url" id="wc-panel-feed-url"  class="input-block-level" />
+            <span class="help-block">Only public feeds that has ever been subscribed (and indexed by Google) could be accessed.</span>
           </form>
 
           <form id="wc-panel-cp" hidden>
