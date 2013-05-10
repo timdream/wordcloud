@@ -874,24 +874,64 @@ ListFetcher.prototype.getData = function lf_getData(dataType, data) {
   }).bind(this), 0);
 };
 
-var FeedFetcher = function FeedFetcher() {
-  this.types = ['rss', 'feed'];
+var JSONPFetcher = function JSONPFetcher() {};
+JSONPFetcher.prototype = new Fetcher();
+JSONPFetcher.prototype.LABEL_VERB = LoadingView.prototype.LABEL_DOWNLOADING;
+JSONPFetcher.prototype.CALLBACK_PREFIX = 'JSONPCallbackX';
+JSONPFetcher.prototype.reset =
+JSONPFetcher.prototype.stop = function jpf_stop() {
+  this.currentRequest = undefined;
+};
+JSONPFetcher.prototype.handleEvent = function jpf_handleEvent(evt) {
+  var el = evt.target;
+  window[el.dataset.callbackName] = undefined;
+  this.currentRequest = undefined;
 
-  // Create a unique callback name for the instance.
-  this.callbackName =
-    this.FEED_API_CALLBACK_PREFIX +
+  el.parentNode.removeChild(el);
+};
+JSONPFetcher.prototype.getNewCallback = function jpf_getNewCallback() {
+  // Create a unique callback name for this request.
+  var callbackName = this.CALLBACK_PREFIX +
     Math.random().toString(36).substr(2, 8).toUpperCase();
 
-  window[this.callbackName] = (this.handleCallback).bind(this);
+  // Install the callback
+  window[callbackName] = (function jpf_callback() {
+    // Ignore any response that is not coming from the currentRequest.
+    if (this.currentRequest !== callbackName)
+      return;
+    this.currentRequest = undefined;
+
+    // send the callback name and the data back
+    this.handleResponse.apply(this, arguments);
+  }).bind(this);
+
+  return callbackName;
+};
+JSONPFetcher.prototype.requestData = function jpf_requestJSONData(url) {
+  var callbackName = this.currentRequest = this.getNewCallback();
+
+  url += (url.indexOf('?') === -1) ? '?' : '&';
+  url += 'callback=' + callbackName;
+
+  var el = this.scriptElement = document.createElement('script');
+  el.src = url;
+  el.dataset.callbackName = callbackName;
+  el.addEventListener('load', this);
+  el.addEventListener('error', this);
+
+  document.documentElement.firstElementChild.appendChild(el);
+};
+
+var FeedFetcher = function FeedFetcher() {
+  this.types = ['rss', 'feed'];
 
   this.params = [
     ['v', '1.0'],
     ['scoring', this.FEED_API_SCORING],
-    ['num', this.FEED_API_NUM],
-    ['callback', this.callbackName]
+    ['num', this.FEED_API_NUM]
   ];
 };
-FeedFetcher.prototype = new Fetcher();
+FeedFetcher.prototype = new JSONPFetcher();
 FeedFetcher.prototype.FEED_API_LOAD_URL =
   'https://ajax.googleapis.com/ajax/services/feed/load';
 FeedFetcher.prototype.FEED_API_CALLBACK_PREFIX = 'FeedFetcherCallback';
@@ -899,43 +939,23 @@ FeedFetcher.prototype.FEED_API_NUM = '-1';
 FeedFetcher.prototype.FEED_API_SCORING = 'h';
 FeedFetcher.prototype.ENTRY_REGEXP =
   /<[^>]+?>|\(.+?\.\.\.\)|\&\w+\;|<script.+?\/script\>/ig;
-FeedFetcher.prototype.reset =
-FeedFetcher.prototype.stop = function rf_stop() {
-  // Remove the context kept
-  this.context = undefined;
-
-  if (this.scriptElement) {
-    this.scriptElement.parentNode.removeChild(this.scriptElement);
-    this.scriptElement = null;
-  }
-};
 FeedFetcher.prototype.getData = function rf_getData(dataType, data) {
   var params = [].concat(this.params);
-  this.context = Math.random().toString(36).substr(2, 8);
 
   params.push(['q', data]);
-  params.push(['context', this.context]);
+  params.push(['context', 'ctx']);
 
   var url = this.FEED_API_LOAD_URL + '?' + params.map(function kv(param) {
     return param[0] + '=' + encodeURIComponent(param[1]);
   }).join('&');
 
-  var el = this.scriptElement = document.createElement('script');
-  el.src = url;
+  this.requestData(url);
 
-  document.documentElement.firstElementChild.appendChild(el);
 };
-FeedFetcher.prototype.handleCallback = function rf_handleCallback(contextValue,
+FeedFetcher.prototype.handleResponse = function rf_handleResponse(contextValue,
                                                                  responseObject,
                                                                  responseStatus,
                                                                  errorDetails) {
-  // ignore the call if the context doesn't match
-  if (contextValue !== this.context)
-    return;
-
-  // Reset ourselves to prevent us from process the call again.
-  this.reset();
-
   // Return empty text if we couldn't get the data.
   if (responseStatus !== 200) {
     this.app.handleData('');

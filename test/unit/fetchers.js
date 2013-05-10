@@ -189,8 +189,6 @@ test('getData(\'feed\')', function() {
     handleData: function gotData(data) {
       ok(!!data, 'Received data, length: ' + data.length);
 
-      // Manually remove the callback reference.
-      window[fetcher.callbackName] = undefined;
       start();
     }
   };
@@ -205,20 +203,14 @@ test('stop()', function() {
     handleData: function gotData(data) {
       ok(false, 'handleData being called.');
 
-      // Manually remove the callback reference.
-      window[fetcher.callbackName] = undefined;
       start();
     }
   };
   setTimeout(function() {
     ok(true, 'stop() works.');
 
-    // Manually remove the callback reference.
-    // XXX: we don't do that here because the json-p script will
-    // later generate a runtime error.
-    // window[fetcher.callbackName] = undefined;
     start();
-  }, 10);
+  }, 100);
   fetcher.getData('feed', data);
   fetcher.stop();
 });
