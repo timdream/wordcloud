@@ -127,6 +127,11 @@ WordCloudApp.prototype.switchUIState = function wca_switchUIState(state) {
   if (!this.UIStateViewMap[state])
     throw 'Undefined state ' + state;
 
+  if (document.activeElement &&
+      document.activeElement !== document.body) {
+    document.activeElement.blur();
+  }
+
   var UIs = Object.keys(this.views);
   var currentUIState = this.currentUIState;
   UIs.forEach((function showOrHide(viewName) {
