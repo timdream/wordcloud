@@ -146,6 +146,19 @@ test('getData(\'list\')', function() {
   fetcher.getData('text', data);
 });
 
+test('getData(\'list\') with malform data', function() {
+  var fetcher = new ListFetcher();
+  var data = '2\tNubes\nXXX==XXX==\n200\tNubia\n30\tNubo\n\n';
+  stop();
+  fetcher.app = {
+    handleList: function gotData(d) {
+      deepEqual(d, [['Nubes', 2], ['Nubia', 200], ['Nubo', 30]]);
+      start();
+    }
+  };
+  fetcher.getData('text', data);
+});
+
 test('getData(\'base64-list\')', function() {
   var fetcher = new ListFetcher();
   var text = '2\tNubes\n200\tNubia\n30\tNubo';

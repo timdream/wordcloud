@@ -890,12 +890,18 @@ ListFetcher.prototype.getData = function lf_getData(dataType, data) {
     decodeURIComponent(escape(window.atob(data))) : data;
 
   var vol = 0;
-  var list = text.split('\n').map(function mapItem(line) {
+  var list = [];
+  text.split('\n').forEach(function eachItem(line) {
     var item = line.split('\t').reverse();
+    if (!line || !item[0] || !item[1])
+      return;
+
     item[1] = parseInt(item[1], 10);
+    if (isNaN(item[1]))
+      return;
 
     vol += item[0].length * item[1] * item[1];
-    return item;
+    list.push(item);
   });
 
   // Make sure we call the handler methods as async callback.
