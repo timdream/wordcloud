@@ -798,6 +798,29 @@ FeedPanelView.prototype.submit = function fepv_submit() {
     '#feed:' + this.template.replace(/%s/g, el.value));
 };
 
+var WikipediaPanelView = function WikipediaPanelView(opts) {
+  this.load(opts, {
+    name: 'wikipedia',
+    element: 'wc-panel-wikipedia',
+    inputElement: 'wc-panel-wikipedia-title'
+  });
+};
+WikipediaPanelView.prototype = new PanelView();
+WikipediaPanelView.prototype.submit = function wpv_submit() {
+  var el = this.inputElement;
+
+  if (!el.value)
+    return;
+
+  // XXX maybe provide a <select> of largest Wikipedias here.
+  // (automatically from this table or manually)
+  // https://meta.wikimedia.org/wiki/List_of_Wikipedias/Table
+  // XXX l10n
+  var lang = 'en';
+
+  this.dialog.submit('#wikipedia.' + lang + ':' + el.value);
+};
+
 var Fetcher = function Fetcher() { };
 Fetcher.prototype.LABEL_VERB = LoadingView.prototype.LABEL_LOADING;
 

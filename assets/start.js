@@ -11,6 +11,7 @@
   sourceDialogView.addPanel(new ExamplePanelView());
   sourceDialogView.addPanel(new CPPanelView());
   sourceDialogView.addPanel(new FilePanelView());
+  sourceDialogView.addPanel(new WikipediaPanelView());
 
   sourceDialogView.addPanel(new FeedPanelView());
   sourceDialogView.addPanel(new FeedPanelView({

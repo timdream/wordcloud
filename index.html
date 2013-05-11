@@ -44,6 +44,9 @@
             </li>
 
             <li hidden>
+              <a href="#" data-panel="wikipedia">Wikipedia</a></li>
+
+            <li hidden>
               <a href="#" data-panel="twitter">Twitter</a></li>
             <li hidden>
               <a href="#" data-panel="plurk">Plurk</a></li>
@@ -80,6 +83,16 @@
                 value="feed:http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml">
               New York Times News Feed (U.S.)
             </label>
+            <label class="radio">
+              <input type="radio" name="example"
+                value="wikipedia:Cloud">
+              Wikipedia entry: Cloud
+            </label>
+          </form>
+
+          <form id="wc-panel-wikipedia" hidden>
+            <label for="wc-panel-wikipedia-title">Title</label>
+            <input type="text" id="wc-panel-wikipedia-title" class="input-medium" />
           </form>
 
           <form id="wc-panel-blogger" hidden>
