@@ -66,4 +66,5 @@
   app.addFetcher(new FileFetcher());
   app.addFetcher(new ListFetcher());
   app.addFetcher(new FeedFetcher());
+  app.addFetcher(new WikipediaFetcher());
 })();

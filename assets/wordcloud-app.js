@@ -240,12 +240,14 @@ WordCloudApp.prototype.route = function wca_route() {
     }
   });
 
-  if (dataType in this.fetchers) {
+  var fetcherType = (dataType.indexOf('.') === -1) ?
+    dataType : dataType.split('.')[0];
+
+  if (fetcherType in this.fetchers) {
     this.switchUIState(this.UI_STATE_WORKING);
-    this.views.loading.updateLabel(
-      this.fetchers[dataType].LABEL_VERB);
-    this.currentFetcher = this.fetchers[dataType];
-    this.fetchers[dataType].getData(dataType, data);
+    var fetcher = this.currentFetcher = this.fetchers[fetcherType];
+    this.views.loading.updateLabel(fetcher.LABEL_VERB);
+    fetcher.getData(dataType, data);
   } else {
     // Can't handle such data. Reset the URL hash.
     this.reset();
@@ -969,4 +971,53 @@ FeedFetcher.prototype.handleResponse = function rf_handleResponse(contextValue,
     text.push('');
   }).bind(this));
   this.app.handleData(text.join('\n'));
+};
+
+var WikipediaFetcher = function WikipediaFetcher(opts) {
+  this.types = ['wiki', 'wikipedia'];
+
+  this.params = [
+    ['action', 'query'],
+    ['prop', 'revisions'],
+    ['rvprop', 'content'],
+    ['redirects', '1'],
+    ['format', 'json'],
+    ['rvparse', '1']
+  ];
+};
+WikipediaFetcher.prototype = new JSONPFetcher();
+WikipediaFetcher.prototype.WIKIPEDIA_API_URL =
+  'https://%lang.wikipedia.org/w/api.php';
+WikipediaFetcher.prototype.DEFAULT_LANG = 'en';
+WikipediaFetcher.prototype.PARSED_WIKITEXT_REGEXP =
+  /<[^>]+?>|\(.+?\.\.\.\)|\&\w+\;|<script.+?\/script\>/ig;
+WikipediaFetcher.prototype.getData = function wf_getData(dataType, data) {
+  var params = [].concat(this.params);
+
+  var dataTypeArr = dataType.split('.');
+  var lang = (dataTypeArr[1]) ? dataTypeArr[1] : this.DEFAULT_LANG;
+
+  if (dataTypeArr[2]) {
+    params.push(['converttitles', dataTypeArr[2]]);
+  }
+
+  params.push(['titles', data]);
+
+  var url = this.WIKIPEDIA_API_URL.replace(/%lang/, lang) + '?' +
+  params.map(function kv(param) {
+    return param[0] + '=' + encodeURIComponent(param[1]);
+  }).join('&');
+
+  this.requestData(url);
+};
+WikipediaFetcher.prototype.handleResponse = function wf_handleResponse(res) {
+  var pageId = Object.keys(res.query.pages)[0];
+  var page = res.query.pages[pageId];
+  if (!('revisions' in page)) {
+    this.app.handleData('');
+    return;
+  }
+
+  var text = page.revisions[0]['*'].replace(this.PARSED_WIKITEXT_REGEXP, '');
+  this.app.handleData(text);
 };

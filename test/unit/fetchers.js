@@ -215,3 +215,38 @@ test('stop()', function() {
   fetcher.stop();
 });
 
+module('WikipediaFetcher');
+
+test('getData(\'wikipedia\')', function() {
+  var fetcher = new WikipediaFetcher();
+  var data = 'Happiness';
+  stop();
+  fetcher.app = {
+    handleData: function gotData(data) {
+      ok(!!data, 'Received data, length: ' + data.length);
+
+      start();
+    }
+  };
+  fetcher.getData('wikipedia', data);
+});
+
+test('stop()', function() {
+  var fetcher = new WikipediaFetcher();
+  var data = 'Happiness';
+  stop();
+  fetcher.app = {
+    handleData: function gotData(data) {
+      ok(false, 'Happiness');
+
+      start();
+    }
+  };
+  setTimeout(function() {
+    ok(true, 'stop() works.');
+
+    start();
+  }, 100);
+  fetcher.getData('wikipedia', data);
+  fetcher.stop();
+});
