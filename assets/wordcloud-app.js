@@ -935,6 +935,114 @@ FacebookPanelView.prototype.submit = function fbpv_submit() {
     '#facebook:' + this.facebookResponse.authResponse.userID);
 };
 
+var GooglePlusPanelView = function GooglePlusPanelView(opts) {
+  this.load(opts, {
+    name: 'googleplus',
+    element: 'wc-panel-googleplus',
+    statusElement: 'wc-panel-googleplus-status',
+    idElement: 'wc-panel-googleplus-id'
+  });
+  this.loaded = false;
+};
+GooglePlusPanelView.prototype = new PanelView();
+GooglePlusPanelView.prototype.LABEL_LOGGED_IN = 'google-ready';
+GooglePlusPanelView.prototype.LABEL_NOT_LOGGED_IN = 'google-start-to-login';
+GooglePlusPanelView.prototype.beforeShow = function gppv_beforeShow() {
+  if (!GOOGLE_CLIENT_ID)
+    throw 'No GOOGLE_CLIENT_ID defined.';
+
+  if (this.loaded)
+    return;
+
+  this.loaded = true;
+
+  var el = document.createElement('script');
+  el.src = './assets/go2/src/google-oauth2.js';
+  el.onload = el.onerror = (function go2load() {
+    el.onload = el.onerror = null;
+
+    if (!window.GO2) {
+      this.loaded = false;
+      return;
+    }
+
+    var redirectUri = window.GO2_REDIRECT_URI ||
+      document.location.href.replace(/\/(index.html)?(#.*)?$/i,
+                                     '/go2-redirect.html');
+
+    GO2.init({
+      client_id: GOOGLE_CLIENT_ID,
+      scope: this.GOOGLE_API_SCOPE || '',
+      redirect_uri: redirectUri
+    });
+
+    GO2.login(false, true);
+
+    // Update UI for the first time, as we might not
+    // be able to log-in quietly.
+    this.updateUI();
+
+    GO2.onlogin = (function go2_onlogin(token) {
+      this.accessToken = token;
+      this.updateUI();
+
+      if (this.submitted) {
+        this.submitted = false;
+
+        // XXX: There is no way to cancel the login pop-up midway if
+        // the user navigates away from the panel (or the source dialog).
+        // We shall do some checking here to avoid accidently switches the UI.
+        if (this.element.hidden || this.dialog.element.hidden)
+          return;
+
+        this.realSubmit();
+      }
+    }).bind(this);
+
+    GO2.onlogout = (function go2_onlogout() {
+      this.accessToken = '';
+      this.updateUI();
+    }).bind(this);
+  }).bind(this);
+
+  document.documentElement.firstElementChild.appendChild(el);
+};
+GooglePlusPanelView.prototype.isReadyForFetch =
+  function gppv_isReadyForFetch() {
+    return !!this.accessToken;
+  };
+GooglePlusPanelView.prototype.updateUI = function gppv_updateUI() {
+  // XXX: l10n
+  if (this.isReadyForFetch()) {
+    this.statusElement.textContent = this.LABEL_LOGGED_IN;
+  } else {
+    this.statusElement.textContent = this.LABEL_NOT_LOGGED_IN;
+  }
+};
+GooglePlusPanelView.prototype.submit = function gppv_submit() {
+  if (!window.GO2 || !this.loaded)
+    return;
+
+  if (!this.isReadyForFetch()) {
+    this.submitted = true;
+    GO2.login(true, false);
+
+    return;
+  }
+
+  this.realSubmit();
+};
+GooglePlusPanelView.prototype.realSubmit = function gppv_realSubmit() {
+  var id = this.idElement.value;
+  if (!id)
+    id = 'me';
+
+  // Remove everything after the first slash.
+  id = id.replace(/\/.*$/, '');
+
+  this.dialog.submit('#googleplus:' + id);
+};
+
 var Fetcher = function Fetcher() { };
 Fetcher.prototype.LABEL_VERB = LoadingView.prototype.LABEL_LOADING;
 
@@ -1162,6 +1270,56 @@ WikipediaFetcher.prototype.handleResponse = function wf_handleResponse(res) {
   }
 
   var text = page.revisions[0]['*'].replace(this.PARSED_WIKITEXT_REGEXP, '');
+  this.app.handleData(text);
+};
+
+var GooglePlusFetcher = function GooglePlusFetcher(opts) {
+  this.types = ['googleplus'];
+
+  this.params = [
+    ['maxResults', '100'],
+    ['alt', 'json'],
+    ['pp', '1']
+  ];
+};
+GooglePlusFetcher.prototype = new JSONPFetcher();
+GooglePlusFetcher.prototype.GOOGLE_PLUS_API_URL =
+  'https://www.googleapis.com/plus/v1/people/%source/activities/public';
+GooglePlusFetcher.prototype.POST_REGEXP =
+  /<[^>]+?>|\(.+?\.\.\.\)|\&\w+\;|<script.+?\/script\>/ig;
+GooglePlusFetcher.prototype.getData = function gpf_getData(dataType, data) {
+  var googlePlusPanelView =
+    this.app.views['source-dialog'].panels['googleplus'];
+  var accessToken = googlePlusPanelView.accessToken;
+
+  if (!accessToken) {
+    // XXX: can we login user from here?
+    // User would lost the id kept in hash here.
+    this.app.reset();
+    this.app.views['source-dialog'].showPanel(googlePlusPanelView);
+    return;
+  }
+
+  var params = [].concat(this.params);
+  params.push(['access_token', accessToken]);
+
+  var url = this.GOOGLE_PLUS_API_URL.replace(/%source/, data) + '?' +
+  params.map(function kv(param) {
+    return param[0] + '=' + encodeURIComponent(param[1]);
+  }).join('&');
+
+  this.requestData(url);
+};
+GooglePlusFetcher.prototype.handleResponse = function gpf_handleResponse(res) {
+  if (res.error || !res.items) {
+    this.app.handleData('');
+    return;
+  }
+
+  var text = res.items.map((function gpf_map(item) {
+    return item.object.content.replace(this.POST_REGEXP, '');
+  }).bind(this)).join('');
+
   this.app.handleData(text);
 };
 

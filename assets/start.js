@@ -13,6 +13,7 @@
   sourceDialogView.addPanel(new FilePanelView());
   sourceDialogView.addPanel(new WikipediaPanelView());
   sourceDialogView.addPanel(new FacebookPanelView());
+  sourceDialogView.addPanel(new GooglePlusPanelView());
 
   sourceDialogView.addPanel(new FeedPanelView());
   sourceDialogView.addPanel(new FeedPanelView({
@@ -70,4 +71,5 @@
   app.addFetcher(new FeedFetcher());
   app.addFetcher(new WikipediaFetcher());
   app.addFetcher(new FacebookFetcher());
+  app.addFetcher(new GooglePlusFetcher());
 })();

@@ -12,8 +12,6 @@
   <script defer type="text/javascript"
     src="./assets/vars.js"></script>
   <script defer type="text/javascript"
-    src="./assets/go2/src/google-oauth2.js"></script>
-  <script defer type="text/javascript"
     src="./assets/wordfreq/src/wordfreq.js"></script>
   <script defer type="text/javascript"
     src="./assets/wordcloud2.js/src/wordcloud2.js"></script>
@@ -69,6 +67,9 @@
             <!-- In memory of Aaron Swartz -->
             <li hidden>
               <a href="#" data-panel="feed">RSS Feed</a></li>
+
+            <li hidden>
+              <a href="#" data-panel="googleplus">Google+</a></li>
 
             <li hidden>
               <a href="#" data-panel="cp">Copy &amp; Paste</a></li>
@@ -172,6 +173,16 @@
 
           <form id="wc-panel-facebook" hidden>
             <p id="wc-panel-facebook-status">...</p>
+          </form>
+
+          <form id="wc-panel-googleplus" hidden>
+            <label for="wc-panel-googleplus-id">Profile ID</label>
+            <div class="input-prepend">
+              <span class="add-on">https://plus.google.com/</span>
+              <input type="text" id="wc-panel-googleplus-id" class="input-medium" placeholder="me" />
+            </div>
+            <span class="help-block">Find the ID by copying it from the URL. Leave it empty to access your own profile.</span>
+            <p id="wc-panel-googleplus-status">...</p>
           </form>
 
         </div>

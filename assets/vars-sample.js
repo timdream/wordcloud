@@ -1,1 +1,2 @@
 var FACEBOOK_APP_ID = '';
+var GOOGLE_CLIENT_ID = '';
