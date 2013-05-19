@@ -846,6 +846,7 @@ FacebookPanelView.prototype.beforeShow = function fbpv_beforeShow() {
     return;
 
   this.loaded = true;
+  this.hasPermission = false;
 
   // Insert fb-root
   var el = document.createElement('div');
@@ -877,17 +878,26 @@ FacebookPanelView.prototype.beforeShow = function fbpv_beforeShow() {
       'auth.authResponseChange', this.updateStatus.bind(this));
   }).bind(this);
 };
-FacebookPanelView.prototype.isLoggedIn = function fbpv_isLoggedIn() {
+FacebookPanelView.prototype.isReadyForFetch = function fbpv_isReadyForFetch() {
   return (this.facebookResponse &&
-    this.facebookResponse.status === 'connected');
+    this.facebookResponse.status === 'connected' &&
+    this.hasPermission);
 };
 FacebookPanelView.prototype.updateStatus = function fbpv_updateStatus(res) {
   this.facebookResponse = res;
-  this.updateUI();
+  if (this.facebookResponse.status === 'connected') {
+    FB.api('/me/permissions', (function checkPermissions(res) {
+      this.hasPermission = (res.data[0]['read_stream'] == 1);
+      this.updateUI();
+    }).bind(this));
+  } else {
+    this.hasPermission = false;
+    this.updateUI();
+  }
 };
 FacebookPanelView.prototype.updateUI = function fbpv_updateUI() {
   // XXX: l10n
-  if (this.isLoggedIn()) {
+  if (this.isReadyForFetch()) {
     this.statusElement.textContent = this.LABEL_LOGGED_IN;
   } else {
     this.statusElement.textContent = this.LABEL_NOT_LOGGED_IN;
@@ -899,12 +909,13 @@ FacebookPanelView.prototype.submit = function fbpv_submit() {
     return;
 
   // Show the login dialog if not logged in
-  if (!this.isLoggedIn()) {
+  if (!this.isReadyForFetch()) {
     FB.login((function fbpv_loggedIn(res) {
-      // We probably do updateStatus() here twice :-/
-      this.updateStatus(res);
-
-      if (!this.isLoggedIn())
+      // We should not be using isReadyForFetch() here because
+      // the permission check would be still in-flight.
+      // Note that we assume we have the permission already
+      // if the user logged in through here.
+      if (res.status !== 'connected')
         return;
 
       // XXX: There is no way to cancel the login pop-up midway if
@@ -915,7 +926,7 @@ FacebookPanelView.prototype.submit = function fbpv_submit() {
 
       this.dialog.submit(
         '#facebook:' + this.facebookResponse.authResponse.userID);
-    }).bind(this));
+    }).bind(this), { scope: 'read_stream' });
 
     return;
   }
@@ -1171,8 +1182,8 @@ FacebookFetcher.prototype.stop = function fbf_stop() {
 FacebookFetcher.prototype.getData = function fbf_getData(dataType, data) {
   var facebookPanelView = this.app.views['source-dialog'].panels['facebook'];
 
-  if (!facebookPanelView.isLoggedIn()) {
-    // If we are not logged in, bring user back to the facebook panel.
+  // If we are not ready, bring user back to the facebook panel.
+  if (!facebookPanelView.isReadyForFetch()) {
 
     // XXX: can we login user from here?
     // User would lost the id kept in hash here.
