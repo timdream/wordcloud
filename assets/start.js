@@ -12,6 +12,7 @@
   sourceDialogView.addPanel(new CPPanelView());
   sourceDialogView.addPanel(new FilePanelView());
   sourceDialogView.addPanel(new WikipediaPanelView());
+  sourceDialogView.addPanel(new FacebookPanelView());
 
   sourceDialogView.addPanel(new FeedPanelView());
   sourceDialogView.addPanel(new FeedPanelView({
@@ -68,4 +69,5 @@
   app.addFetcher(new ListFetcher());
   app.addFetcher(new FeedFetcher());
   app.addFetcher(new WikipediaFetcher());
+  app.addFetcher(new FacebookFetcher());
 })();

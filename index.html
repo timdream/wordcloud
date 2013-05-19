@@ -10,6 +10,8 @@
   <link rel="stylesheet" type="text/css" href="./assets/wordcloud.css">
 
   <script defer type="text/javascript"
+    src="./assets/vars.js"></script>
+  <script defer type="text/javascript"
     src="./assets/go2/src/google-oauth2.js"></script>
   <script defer type="text/javascript"
     src="./assets/wordfreq/src/wordfreq.js"></script>
@@ -43,6 +45,9 @@
             <li hidden>
               <a href="#" data-panel="example">Examples</a>
             </li>
+
+            <li hidden>
+              <a href="#" data-panel="facebook">Facebook</a></li>
 
             <li hidden>
               <a href="#" data-panel="wikipedia">Wikipedia</a></li>
@@ -163,6 +168,10 @@
             <label for="wc-panel-file-encoding">Character Encoding</label>
             <input type="text" id="wc-panel-file-encoding" value="UTF-8">
             <span class="help-block">UTF-8 is the usual value.</span>
+          </form>
+
+          <form id="wc-panel-facebook" hidden>
+            <p id="wc-panel-facebook-status">...</p>
           </form>
 
         </div>

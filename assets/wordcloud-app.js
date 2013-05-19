@@ -826,6 +826,104 @@ WikipediaPanelView.prototype.submit = function wpv_submit() {
   this.dialog.submit('#wikipedia.' + lang + ':' + el.value);
 };
 
+var FacebookPanelView = function FacebookPanelView(opts) {
+  this.load(opts, {
+    name: 'facebook',
+    element: 'wc-panel-facebook',
+    statusElement: 'wc-panel-facebook-status'
+  });
+  this.loaded = false;
+};
+FacebookPanelView.prototype = new PanelView();
+FacebookPanelView.prototype.LABEL_LOGGED_IN = 'facebook-ready';
+FacebookPanelView.prototype.LABEL_NOT_LOGGED_IN = 'facebook-start-to-login';
+
+FacebookPanelView.prototype.beforeShow = function fbpv_beforeShow() {
+  if (!FACEBOOK_APP_ID)
+    throw 'No FACEBOOK_APP_ID defined.';
+
+  if (this.loaded)
+    return;
+
+  this.loaded = true;
+
+  // Insert fb-root
+  var el = document.createElement('div');
+  el.id = 'fb-root';
+  document.body.insertBefore(el, document.body.firstChild);
+
+  // Load the SDK Asynchronously
+  (function loadFacebookSDK(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) {return;}
+    js = d.createElement(s); js.id = id;
+    js.src = '//connect.facebook.net/en_US/all.js';
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+
+  var channelUrl = window.FACEBOOK_CHANNEL_URL ||
+    document.location.href.replace(/\/(index.html)?(#.*)?$/i,
+                                   '/facebook-channel.html');
+
+  window.fbAsyncInit = (function fbpv_fbAsyncInit() {
+    window.fbAsyncInit = null;
+
+    FB.init({
+      appId: FACEBOOK_APP_ID,
+      channelUrl: channelUrl
+    });
+    FB.getLoginStatus(this.updateStatus.bind(this));
+    FB.Event.subscribe(
+      'auth.authResponseChange', this.updateStatus.bind(this));
+  }).bind(this);
+};
+FacebookPanelView.prototype.isLoggedIn = function fbpv_isLoggedIn() {
+  return (this.facebookResponse &&
+    this.facebookResponse.status === 'connected');
+};
+FacebookPanelView.prototype.updateStatus = function fbpv_updateStatus(res) {
+  this.facebookResponse = res;
+  this.updateUI();
+};
+FacebookPanelView.prototype.updateUI = function fbpv_updateUI() {
+  // XXX: l10n
+  if (this.isLoggedIn()) {
+    this.statusElement.textContent = this.LABEL_LOGGED_IN;
+  } else {
+    this.statusElement.textContent = this.LABEL_NOT_LOGGED_IN;
+  }
+};
+FacebookPanelView.prototype.submit = function fbpv_submit() {
+  // Return if the status is never updated.
+  if (!this.facebookResponse)
+    return;
+
+  // Show the login dialog if not logged in
+  if (!this.isLoggedIn()) {
+    FB.login((function fbpv_loggedIn(res) {
+      // We probably do updateStatus() here twice :-/
+      this.updateStatus(res);
+
+      if (!this.isLoggedIn())
+        return;
+
+      // XXX: There is no way to cancel the login pop-up midway if
+      // the user navigates away from the panel (or the source dialog).
+      // We shall do some checking here to avoid accidently switches the UI.
+      if (this.element.hidden || this.dialog.element.hidden)
+        return;
+
+      this.dialog.submit(
+        '#facebook:' + this.facebookResponse.authResponse.userID);
+    }).bind(this));
+
+    return;
+  }
+
+  this.dialog.submit(
+    '#facebook:' + this.facebookResponse.authResponse.userID);
+};
+
 var Fetcher = function Fetcher() { };
 Fetcher.prototype.LABEL_VERB = LoadingView.prototype.LABEL_LOADING;
 
@@ -1054,4 +1152,71 @@ WikipediaFetcher.prototype.handleResponse = function wf_handleResponse(res) {
 
   var text = page.revisions[0]['*'].replace(this.PARSED_WIKITEXT_REGEXP, '');
   this.app.handleData(text);
+};
+
+var FacebookFetcher = function FacebookFetcher() {
+  this.types = ['facebook'];
+};
+FacebookFetcher.prototype = new Fetcher();
+FacebookFetcher.prototype.LABEL_VERB = LoadingView.prototype.LABEL_DOWNLOADING;
+FacebookFetcher.prototype.FACEBOOK_GRAPH_FIELDS =
+  'notes.limit(500).fields(subject,message),' +
+  'feed.limit(2500).fields(from.fields(id),message)';
+FacebookFetcher.prototype.NOTE_REGEXP =
+  /<[^>]+?>|\(.+?\.\.\.\)|\&\w+\;|<script.+?\/script\>/ig;
+FacebookFetcher.prototype.stop = function fbf_stop() {
+  // FB.api doesn't comes with a method to cancel the request.
+  this.loading = false;
+};
+FacebookFetcher.prototype.getData = function fbf_getData(dataType, data) {
+  var facebookPanelView = this.app.views['source-dialog'].panels['facebook'];
+
+  if (!facebookPanelView.isLoggedIn()) {
+    // If we are not logged in, bring user back to the facebook panel.
+
+    // XXX: can we login user from here?
+    // User would lost the id kept in hash here.
+    this.app.reset();
+    this.app.views['source-dialog'].showPanel(facebookPanelView);
+    return;
+  }
+
+  var path = '/' + encodeURIComponent(data) +
+    '?fields=' + this.FACEBOOK_GRAPH_FIELDS;
+
+  this.loading = true;
+  FB.api(path, this.handleResponse.bind(this));
+};
+FacebookFetcher.prototype.handleResponse = function fbf_handleResponse(res) {
+  if (!this.loading)
+    return;
+  this.loading = false;
+
+  if (res.error) {
+    this.app.handleData('');
+    return;
+  }
+
+  var text = [];
+
+  if (res.notes) {
+    var NOTE_REGEXP = this.NOTE_REGEXP;
+    res.notes.data.forEach(function forEachNote(note) {
+      if (note.subject)
+        text.push(note.subject);
+      if (note.message)
+        text.push(note.message.replace(NOTE_REGEXP, ''));
+    });
+  }
+
+  res.feed.data.forEach(function forEachData(entry) {
+    // Get rid of birthday messages on the wall.
+    if (entry.from.id !== res.id)
+      return;
+
+    if (entry.message)
+      text.push(entry.message);
+  });
+
+  this.app.handleData(text.join('\n'));
 };
