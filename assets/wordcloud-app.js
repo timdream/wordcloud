@@ -1335,7 +1335,7 @@ FacebookFetcher.prototype.NOTE_REGEXP =
   /<[^>]+?>|\(.+?\.\.\.\)|\&\w+\;|<script.+?\/script\>/ig;
 FacebookFetcher.prototype.stop = function fbf_stop() {
   // FB.api doesn't comes with a method to cancel the request.
-  this.loading = false;
+  this.currentPath = undefined;
 };
 FacebookFetcher.prototype.getData = function fbf_getData(dataType, data) {
   var facebookPanelView = this.app.views['source-dialog'].panels['facebook'];
@@ -1350,17 +1350,19 @@ FacebookFetcher.prototype.getData = function fbf_getData(dataType, data) {
     return;
   }
 
-  var path = '/' + encodeURIComponent(data) +
+  var path = this.currentPath = '/' + encodeURIComponent(data) +
     '?fields=' + this.FACEBOOK_GRAPH_FIELDS;
 
-  this.loading = true;
-  FB.api(path, this.handleResponse.bind(this));
+  FB.api(path, (function gotFacebookAPIData(res) {
+    // Ignore any response that does not match currentPath.
+    if (this.currentPath !== path)
+      return;
+    this.currentPath = undefined;
+
+    this.handleResponse(res);
+  }).bind(this));
 };
 FacebookFetcher.prototype.handleResponse = function fbf_handleResponse(res) {
-  if (!this.loading)
-    return;
-  this.loading = false;
-
   if (res.error) {
     this.app.handleData('');
     return;
