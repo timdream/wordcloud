@@ -18,6 +18,7 @@ Understand more on how this web application works by following the links below:
 * [Google Feed API](https://developers.google.com/feed/)
 * [MediaWiki API](https://en.wikipedia.org/w/api.php) running on Wikipedia
 * [Facebook Javascript SDK](https://developers.facebook.com/docs/reference/javascript/) and [Graph API](https://developers.facebook.com/docs/reference/api/)
+* [Google+ API](https://developers.google.com/+/api/) available in JSON-P
 
 ## Contributors
 
