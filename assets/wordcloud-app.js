@@ -839,65 +839,20 @@ FacebookPanelView.prototype.LABEL_LOGGED_IN = 'facebook-ready';
 FacebookPanelView.prototype.LABEL_NOT_LOGGED_IN = 'facebook-start-to-login';
 
 FacebookPanelView.prototype.beforeShow = function fbpv_beforeShow() {
-  if (!FACEBOOK_APP_ID)
-    throw 'No FACEBOOK_APP_ID defined.';
-
   if (this.loaded)
     return;
 
   this.loaded = true;
   this.hasPermission = false;
 
-  var bindFacebookSDK = (function fbpv_bindFacebookSDK() {
+  // Load Facebook SDK at this point;
+  // We won't wrap other FB.xxx calls in other functions
+  // because this is the only entry point for FacebookPanelView.
+  (new FacebookSDKLoader()).load((function fbpv_bindFacebookSDK() {
     FB.getLoginStatus(this.updateStatus.bind(this));
     FB.Event.subscribe(
       'auth.authResponseChange', this.updateStatus.bind(this));
-  }).bind(this);
-
-  if (window.FB) {
-    bindFacebookSDK();
-    return;
-  }
-
-  if (window.fbAsyncInit) {
-    var originalFbAsyncInit = window.fbAsyncInit;
-    window.fbAsyncInit = (function fbpv_fbAsyncInit() {
-      window.fbAsyncInit = null;
-
-      originalFbAsyncInit();
-      bindFacebookSDK();
-    }).bind(this);
-
-    return;
-  }
-
-  // Insert fb-root
-  var el = document.createElement('div');
-  el.id = 'fb-root';
-  document.body.insertBefore(el, document.body.firstChild);
-
-  // Load the SDK Asynchronously
-  (function loadFacebookSDK(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) {return;}
-    js = d.createElement(s); js.id = id;
-    js.src = '//connect.facebook.net/en_US/all.js';
-    fjs.parentNode.insertBefore(js, fjs);
-  }(document, 'script', 'facebook-jssdk'));
-
-  var channelUrl = window.FACEBOOK_CHANNEL_URL ||
-    document.location.href.replace(/\/(index.html)?(#.*)?$/i,
-                                   '/facebook-channel.html');
-
-  window.fbAsyncInit = function fbpv_fbAsyncInit() {
-    window.fbAsyncInit = null;
-
-    FB.init({
-      appId: FACEBOOK_APP_ID,
-      channelUrl: channelUrl
-    });
-    bindFacebookSDK();
-  };
+  }).bind(this));
 };
 FacebookPanelView.prototype.isReadyForFetch = function fbpv_isReadyForFetch() {
   return (this.facebookResponse &&
@@ -1411,4 +1366,64 @@ FacebookFetcher.prototype.handleResponse = function fbf_handleResponse(res) {
   });
 
   this.app.handleData(text.join('\n'));
+};
+
+var FacebookSDKLoader = function FacebookSDKLoader() {
+  if (!FACEBOOK_APP_ID)
+    throw 'No FACEBOOK_APP_ID defined.';
+
+  this.loaded = false;
+};
+FacebookSDKLoader.prototype.load = function fsl_load(callback) {
+  if (this.loaded)
+    throw 'FacebookSDKLoader shouldn\'t be reused.';
+  this.loaded = true;
+
+  // If API is already available, run the callback synchronizely.
+  if (window.FB) {
+    callback();
+    return;
+  }
+
+  // If there is already a fbAsyncInit(), we should wrap it.
+  if (window.fbAsyncInit) {
+    var originalFbAsyncInit = window.fbAsyncInit;
+    window.fbAsyncInit = (function fbpv_fbAsyncInit() {
+      window.fbAsyncInit = null;
+
+      originalFbAsyncInit();
+      callback();
+    }).bind(this);
+
+    return;
+  }
+
+  // Insert fb-root
+  var el = document.createElement('div');
+  el.id = 'fb-root';
+  document.body.insertBefore(el, document.body.firstChild);
+
+  // Load the SDK Asynchronously
+  (function loadFacebookSDK(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) {return;}
+    js = d.createElement(s); js.id = id;
+    js.src = '//connect.facebook.net/en_US/all.js';
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+
+  var channelUrl = window.FACEBOOK_CHANNEL_URL ||
+    document.location.href.replace(/\/(index.html)?(#.*)?$/i,
+                                   '/facebook-channel.html');
+
+  window.fbAsyncInit = function fbpv_fbAsyncInit() {
+    window.fbAsyncInit = null;
+
+    FB.init({
+      appId: FACEBOOK_APP_ID,
+      channelUrl: channelUrl
+    });
+
+    callback();
+  };
 };
