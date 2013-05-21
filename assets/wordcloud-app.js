@@ -848,6 +848,29 @@ FacebookPanelView.prototype.beforeShow = function fbpv_beforeShow() {
   this.loaded = true;
   this.hasPermission = false;
 
+  var bindFacebookSDK = (function fbpv_bindFacebookSDK() {
+    FB.getLoginStatus(this.updateStatus.bind(this));
+    FB.Event.subscribe(
+      'auth.authResponseChange', this.updateStatus.bind(this));
+  }).bind(this);
+
+  if (window.FB) {
+    bindFacebookSDK();
+    return;
+  }
+
+  if (window.fbAsyncInit) {
+    var originalFbAsyncInit = window.fbAsyncInit;
+    window.fbAsyncInit = (function fbpv_fbAsyncInit() {
+      window.fbAsyncInit = null;
+
+      originalFbAsyncInit();
+      bindFacebookSDK();
+    }).bind(this);
+
+    return;
+  }
+
   // Insert fb-root
   var el = document.createElement('div');
   el.id = 'fb-root';
@@ -866,17 +889,15 @@ FacebookPanelView.prototype.beforeShow = function fbpv_beforeShow() {
     document.location.href.replace(/\/(index.html)?(#.*)?$/i,
                                    '/facebook-channel.html');
 
-  window.fbAsyncInit = (function fbpv_fbAsyncInit() {
+  window.fbAsyncInit = function fbpv_fbAsyncInit() {
     window.fbAsyncInit = null;
 
     FB.init({
       appId: FACEBOOK_APP_ID,
       channelUrl: channelUrl
     });
-    FB.getLoginStatus(this.updateStatus.bind(this));
-    FB.Event.subscribe(
-      'auth.authResponseChange', this.updateStatus.bind(this));
-  }).bind(this);
+    bindFacebookSDK();
+  };
 };
 FacebookPanelView.prototype.isReadyForFetch = function fbpv_isReadyForFetch() {
   return (this.facebookResponse &&
