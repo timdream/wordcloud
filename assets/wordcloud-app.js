@@ -1297,18 +1297,22 @@ FacebookPanelView.prototype.submit = function fbpv_submit() {
   // Show the login dialog if not logged in
   if (!this.isReadyForFetch()) {
     FB.login((function fbpv_loggedIn(res) {
-      // We should not be using isReadyForFetch() here because
-      // the permission check would be still in-flight.
-      // Note that we assume we have the permission already
-      // if the user logged in through here.
-      if (res.status !== 'connected')
-        return;
-
       // XXX: There is no way to cancel the login pop-up midway if
       // the user navigates away from the panel (or the source dialog).
       // We shall do some checking here to avoid accidently switches the UI.
       if (this.element.hidden || this.dialog.element.hidden)
         return;
+
+      this.facebookResponse = res;
+
+      if (res.status !== 'connected')
+        return;
+
+      // Note that we assume we have the permission already
+      // if the user logged in through here.
+      // We have to overwrite this here so FacebookFetcher
+      // could confirm the permission.
+      this.hasPermission = true;
 
       this.dialog.submit(
         '#facebook:' + this.facebookResponse.authResponse.userID);
