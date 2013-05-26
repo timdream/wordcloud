@@ -39,9 +39,21 @@ body {
     -webkit-transform: rotateX(-20deg);
     visibility: hidden;
     opacity: 0; }
-  #wc-source-dialog .btn-group,
-  #wc-dashboard .btn-group {
-    margin-bottom: 5px; }
+
+#wc-dashboard .btn-group {
+  margin-bottom: 5px; }
+
+#wc-list-dialog, #wc-sharer-dialog {
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  -webkit-transition: opacity 0.5s ease, -webkit-transform 0.5s ease; }
+  #wc-list-dialog[hidden], #wc-sharer-dialog[hidden] {
+    transition: visibility 0.5s ease, opacity 0.5s ease, transform 0.5s ease;
+    -webkit-transition: visibility 0.5s ease, opacity 0.5s ease, -webkit-transform 0.5s ease;
+    display: inherit;
+    transform: translateY(-200%);
+    -webkit-transform: translateY(-200%);
+    visibility: hidden;
+    opacity: 0; }
 
 .error .wc-icon-cloud {
   background-color: #d8d8d8;

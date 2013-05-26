@@ -63,8 +63,39 @@ $transition-time: 0.5s;
     visibility: hidden;
     opacity: 0;
   }
+}
+
+#wc-dashboard {
   .btn-group {
     margin-bottom: 5px;
+  }
+}
+
+#wc-list-dialog, #wc-sharer-dialog {
+  // XXX: Apply visibility transition to visible element
+  // will stop element within from getting |focus()| programmatically.
+  // Gecko: https://bugzilla.mozilla.org/show_bug.cgi?id=869512
+  // WebKit and Chromium bug not filed yet.
+  transition:
+    opacity $transition-time ease,
+    transform $transition-time ease;
+  -webkit-transition:
+    opacity $transition-time ease,
+    -webkit-transform $transition-time ease;
+  &[hidden] {
+    transition:
+      visibility $transition-time ease,
+      opacity $transition-time ease,
+      transform $transition-time ease;
+    -webkit-transition:
+      visibility $transition-time ease,
+      opacity $transition-time ease,
+      -webkit-transform $transition-time ease;
+    display: inherit;
+    transform: translateY(-200%);
+    -webkit-transform: translateY(-200%);
+    visibility: hidden;
+    opacity: 0;
   }
 }
 
