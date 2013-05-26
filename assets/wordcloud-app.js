@@ -645,10 +645,12 @@ var ListDialogView = function ListDialogView(opts) {
     name: 'list-dialog',
     element: 'wc-list-dialog',
     textElement: 'wc-list-edit',
-    doneBtnElement: 'wc-list-done-btn'
+    cancelBtnElement: 'wc-list-cancel-btn',
+    confirmBtnElement: 'wc-list-confirm-btn'
   });
 
-  this.doneBtnElement.addEventListener('click', this);
+  this.cancelBtnElement.addEventListener('click', this);
+  this.confirmBtnElement.addEventListener('click', this);
 };
 ListDialogView.prototype = new View();
 ListDialogView.prototype.beforeShow = function ldv_beforeShow() {
@@ -663,7 +665,17 @@ ListDialogView.prototype.afterHide = function ldv_afterHide() {
   this.textElement.value = '';
 };
 ListDialogView.prototype.handleEvent = function ldv_handleEvent(evt) {
-  this.submit();
+  switch (evt.target) {
+    case this.confirmBtnElement:
+      this.submit();
+
+      break;
+
+    case this.cancelBtnElement:
+      this.close();
+
+      break;
+  }
 };
 ListDialogView.prototype.submit = function ldv_submit() {
   var el = this.textElement;
@@ -684,6 +696,9 @@ ListDialogView.prototype.submit = function ldv_submit() {
     // Let's close ourselves.
     this.app.switchUIState(this.app.UI_STATE_DASHBOARD);
   }
+};
+ListDialogView.prototype.close = function ldv_close() {
+  this.app.switchUIState(this.app.UI_STATE_DASHBOARD);
 };
 
 var SharerDialogView = function SharerDialogView(opts) {
