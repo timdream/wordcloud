@@ -34,7 +34,8 @@ var WordCloudApp = function WordCloudApp() {
     ['loading', 'dashboard'],
     ['canvas', 'dashboard'],
     ['canvas', 'dashboard', 'list-dialog'],
-    ['loading', 'dashboard']
+    ['loading', 'dashboard'],
+    ['canvas', 'dashboard', 'sharer-dialog']
   ];
 
   this.wordfreqOption = {
@@ -123,6 +124,7 @@ WordCloudApp.prototype.UI_STATE_WORKING = 2;
 WordCloudApp.prototype.UI_STATE_DASHBOARD = 3;
 WordCloudApp.prototype.UI_STATE_LIST_DIALOG = 4;
 WordCloudApp.prototype.UI_STATE_ERROR_WITH_DASHBOARD = 5;
+WordCloudApp.prototype.UI_STATE_SHARER_DIALOG = 6;
 WordCloudApp.prototype.switchUIState = function wca_switchUIState(state) {
   if (!this.UIStateViewMap[state])
     throw 'Undefined state ' + state;
@@ -205,6 +207,10 @@ WordCloudApp.prototype.getWordCloudOption = function wca_getWordCloudOption() {
   }).bind(this));
 
   return option;
+};
+WordCloudApp.prototype.showSharer = function wca_showSharer(type) {
+  this.views['sharer-dialog'].type = type;
+  this.switchUIState(this.UI_STATE_SHARER_DIALOG);
 };
 WordCloudApp.prototype.route = function wca_route() {
   var hash = window.location.hash;
@@ -626,15 +632,10 @@ DashboardView.prototype.handleEvent = function dv_handleEvent(evt) {
       break;
 
     case 'facebook':
-      // XXX: to be implemented
-      break;
-
     case 'plurk':
-      // XXX: to be implemented
-      break;
-
     case 'twitter':
-      // XXX: to be implemented
+      app.showSharer(action);
+
       break;
   }
 };
@@ -682,6 +683,415 @@ ListDialogView.prototype.submit = function ldv_submit() {
     // It's useless to push the same hash here;
     // Let's close ourselves.
     this.app.switchUIState(this.app.UI_STATE_DASHBOARD);
+  }
+};
+
+var SharerDialogView = function SharerDialogView(opts) {
+  this.load(opts, {
+    name: 'sharer-dialog',
+    element: 'wc-sharer-dialog',
+    titleElement: 'wc-sharer-title',
+    imgElement: 'wc-sharer-img',
+    imgLinkElement: 'wc-sharer-img-link',
+    progressElement: 'wc-sharer-progress',
+    statusElement: 'wc-sharer-status',
+    reUploadBtnElement: 'wc-sharer-reupload-btn',
+    shareBtnElement: 'wc-sharer-share-btn',
+    cancelBtnElement: 'wc-sharer-cancel-btn'
+  });
+
+  this.imgLinkElement.addEventListener('click', this);
+  this.shareBtnElement.addEventListener('click', this);
+  this.reUploadBtnElement.addEventListener('click', this);
+  this.cancelBtnElement.addEventListener('click', this);
+
+  this.imgElement.addEventListener('load', function sdv_imgLoaded(evt) {
+    window.URL.revokeObjectURL(this.src);
+  });
+
+  if (!window.HTMLCanvasElement.prototype.toBlob) {
+    // Load canvas-to-blob library to see if we could shim it.
+    var el = document.createElement('script');
+    el.src = './assets/canvas-to-blob/canvas-to-blob.min.js';
+    document.documentElement.firstElementChild.appendChild(el);
+  }
+
+  this.stringIds = [
+    'share-to-facebook',
+    'share-to-plurk',
+    'share-to-twitter',
+    'uploading-to-imgur',
+    'image-uploaded',
+    'error-fallback-to-text',
+    'facebook-getting-photo'
+  ];
+};
+SharerDialogView.prototype = new View();
+SharerDialogView.prototype.HASHTAG = '#HTML5WordCloud';
+SharerDialogView.prototype.TWITTER_SHARE_URL =
+  'https://twitter.com/home/?status=';
+SharerDialogView.prototype.PLURK_SHARE_URL =
+  'http://plurk.com/?status=';
+SharerDialogView.prototype.FACEBOOK_PHOTO_URL =
+  'https://www.facebook.com/photo.php?fbid=';
+SharerDialogView.prototype.IMGUR_URL =
+  'http://imgur.com/';
+SharerDialogView.prototype.IMGUR_API_URL =
+  'https://api.imgur.com/3/upload.json';
+SharerDialogView.prototype.SHARED_ITEM_LIMIT = 10;
+SharerDialogView.prototype.LABEL_TITLE_FACEBOOK = 0;
+SharerDialogView.prototype.LABEL_TITLE_PLURK = 1;
+SharerDialogView.prototype.LABEL_TITLE_TWITTER = 2;
+SharerDialogView.prototype.LABEL_STATUS_IMGUR_UPLOADING = 3;
+SharerDialogView.prototype.LABEL_STATUS_IMAGE_UPLOADED = 4;
+SharerDialogView.prototype.LABEL_STATUS_FALLBACK_TEXT = 5;
+SharerDialogView.prototype.LABEL_FACEBOOK_WINDOW_LOADING = 6;
+
+
+SharerDialogView.prototype.beforeShow = function sdv_beforeShow() {
+  if (!this.type)
+    throw 'shareDialogView.type must be set before show().';
+
+  var uploadSupported = !!(window.HTMLCanvasElement.prototype.toBlob &&
+    window.XMLHttpRequest && window.FormData);
+
+  if (uploadSupported) {
+    this.shareImage();
+  } else {
+    this.shareText();
+    var app = this.app;
+    setTimeout(function updateState() {
+      app.switchUIState(app.UI_STATE_DASHBOARD);
+    });
+    return false; // prevent us from showing up
+  }
+};
+SharerDialogView.prototype.afterHide = function sdv_afterHide() {
+  this.type = undefined;
+  if (this.xhr) {
+    this.xhr.abort();
+    this.xhr = null;
+  }
+};
+SharerDialogView.prototype.handleEvent = function sdv_handleEvent(evt) {
+  if (evt.target.disabled)
+    return;
+
+  switch (evt.target) {
+    case this.shareBtnElement:
+      this.sendImage();
+
+      break;
+
+    case this.reUploadBtnElement:
+      this.uploadImage();
+
+      break;
+
+    case this.imgLinkElement:
+      if (!this.imgurData) {
+        evt.preventDefault();
+
+        break;
+      }
+
+      break;
+
+    case this.cancelBtnElement:
+      this.close();
+      break;
+  }
+};
+SharerDialogView.prototype.close = function sdv_close() {
+  this.app.switchUIState(this.app.UI_STATE_DASHBOARD);
+};
+SharerDialogView.prototype.getCanvasBlob = function sdv_getCanvasBlob(cb) {
+  this.app.views['canvas'].element.toBlob(cb.bind(this));
+};
+SharerDialogView.prototype.updateTitle = function sdv_updateTitle(stringId) {
+  if (!this.stringIds[stringId])
+    throw 'Undefined stringId ' + stringId;
+
+  // XXX: replace this with l10n library calls
+  this.titleElement.textContent = this.stringIds[stringId];
+};
+SharerDialogView.prototype.updateStatus = function sdv_updateStatus(stringId) {
+  if (!this.stringIds[stringId])
+    throw 'Undefined stringId ' + stringId;
+
+  // XXX: replace this with l10n library calls
+  this.statusElement.textContent = this.stringIds[stringId];
+};
+SharerDialogView.prototype.updateProgress =
+  function sdv_updateProgress(progress, active) {
+    this.progressElement.style.width = Math.floor(progress * 100) + '%';
+    // Don't use classList here for IE9
+    this.progressElement.parentNode.className =
+      'progress progress-striped' + (active ? ' active' : '');
+  };
+SharerDialogView.prototype.getCloudTitle = function sdv_getCloudTitle() {
+  // XXX l10n
+  return 'HTML5 Word Cloud';
+};
+SharerDialogView.prototype.getCloudList = function sdv_getCloudList() {
+  var list = this.app.data.list;
+  var i = 0;
+  var sharedItems = [];
+  do {
+    sharedItems[i] = list[i][0];
+  } while (++i < this.SHARED_ITEM_LIMIT);
+
+  // XXX l10n
+  return 'most frequent terms: ' + sharedItems.join(', ') +
+        ((list.length > this.SHARED_ITEM_LIMIT) ? '...' : '');
+};
+SharerDialogView.prototype.shareText = function sdv_shareText() {
+  var url = window.location.href;
+  switch (this.type) {
+    case 'facebook':
+      // Load Facebook SDK at this point;
+      // We won't wrap other FB.xxx calls in other functions
+      // because this is the only entry point for FacebookPanelView.
+      (new FacebookSDKLoader()).load((function sdv_bindFacebookSDK() {
+        // XXX This will be blocked by pop-up blocker.
+        FB.ui({
+          method: 'feed',
+          link: url,
+          name: this.getCloudTitle(),
+          description: this.getCloudList(),
+          display: 'iframe'
+        });
+      }).bind(this));
+      break;
+
+    case 'plurk':
+      window.open(this.PLURK_SHARE_URL +
+        encodeURIComponent(
+          url + ' (' +
+          this.getCloudTitle() + ') ' +
+          this.getCloudList() + ' ' +
+          this.HASHTAG));
+      break;
+
+    case 'twitter':
+      window.open(this.TWITTER_SHARE_URL +
+        encodeURIComponent(
+          url + ' ' +
+          this.getCloudTitle() + ' ' +
+          this.getCloudList() + ' ' +
+          this.HASHTAG));
+      break;
+
+    default:
+      throw 'Unknown shareDialogView type ' + this.type;
+  }
+};
+SharerDialogView.prototype.shareImage = function sdv_shareImage() {
+  switch (this.type) {
+    case 'facebook':
+      (new FacebookSDKLoader()).load((function sdv_bindFacebookSDK() {
+        if (this.facebookLoaded)
+          return;
+
+        this.facebookLoaded = true;
+
+        FB.getLoginStatus(this.updateFacebookStatus.bind(this));
+        FB.Event.subscribe(
+          'auth.authResponseChange', this.updateFacebookStatus.bind(this));
+      }).bind(this));
+
+      // no 'break' here.
+
+    case 'plurk':
+    case 'twitter':
+      this.updateTitle(this['LABEL_TITLE_' + this.type.toUpperCase()]);
+
+      break;
+
+    default:
+      throw 'Unknown shareDialogView type ' + this.type;
+  }
+
+  // Start upload if we have never upload any image.
+  if (!this.imgurData) {
+    this.reUploadBtnElement.disabled = true;
+    this.uploadImage();
+  } else {
+    this.reUploadBtnElement.disabled = false;
+  }
+};
+SharerDialogView.prototype.updateFacebookStatus =
+  function sdv_updateFacebookStatus(res) {
+    if (res.status === 'connected') {
+      FB.api('/me/permissions', (function checkPermissions(res) {
+        this.hasFacebookPermission = (res.data[0]['publish_stream'] == 1);
+      }).bind(this));
+    } else {
+      this.hasFacebookPermission = false;
+    }
+  };
+SharerDialogView.prototype.uploadImage = function sdv_uploadImage() {
+  if (!window.IMGUR_CLIENT_ID)
+    throw 'IMGUR_CLIENT_ID is not set.';
+
+  this.imgurData = undefined;
+  this.updateStatus(this.LABEL_STATUS_IMGUR_UPLOADING);
+  this.updateProgress(0.05, true);
+  this.shareBtnElement.disabled = true;
+
+  var formdata = new FormData();
+  formdata.append('title', this.getCloudTitle());
+  formdata.append('name', 'wordcloud.png');
+  formdata.append('description',
+    this.getCloudList() + '\n\n' + window.location.href);
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', this.IMGUR_API_URL);
+  xhr.setRequestHeader('Authorization', 'Client-ID ' + IMGUR_CLIENT_ID);
+
+  if (xhr.upload) {
+    xhr.upload.onprogress = (function sdv_xhrProgress(evt) {
+      this.updateProgress(evt.loaded / evt.total, true);
+    }).bind(this);
+  } else {
+    this.updateProgress(1, true);
+  }
+
+  xhr.onreadystatechange = (function sdv_xhrFinish(evt) {
+    if (xhr.readyState !== XMLHttpRequest.DONE || !this.type)
+      return;
+
+    this.xhr = null;
+    var response;
+    try {
+      response = JSON.parse(xhr.responseText);
+    } catch (e) {}
+
+    if (!response || !response.success) {
+      // Upload failed
+      this.updateProgress(0.05, false);
+      this.updateStatus(this.LABEL_STATUS_FALLBACK_TEXT);
+      this.shareBtnElement.disabled = false;
+      this.reUploadBtnElement.disabled = false;
+
+      return;
+    }
+
+    // Upload succeed
+    this.imgurData = response.data;
+    this.imgLinkElement.href = this.IMGUR_URL + this.imgurData.id;
+
+    this.updateProgress(1, false);
+    this.updateStatus(this.LABEL_STATUS_IMAGE_UPLOADED);
+    this.shareBtnElement.disabled = false;
+  }).bind(this);
+
+  this.getCanvasBlob(function sdv_gotBlob(blob) {
+    if (!this.type)
+      return;
+
+    this.imgElement.src = window.URL.createObjectURL(blob);
+
+    formdata.append('image', blob);
+    xhr.send(formdata);
+    this.xhr = xhr;
+  });
+};
+SharerDialogView.prototype.sendImage = function sdv_sendImage() {
+  if (!this.imgurData) {
+    this.shareText();
+
+    return;
+  }
+
+  var url = window.location.href;
+  switch (this.type) {
+    case 'facebook':
+      if (!window.FB) {
+        // FB API is slower than Imgur image uploading?
+
+        return;
+      }
+
+      // Get us a new window here to workaround pop-up blocker
+      // once the image is uploaded.
+      // Obviously this is not the optimal user experience.
+
+      // XXX l10n
+      var facebookWin = window.open('data:text/html,' +
+        encodeURIComponent(this.stringIds[this.LABEL_FACEBOOK_WINDOW_LOADING]));
+
+      var sendFacebookPhoto = function sdv_sendFacebookPhoto() {
+        // XXX This is sad. We couldn't make a CORS XHR request
+        // to Facebook Graph API to send our image directly,
+        // so we ask Facebook to pull the image uploaded to Imgur.
+        FB.api('/me/photos', 'post', {
+          url: this.imgurData.link,
+          message: this.getCloudTitle() + '\n\n' +
+            this.getCloudList() + '\n\n' + url
+        }, (function uploaded(res) {
+          if (!res || !res.id) {
+            facebookWin.close();
+
+            if (!this.type)
+              return;
+
+            // Failed, fall back to sharing via FB.ui() instead.
+            this.shareText();
+            this.close();
+
+            return;
+          }
+
+          facebookWin.location.href = this.FACEBOOK_PHOTO_URL + res.id;
+
+          if (!this.type)
+            return;
+
+          this.close();
+        }).bind(this));
+      };
+
+      if (!this.hasFacebookPermission) {
+        FB.login((function sdv_loggedIn(res) {
+          // Note that we assume we have the permission already
+          // if the user logged in through here.
+          if (res.status !== 'connected' || !this.type)
+            return;
+
+          sendFacebookPhoto.call(this);
+        }).bind(this), { scope: 'publish_stream' });
+      } else {
+        sendFacebookPhoto.call(this);
+      }
+
+      break;
+
+    case 'plurk':
+      window.open(this.PLURK_SHARE_URL +
+        encodeURIComponent(
+          this.imgurData.link + ' ' +
+          url + ' (' + this.getCloudTitle() + ') ' +
+          this.getCloudList() + ' ' +
+          this.HASHTAG));
+      this.close();
+
+      break;
+
+    case 'twitter':
+      window.open(this.TWITTER_SHARE_URL +
+        encodeURIComponent(
+          url + ' ' +
+          this.getCloudTitle() + ' ' +
+          this.getCloudList() + ' ' +
+          this.imgurData.link + ' ' +
+          this.HASHTAG));
+      this.close();
+
+      break;
+
+    default:
+      throw 'Unknown shareDialogView type ' + this.type;
   }
 };
 

@@ -10,3 +10,6 @@
 [submodule "test/qunit"]
 	path = test/qunit
 	url = git://github.com/jquery/qunit.git
+[submodule "assets/canvas-to-blob"]
+	path = assets/canvas-to-blob
+	url = git://github.com/blueimp/JavaScript-Canvas-to-Blob.git

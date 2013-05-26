@@ -63,6 +63,7 @@
   app.addView(new LoadingView());
   app.addView(new DashboardView());
   app.addView(new ListDialogView());
+  app.addView(new SharerDialogView());
   app.addView(sourceDialogView);
 
   app.addFetcher(new TextFetcher());

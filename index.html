@@ -220,9 +220,9 @@
           <div class="pull-right">
 
             <div class="btn-group">
-              <button data-action="facebook" class="btn disabled" title="Share on Facebook"><i class="favicons-facebook"></i></button>
-              <button data-action="plurk" class="btn disabled" title="Share on Plurk"><i class="favicons-plurk"></i></button>
-              <button data-action="twitter" class="btn disabled" title="Share on Twitter"><i class="favicons-twitter"></i></button>
+              <button data-canvas-ctl data-action="facebook" class="btn disabled" title="Share on Facebook"><i class="favicons-facebook"></i></button>
+              <button data-canvas-ctl data-action="plurk" class="btn disabled" title="Share on Plurk"><i class="favicons-plurk"></i></button>
+              <button data-canvas-ctl data-action="twitter" class="btn disabled" title="Share on Twitter"><i class="favicons-twitter"></i></button>
             </div>
 
             <div class="btn-group">
@@ -243,6 +243,32 @@
     </div>
     <div class="modal-footer">
       <button id="wc-list-done-btn" class="btn btn-primary">Done</button>
+    </div>
+  </div>
+
+  <div id="wc-sharer-dialog" class="modal" hidden>
+    <div class="modal-header">
+      <h3 id="wc-sharer-title">...</h3>
+    </div>
+    <div class="modal-body">
+      <div class="row-fluid">
+        <div class="span3">
+          <a class="thumbnail" id="wc-sharer-img-link" target="_blank">
+            <img id="wc-sharer-img" />
+          </a>
+        </div>
+        <div class="span9">
+          <div class="progress progress-striped active">
+            <div class="bar" id="wc-sharer-progress"></div>
+          </div>
+          <p id="wc-sharer-status">...</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button id="wc-sharer-cancel-btn" class="btn">Cancel</button>
+      <button id="wc-sharer-reupload-btn" class="btn">New Upload</button>
+      <button id="wc-sharer-share-btn" class="btn btn-primary">Share</button>
     </div>
   </div>
 
