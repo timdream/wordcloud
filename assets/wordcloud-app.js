@@ -42,11 +42,30 @@ var WordCloudApp = function WordCloudApp() {
     workerUrl: './assets/wordfreq/src/wordfreq.worker.js'
   };
 
+  this.shapes = [
+    {
+      shape: function shapeSquare(theta) {
+        var thetaPrime = (theta + Math.PI / 4) % (2 * Math.PI / 4);
+        return 1 / (Math.cos(thetaPrime) + Math.sin(thetaPrime));
+      }
+    },
+    { shape: 'triangle-forward',
+      ellipticity: 1 },
+    { shape: 'circle' },
+    { shape: 'star',
+      ellipticity: 1 }
+  ];
+
   this.themes = [
     {
       fontFamily: '"Trebuchet MS", "Heiti TC", "微軟正黑體", ' +
                   '"Arial Unicode MS", "Droid Fallback Sans", sans-serif',
-      color: 'random-dark',
+      color: function getRandomDarkColor() {
+        return 'rgb(' +
+          Math.floor(Math.random() * 128 + 48).toString(10) + ',' +
+          Math.floor(Math.random() * 128 + 48).toString(10) + ',' +
+          Math.floor(Math.random() * 128 + 48).toString(10) + ')';
+      },
       backgroundColor: '#eee'  //opaque white
     },
     {
@@ -66,6 +85,14 @@ var WordCloudApp = function WordCloudApp() {
       backgroundColor: '#000'
     },
     {
+      // http://ethantw.net/projects/lab/css-reset/
+      fontFamily: 'Baskerville, "Times New Roman", "華康儷金黑 Std", ' +
+                  '"華康儷宋 Std",  DFLiKingHeiStd-W8, DFLiSongStd-W5, ' +
+                  '"Hiragino Mincho Pro", "LiSong Pro Light", "新細明體", serif',
+      color: '#d0d0d0',
+      backgroundColor: '#999'
+    },
+    {
       fontFamily: '"Myriad Pro", "Lucida Grande", Helvetica, "Heiti TC", ' +
                   '"微軟正黑體", "Arial Unicode MS", "Droid Fallback Sans", ' +
                   'sans-serif',
@@ -82,6 +109,7 @@ var WordCloudApp = function WordCloudApp() {
 
   this.data = {
     theme: 0,
+    shape: 0,
     gridSize: undefined,
     weightFactor: undefined
   };
@@ -204,6 +232,11 @@ WordCloudApp.prototype.getWordCloudOption = function wca_getWordCloudOption() {
   var themeKeys = Object.keys(this.themes[this.data.theme]);
   themeKeys.forEach((function copyThemeValues(key) {
     option[key] = this.themes[this.data.theme][key];
+  }).bind(this));
+
+  var shapeKeys = Object.keys(this.shapes[this.data.shape]);
+  shapeKeys.forEach((function copyThemeValues(key) {
+    option[key] = this.shapes[this.data.shape][key];
   }).bind(this));
 
   return option;
@@ -572,6 +605,14 @@ DashboardView.prototype.handleEvent = function dv_handleEvent(evt) {
       app.data.theme++;
       if (app.data.theme >= app.themes.length)
         app.data.theme = 0;
+
+      app.draw();
+      break;
+
+    case 'shape':
+      app.data.shape++;
+      if (app.data.shape >= app.shapes.length)
+        app.data.shape = 0;
 
       app.draw();
       break;
