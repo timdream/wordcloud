@@ -710,6 +710,7 @@ var SharerDialogView = function SharerDialogView(opts) {
     imgLinkElement: 'wc-sharer-img-link',
     progressElement: 'wc-sharer-progress',
     statusElement: 'wc-sharer-status',
+    facebookLoginElement: 'wc-sharer-facebook-login-btn',
     reUploadBtnElement: 'wc-sharer-reupload-btn',
     shareBtnElement: 'wc-sharer-share-btn',
     cancelBtnElement: 'wc-sharer-cancel-btn'
@@ -717,6 +718,7 @@ var SharerDialogView = function SharerDialogView(opts) {
 
   this.imgLinkElement.addEventListener('click', this);
   this.shareBtnElement.addEventListener('click', this);
+  this.facebookLoginElement.addEventListener('click', this);
   this.reUploadBtnElement.addEventListener('click', this);
   this.cancelBtnElement.addEventListener('click', this);
 
@@ -738,7 +740,8 @@ var SharerDialogView = function SharerDialogView(opts) {
     'uploading-to-imgur',
     'image-uploaded',
     'error-fallback-to-text',
-    'facebook-getting-photo'
+    'facebook-getting-photo',
+    'need-facebook-login'
   ];
 };
 SharerDialogView.prototype = new View();
@@ -761,7 +764,7 @@ SharerDialogView.prototype.LABEL_STATUS_IMGUR_UPLOADING = 3;
 SharerDialogView.prototype.LABEL_STATUS_IMAGE_UPLOADED = 4;
 SharerDialogView.prototype.LABEL_STATUS_FALLBACK_TEXT = 5;
 SharerDialogView.prototype.LABEL_FACEBOOK_WINDOW_LOADING = 6;
-
+SharerDialogView.prototype.LABEL_ALERT_NEED_FACEBOOK_LOGIN = 7;
 
 SharerDialogView.prototype.beforeShow = function sdv_beforeShow() {
   if (!this.type)
@@ -800,6 +803,11 @@ SharerDialogView.prototype.handleEvent = function sdv_handleEvent(evt) {
 
     case this.reUploadBtnElement:
       this.uploadImage();
+
+      break;
+
+    case this.facebookLoginElement:
+      FB.login(function noop() {}, { scope: 'publish_stream' });
 
       break;
 
@@ -844,6 +852,10 @@ SharerDialogView.prototype.updateProgress =
     this.progressElement.parentNode.className =
       'progress progress-striped' + (active ? ' active' : '');
   };
+SharerDialogView.prototype.updateFacebookUI = function sdv_updateFacebookUI() {
+  this.facebookLoginElement.hidden =
+    (this.type !== 'facebook' || this.hasFacebookPermission);
+};
 SharerDialogView.prototype.getCloudTitle = function sdv_getCloudTitle() {
   // XXX l10n
   return 'HTML5 Word Cloud';
@@ -934,16 +946,19 @@ SharerDialogView.prototype.shareImage = function sdv_shareImage() {
   } else {
     this.reUploadBtnElement.disabled = false;
   }
+  this.updateFacebookUI();
 };
 SharerDialogView.prototype.updateFacebookStatus =
   function sdv_updateFacebookStatus(res) {
     if (res.status === 'connected') {
       FB.api('/me/permissions', (function checkPermissions(res) {
         this.hasFacebookPermission = (res.data[0]['publish_stream'] == 1);
+        this.updateFacebookUI();
       }).bind(this));
     } else {
       this.hasFacebookPermission = false;
     }
+    this.updateFacebookUI();
   };
 SharerDialogView.prototype.uploadImage = function sdv_uploadImage() {
   if (!window.IMGUR_CLIENT_ID)
@@ -1022,8 +1037,9 @@ SharerDialogView.prototype.sendImage = function sdv_sendImage() {
   var url = window.location.href;
   switch (this.type) {
     case 'facebook':
-      if (!window.FB) {
-        // FB API is slower than Imgur image uploading?
+      if (!this.hasFacebookPermission) {
+        // XXX l10n
+        alert(this.stringIds[this.LABEL_ALERT_NEED_FACEBOOK_LOGIN]);
 
         return;
       }
@@ -1036,49 +1052,34 @@ SharerDialogView.prototype.sendImage = function sdv_sendImage() {
       var facebookWin = window.open('data:text/html,' +
         encodeURIComponent(this.stringIds[this.LABEL_FACEBOOK_WINDOW_LOADING]));
 
-      var sendFacebookPhoto = function sdv_sendFacebookPhoto() {
-        // XXX This is sad. We couldn't make a CORS XHR request
-        // to Facebook Graph API to send our image directly,
-        // so we ask Facebook to pull the image uploaded to Imgur.
-        FB.api('/me/photos', 'post', {
-          url: this.imgurData.link,
-          message: this.getCloudTitle() + '\n\n' +
-            this.getCloudList() + '\n\n' + url
-        }, (function uploaded(res) {
-          if (!res || !res.id) {
-            facebookWin.close();
-
-            if (!this.type)
-              return;
-
-            // Failed, fall back to sharing via FB.ui() instead.
-            this.shareText();
-            this.close();
-
-            return;
-          }
-
-          facebookWin.location.href = this.FACEBOOK_PHOTO_URL + res.id;
+      // XXX This is sad. We couldn't make a CORS XHR request
+      // to Facebook Graph API to send our image directly,
+      // so we ask Facebook to pull the image uploaded to Imgur.
+      FB.api('/me/photos', 'post', {
+        url: this.imgurData.link,
+        message: this.getCloudTitle() + '\n\n' +
+          this.getCloudList() + '\n\n' + url
+      }, (function sdv_facebookImageUploaded(res) {
+        if (!res || !res.id) {
+          facebookWin.close();
 
           if (!this.type)
             return;
 
+          // Failed, fall back to sharing via FB.ui() instead.
+          this.shareText();
           this.close();
-        }).bind(this));
-      };
 
-      if (!this.hasFacebookPermission) {
-        FB.login((function sdv_loggedIn(res) {
-          // Note that we assume we have the permission already
-          // if the user logged in through here.
-          if (res.status !== 'connected' || !this.type)
-            return;
+          return;
+        }
 
-          sendFacebookPhoto.call(this);
-        }).bind(this), { scope: 'publish_stream' });
-      } else {
-        sendFacebookPhoto.call(this);
-      }
+        facebookWin.location.href = this.FACEBOOK_PHOTO_URL + res.id;
+
+        if (!this.type)
+          return;
+
+        this.close();
+      }).bind(this));
 
       break;
 

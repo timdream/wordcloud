@@ -65,6 +65,10 @@ $transition-time: 0.5s;
   }
 }
 
+.btn[hidden] {
+  display: none;
+}
+
 #wc-dashboard {
   .btn-group {
     margin-bottom: 5px;

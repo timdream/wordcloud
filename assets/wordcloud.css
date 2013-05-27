@@ -40,6 +40,9 @@ body {
     visibility: hidden;
     opacity: 0; }
 
+.btn[hidden] {
+  display: none; }
+
 #wc-dashboard .btn-group {
   margin-bottom: 5px; }
 
