@@ -634,6 +634,7 @@ DashboardView.prototype.handleEvent = function dv_handleEvent(evt) {
     case 'facebook':
     case 'plurk':
     case 'twitter':
+    case 'tumblr':
       app.showSharer(action);
 
       break;
@@ -741,7 +742,8 @@ var SharerDialogView = function SharerDialogView(opts) {
     'image-uploaded',
     'error-fallback-to-text',
     'facebook-getting-photo',
-    'need-facebook-login'
+    'need-facebook-login',
+    'share-to-tumblr'
   ];
 };
 SharerDialogView.prototype = new View();
@@ -765,7 +767,7 @@ SharerDialogView.prototype.LABEL_STATUS_IMAGE_UPLOADED = 4;
 SharerDialogView.prototype.LABEL_STATUS_FALLBACK_TEXT = 5;
 SharerDialogView.prototype.LABEL_FACEBOOK_WINDOW_LOADING = 6;
 SharerDialogView.prototype.LABEL_ALERT_NEED_FACEBOOK_LOGIN = 7;
-
+SharerDialogView.prototype.LABEL_TITLE_TUMBLR = 8;
 SharerDialogView.prototype.beforeShow = function sdv_beforeShow() {
   if (!this.type)
     throw 'shareDialogView.type must be set before show().';
@@ -909,6 +911,13 @@ SharerDialogView.prototype.shareText = function sdv_shareText() {
           this.HASHTAG));
       break;
 
+    case 'tumblr':
+      window.open('http://www.tumblr.com/share/link?=description=' +
+         encodeURIComponent(this.getCloudList()) +
+         '&name=' + encodeURIComponent(this.getCloudTitle()) +
+         '&url=' + encodeURIComponent(url));
+      this.close();
+
     default:
       throw 'Unknown shareDialogView type ' + this.type;
   }
@@ -931,6 +940,7 @@ SharerDialogView.prototype.shareImage = function sdv_shareImage() {
 
     case 'plurk':
     case 'twitter':
+    case 'tumblr':
       this.updateTitle(this['LABEL_TITLE_' + this.type.toUpperCase()]);
 
       break;
@@ -1102,6 +1112,16 @@ SharerDialogView.prototype.sendImage = function sdv_sendImage() {
           this.getCloudList() + ' ' +
           this.imgurData.link + ' ' +
           this.HASHTAG));
+      this.close();
+
+      break;
+
+    case 'tumblr':
+      window.open('http://www.tumblr.com/share/photo?source=' +
+         encodeURIComponent(this.imgurData.link) +
+         '&caption=' + encodeURIComponent(
+            this.getCloudTitle() + '\n' + this.getCloudList()) +
+         '&clickthru=' + encodeURIComponent(url));
       this.close();
 
       break;
