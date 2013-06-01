@@ -1326,6 +1326,8 @@ FacebookPanelView.prototype.LABEL_LOGGED_IN = 'facebook-ready';
 FacebookPanelView.prototype.LABEL_NOT_LOGGED_IN = 'facebook-start-to-login';
 
 FacebookPanelView.prototype.beforeShow = function fbpv_beforeShow() {
+  PanelView.prototype.beforeShow.apply(this, arguments);
+
   if (this.loaded)
     return;
 

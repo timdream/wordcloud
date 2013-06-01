@@ -40,6 +40,12 @@ body {
     visibility: hidden;
     opacity: 0; }
 
+@media (max-width: 767px) {
+  #wc-source-menu {
+    float: none; } }
+.modal {
+  position: absolute; }
+
 .btn[hidden] {
   display: none; }
 
