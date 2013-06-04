@@ -359,6 +359,42 @@ View.prototype.hide = function v_hide(currentState, nextState) {
   return true;
 };
 
+var LanguageSwitcherView = function LanguageSwitcher(opts) {
+  this.load(opts, {
+    element: 'wc-language'
+  });
+
+  // Collect the information about available languages from HTML.
+  var langs = this.langs = [];
+  Array.prototype.forEach.call(this.element.children, function lang(el) {
+    langs.push(el.value);
+    if (el.value === navigator.language)
+      el.selected = true;
+  });
+
+  if (langs.indexOf(navigator.language) === -1) {
+    // Default to the first one.
+    this.element.selectedIndex = 0;
+    document.webL10n.setLanguage(langs[0]);
+  }
+
+  // 'localized' is a CustomEvent dispatched by l10n.js
+  document.addEventListener('localized', this);
+  this.element.addEventListener('change', this);
+};
+LanguageSwitcherView.prototype = new View();
+LanguageSwitcherView.prototype.handleEvent = function lsv_handleEvent(evt) {
+  switch (evt.type) {
+    case 'change':
+      document.webL10n.setLanguage(this.element.value);
+      break;
+
+    case 'localized':
+      document.documentElement.lang = evt.language;
+      break;
+  }
+};
+
 var CanvasView = function CanvasView(opts) {
   this.load(opts, {
     name: 'canvas',

@@ -43,6 +43,9 @@ body {
 @media (max-width: 767px) {
   #wc-source-menu {
     float: none; } }
+.modal-footer .input-prepend {
+  margin: 0; }
+
 .modal {
   position: absolute; }
 

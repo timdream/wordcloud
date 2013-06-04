@@ -9,8 +9,12 @@
   <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="./assets/wordcloud.css">
 
+  <link rel="prefetch" type="application/l10n" href="./locales/locales.ini" />
+
   <script defer type="text/javascript"
     src="./assets/vars.js"></script>
+  <script defer type="text/javascript"
+    src="./assets/web-l10n/l10n.js"></script>
   <script defer type="text/javascript"
     src="./assets/wordfreq/src/wordfreq.js"></script>
   <script defer type="text/javascript"
@@ -34,7 +38,7 @@
 
   <div id="wc-source-dialog" class="modal" hidden>
     <div class="modal-header">
-      <h3>HTML5 Word Cloud</h3>
+      <h3 data-l10n-id="source-dialog-title"></h3>
     </div>
     <div class="modal-body">
       <div class="row-fluid">
@@ -189,7 +193,17 @@
       </div>
     </div>
     <div class="modal-footer">
+
+      <div class="input-prepend pull-left" title="Language">
+        <span class="add-on"><i class="icon-globe"></i></span>
+        <select id="wc-language" class="input-small">
+          <option value="en-US" selected>English</option>
+          <option value="zh-TW">正體中文</option>
+        </select>
+      </div>
+
       <button id="wc-source-start-btn" class="btn btn-primary">Start</button>
+
     </div>
   </div>
 

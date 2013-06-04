@@ -7,6 +7,8 @@
   if (!app.isSupported)
     return;
 
+  var langSwitcherView = new LanguageSwitcherView();
+
   var sourceDialogView = new SourceDialogView();
   sourceDialogView.addPanel(new ExamplePanelView());
   sourceDialogView.addPanel(new CPPanelView());

@@ -13,3 +13,6 @@
 [submodule "assets/canvas-to-blob"]
 	path = assets/canvas-to-blob
 	url = git://github.com/blueimp/JavaScript-Canvas-to-Blob.git
+[submodule "assets/web-l10n"]
+	path = assets/web-l10n
+	url = git://github.com/timdream/webL10n.git

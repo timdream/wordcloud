@@ -71,6 +71,10 @@ $transition-time: 0.5s;
   }
 }
 
+.modal-footer .input-prepend {
+  margin: 0;
+}
+
 .modal {
   position: absolute;
 }
