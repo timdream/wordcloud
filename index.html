@@ -37,8 +37,11 @@
   </div>
 
   <div id="wc-source-dialog" class="modal" hidden>
-    <div class="modal-header">
-      <h3 data-l10n-id="source-dialog-title"></h3>
+    <div class="modal-header clearfix">
+      <h3 data-l10n-id="source-dialog-title" id="wc-source-title" class="pull-left"></h3>
+      <div class="pull-right">
+        <button id="wc-source-about-btn" class="btn btn-info">About</button>
+      </div>
     </div>
     <div class="modal-body">
       <div class="row-fluid">
@@ -287,6 +290,18 @@
       <button id="wc-sharer-cancel-btn" class="btn">Cancel</button>
       <button id="wc-sharer-reupload-btn" class="btn">New Upload</button>
       <button id="wc-sharer-share-btn" class="btn btn-primary">Share</button>
+    </div>
+  </div>
+
+  <div id="wc-about-dialog" class="modal" hidden>
+    <div class="modal-header">
+      <h3 id="wc-sharer-title">About HTML5 Word Cloud</h3>
+    </div>
+    <div class="modal-body">
+      <span>TODO: Insert trimed content of README.md</span>
+    </div>
+    <div class="modal-footer">
+      <button id="wc-about-close-btn" class="btn btn-primary">Close</button>
     </div>
   </div>
 

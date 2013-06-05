@@ -89,7 +89,7 @@ $transition-time: 0.5s;
   }
 }
 
-#wc-list-dialog, #wc-sharer-dialog {
+#wc-list-dialog, #wc-sharer-dialog, #wc-about-dialog {
   // XXX: Apply visibility transition to visible element
   // will stop element within from getting |focus()| programmatically.
   // Gecko: https://bugzilla.mozilla.org/show_bug.cgi?id=869512

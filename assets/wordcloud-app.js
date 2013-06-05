@@ -35,7 +35,8 @@ var WordCloudApp = function WordCloudApp() {
     ['canvas', 'dashboard'],
     ['canvas', 'dashboard', 'list-dialog'],
     ['loading', 'dashboard'],
-    ['canvas', 'dashboard', 'sharer-dialog']
+    ['canvas', 'dashboard', 'sharer-dialog'],
+    ['canvas', 'about-dialog']
   ];
 
   this.wordfreqOption = {
@@ -153,6 +154,7 @@ WordCloudApp.prototype.UI_STATE_DASHBOARD = 3;
 WordCloudApp.prototype.UI_STATE_LIST_DIALOG = 4;
 WordCloudApp.prototype.UI_STATE_ERROR_WITH_DASHBOARD = 5;
 WordCloudApp.prototype.UI_STATE_SHARER_DIALOG = 6;
+WordCloudApp.prototype.UI_STATE_ABOUT_DIALOG = 7;
 WordCloudApp.prototype.switchUIState = function wca_switchUIState(state) {
   if (!this.UIStateViewMap[state])
     throw 'Undefined state ' + state;
@@ -439,6 +441,8 @@ CanvasView.prototype.beforeShow =
 CanvasView.prototype.beforeHide = function cv_beforeShowHide(state, nextState) {
   switch (nextState) {
     case this.app.UI_STATE_SOURCE_DIALOG:
+      if (state == this.app.UI_STATE_ABOUT_DIALOG)
+        break;
       this.drawIdleCloud();
       break;
 
@@ -521,7 +525,8 @@ var SourceDialogView = function SourceDialogView(opts) {
     element: 'wc-source-dialog',
     menuElement: 'wc-source-menu',
     startBtnElement: 'wc-source-start-btn',
-    panelContainerElement: 'wc-source-panels'
+    panelContainerElement: 'wc-source-panels',
+    aboutBtnElement: 'wc-source-about-btn'
   });
 
   this.currentPanel = null;
@@ -530,6 +535,7 @@ var SourceDialogView = function SourceDialogView(opts) {
   this.menuElement.addEventListener('click', this);
   this.startBtnElement.addEventListener('click', this);
   this.panelContainerElement.addEventListener('submit', this);
+  this.aboutBtnElement.addEventListener('click', this);
 };
 SourceDialogView.prototype = new View();
 SourceDialogView.prototype.afterShow = function sdv_afterShow() {
@@ -550,6 +556,10 @@ SourceDialogView.prototype.handleEvent = function sd_handleEvent(evt) {
         return;
 
       this.showPanel(this.panels[panelName]);
+      break;
+
+    case this.aboutBtnElement:
+      this.app.switchUIState(this.app.UI_STATE_ABOUT_DIALOG);
       break;
 
     case this.startBtnElement:
@@ -1546,6 +1556,28 @@ GooglePlusPanelView.prototype.realSubmit = function gppv_realSubmit() {
   id = id.replace(/\/.*$/, '');
 
   this.dialog.submit('#googleplus:' + id);
+};
+
+var AboutDialogView = function AboutDialogView(opts) {
+  this.load(opts, {
+    name: 'about-dialog',
+    element: 'wc-about-dialog',
+    closeBtnElement: 'wc-about-close-btn'
+  });
+
+  this.closeBtnElement.addEventListener('click', this);
+};
+AboutDialogView.prototype = new View();
+AboutDialogView.prototype.handleEvent = function adv_handleEvent(evt) {
+  switch (evt.target) {
+    case this.closeBtnElement:
+      this.close();
+
+      break;
+  }
+};
+AboutDialogView.prototype.close = function adv_close() {
+  this.app.switchUIState(this.app.UI_STATE_SOURCE_DIALOG);
 };
 
 var Fetcher = function Fetcher() { };

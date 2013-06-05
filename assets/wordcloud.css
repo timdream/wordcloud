@@ -55,10 +55,10 @@ body {
 #wc-dashboard .btn-group {
   margin-bottom: 5px; }
 
-#wc-list-dialog, #wc-sharer-dialog {
+#wc-list-dialog, #wc-sharer-dialog, #wc-about-dialog {
   transition: opacity 0.5s ease, transform 0.5s ease;
   -webkit-transition: opacity 0.5s ease, -webkit-transform 0.5s ease; }
-  #wc-list-dialog[hidden], #wc-sharer-dialog[hidden] {
+  #wc-list-dialog[hidden], #wc-sharer-dialog[hidden], #wc-about-dialog[hidden] {
     transition: visibility 0.5s ease, opacity 0.5s ease, transform 0.5s ease;
     -webkit-transition: visibility 0.5s ease, opacity 0.5s ease, -webkit-transform 0.5s ease;
     display: inherit;
