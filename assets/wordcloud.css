@@ -117,7 +117,7 @@ body {
     padding-left: 5px; }
 
 .favicons-sprite, .favicons-facebook, .favicons-plurk, .favicons-tumblr, .favicons-twitter {
-  background: url('/assets/images/favicons-se0bb177de3.png') no-repeat; }
+  background: url('images/favicons-se0bb177de3.png') no-repeat; }
 
 .favicons-facebook {
   background-position: 0 -32px; }
