@@ -23,4 +23,5 @@ Understand more on how this web application works by following the links below:
 
 ## Contributors
 
+* [Grassboy Wu](https://github.com/Grassboy) for helping some of the work in the rewrite version
 * [Yuren Ju](https://github.com/yurenju) for initial version of Facebook status fetching support
