@@ -1,6 +1,13 @@
 # HTML5 Word Cloud
 
-Create a tag [Wordle](http://www.wordle.net/) presentation on a HTML5 canvas element for a given article, powered by [wordfreq](https://github.com/timdream/wordfreq), remote data fetching through public APIs, and sharing tools. **Visit [the web app](http://timc.idv.tw/wordcloud/).**
+Create a tag [Wordle](http://www.wordle.net/) presentation on a HTML5 canvas element for a given article, powered by [wordfreq](https://github.com/timdream/wordfreq), remote data fetching through public APIs, and sharing tools.
+
+**Visit [the web app](http://timc.idv.tw/wordcloud/).**
+
+## Author & Copyright
+
+Copyright 2011, 2013 [Timothy Guan-tin Chien](http://timdream.org/) and other contributors.
+Released under [the MIT license](./MIT-LICENSE.txt).
 
 ## Libraries used
 
