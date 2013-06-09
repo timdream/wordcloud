@@ -117,6 +117,24 @@ $transition-time: 0.5s;
   }
 }
 
+#wc-about-icon {
+  position: relative;
+  height: 120px;
+}
+
+#wc-about-content {
+  h1 {
+    font-size: 31.5px;
+  }
+  h2 {
+    font-size: 24.5px;
+  }
+  h3 {
+    font-size: 17.5px;
+    line-height: 20px;
+  }
+}
+
 $icon-width: 100px;
 $icon-height: $icon-width * .3333;
 $hoz-shift: $icon-width * 0.13;

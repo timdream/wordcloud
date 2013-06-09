@@ -67,6 +67,18 @@ body {
     visibility: hidden;
     opacity: 0; }
 
+#wc-about-icon {
+  position: relative;
+  height: 120px; }
+
+#wc-about-content h1 {
+  font-size: 31.5px; }
+#wc-about-content h2 {
+  font-size: 24.5px; }
+#wc-about-content h3 {
+  font-size: 17.5px;
+  line-height: 20px; }
+
 .error .wc-icon-cloud {
   background-color: #d8d8d8;
   box-shadow: inset 0 -2.5px rgba(216, 216, 216, 0.6), 0 5px 5px rgba(0, 0, 0, 0.1), inset 0 -5px 5px rgba(0, 85, 136, 0.1); }

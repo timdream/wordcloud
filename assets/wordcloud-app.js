@@ -1562,14 +1562,69 @@ var AboutDialogView = function AboutDialogView(opts) {
   this.load(opts, {
     name: 'about-dialog',
     element: 'wc-about-dialog',
+    contentElement: 'wc-about-content',
     closeBtnElement: 'wc-about-close-btn'
   });
 
+  this.loaded = false;
+
   this.closeBtnElement.addEventListener('click', this);
+  this.contentElement.addEventListener('click', this);
+  document.addEventListener('localized', this);
 };
 AboutDialogView.prototype = new View();
+AboutDialogView.prototype.beforeShow = function adv_beforeShow() {
+  this.loaded = true;
+  var lang = document.webL10n.getLanguage();
+  this.loadContent(lang, true);
+};
+AboutDialogView.prototype.loadContent = function adv_loadContent(lang, first) {
+  // Everything would be a *lot* easier
+  // if we could have seamless iframe here...
+  var iframe = document.createElement('iframe');
+  iframe.src = 'about.' + lang + '.html';
+  this.contentElement.appendChild(iframe);
+
+  iframe.onload = (function contentLoaded() {
+    // Import nodes to this document
+    var content = document.importNode(
+      iframe.contentWindow.document.body, true);
+
+    // Create a document fragment; move all the children to it.
+    var docFrag = document.createDocumentFragment();
+    while (content.firstElementChild) {
+      docFrag.appendChild(content.firstElementChild);
+    }
+
+    // Append the children to the container.
+    var container = this.contentElement;
+    while (container.firstChild) {
+      container.removeChild(container.firstChild);
+    }
+    container.appendChild(docFrag);
+  }).bind(this);
+  if (first) {
+    iframe.onerror = (function contentLoadError() {
+      this.loaded = false;
+    }).bind(this);
+  }
+};
 AboutDialogView.prototype.handleEvent = function adv_handleEvent(evt) {
-  switch (evt.target) {
+  if (evt.type === 'localized') {
+    this.loaded = false;
+
+    return;
+  }
+
+  switch (evt.currentTarget) {
+    case this.contentElement:
+      if (evt.target.tagName === 'A') {
+        evt.preventDefault();
+        window.open(evt.target.href);
+      }
+
+      break;
+
     case this.closeBtnElement:
       this.close();
 

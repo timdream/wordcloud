@@ -79,7 +79,7 @@ https://gist.github.com/2945570
   border-radius: 33.33px;
   box-shadow: inset 0 -2.5px rgba(255, 255, 255, 0.6), 0 5px 5px rgba(0, 0, 0, 0.1), inset 0 -5px 5px rgba(0, 100, 160, 0.1);
   z-index: 2; }
-  :not(.error):not([hidden]) > .wc-icon > .wc-icon-cloud {
+  #wc-loading:not(.error):not([hidden]) > .wc-icon > .wc-icon-cloud {
     animation: shake 2s infinite;
     -webkit-animation: shake 2s infinite; }
   .wc-icon-cloud:before, .wc-icon-cloud:after {

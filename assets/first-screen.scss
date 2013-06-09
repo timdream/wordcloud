@@ -92,7 +92,7 @@ $shadow-length: $icon-width * 0.05;
     0 $shadow-length $shadow-length rgba(0, 0, 0, 0.1),
     inset 0 (- $shadow-length) $shadow-length rgba(0, 100, 160, 0.1);
 
-  :not(.error):not([hidden]) > .wc-icon > & {
+  #wc-loading:not(.error):not([hidden]) > .wc-icon > & {
     animation: shake 2s infinite;
     -webkit-animation: shake 2s infinite;
   }
