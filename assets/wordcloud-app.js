@@ -462,6 +462,9 @@ CanvasView.prototype.setDimension = function cv_setDimension(width, height) {
   el.style.marginTop = (- height / 2) + 'px';
 };
 CanvasView.prototype.draw = function cv_draw(option) {
+  // Have generic font selected based on UI language
+  this.element.lang = '';
+
   WordCloud(this.element, option);
 };
 CanvasView.prototype.drawIdleCloud = function cv_drawIdleCloud() {
@@ -475,7 +478,10 @@ CanvasView.prototype.drawIdleCloud = function cv_drawIdleCloud() {
     return Math.pow(size, 2.3) * width / 1024;
   };
 
-  WordCloud(this.element, this.idleOption);
+  // Make sure Latin characters looks correct for non-English the UI language
+  el.lang = 'en';
+
+  WordCloud(el, this.idleOption);
 };
 CanvasView.prototype.empty = function cv_empty() {
   WordCloud(this.element, {
