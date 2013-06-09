@@ -1723,6 +1723,7 @@ var JSONPFetcher = function JSONPFetcher() {};
 JSONPFetcher.prototype = new Fetcher();
 JSONPFetcher.prototype.LABEL_VERB = LoadingView.prototype.LABEL_DOWNLOADING;
 JSONPFetcher.prototype.CALLBACK_PREFIX = 'JSONPCallbackX';
+JSONPFetcher.prototype.TIMEOUT = 30 * 1000;
 JSONPFetcher.prototype.reset =
 JSONPFetcher.prototype.stop = function jpf_stop() {
   this.currentRequest = undefined;
@@ -1745,6 +1746,7 @@ JSONPFetcher.prototype.getNewCallback = function jpf_getNewCallback() {
     if (this.currentRequest !== callbackName)
       return;
     this.currentRequest = undefined;
+    clearTimeout(this.timer);
 
     // send the callback name and the data back
     this.handleResponse.apply(this, arguments);
@@ -1765,6 +1767,11 @@ JSONPFetcher.prototype.requestData = function jpf_requestJSONData(url) {
   el.addEventListener('error', this);
 
   document.documentElement.firstElementChild.appendChild(el);
+
+  clearTimeout(this.timer);
+  this.timer = setTimeout(function jpf_timeout() {
+    window[callbackName]();
+  }, this.TIMEOUT);
 };
 
 var FeedFetcher = function FeedFetcher() {
@@ -1802,7 +1809,7 @@ FeedFetcher.prototype.handleResponse = function rf_handleResponse(contextValue,
                                                                  responseStatus,
                                                                  errorDetails) {
   // Return empty text if we couldn't get the data.
-  if (responseStatus !== 200) {
+  if (!contextValue || responseStatus !== 200) {
     this.app.handleData('');
     return;
   }
@@ -1854,6 +1861,11 @@ WikipediaFetcher.prototype.getData = function wf_getData(dataType, data) {
   this.requestData(url);
 };
 WikipediaFetcher.prototype.handleResponse = function wf_handleResponse(res) {
+  if (!res) {
+    this.app.handleData('');
+    return;
+  }
+
   var pageId = Object.keys(res.query.pages)[0];
   var page = res.query.pages[pageId];
   if (!('revisions' in page)) {
@@ -1903,7 +1915,7 @@ GooglePlusFetcher.prototype.getData = function gpf_getData(dataType, data) {
   this.requestData(url);
 };
 GooglePlusFetcher.prototype.handleResponse = function gpf_handleResponse(res) {
-  if (res.error || !res.items) {
+  if (!res || res.error || !res.items) {
     this.app.handleData('');
     return;
   }
