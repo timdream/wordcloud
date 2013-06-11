@@ -565,8 +565,8 @@ LoadingView.prototype.updateLabel = function l_updateLabel(stringId) {
   if (!this.stringIds[stringId])
     throw 'Undefined stringId ' + stringId;
 
-  // XXX: replace this with l10n library calls
-  this.labelElement.textContent = this.stringIds[stringId];
+  this.labelElement.textContent =
+    document.webL10n.get(this.stringIds[stringId]);
 };
 
 var SourceDialogView = function SourceDialogView(opts) {
@@ -760,9 +760,7 @@ DashboardView.prototype.handleEvent = function dv_handleEvent(evt) {
         }, 0);
       } else {
         evt.preventDefault();
-        // XXX: l10n
-        alert('Please right click and choose "Save As..."' +
-              ' to save the generated image.');
+        alert(document.webL10n.get('right-click-to-save'));
         window.open(url, '_blank', 'width=500,height=300,menubar=yes');
       }
 
@@ -974,15 +972,15 @@ SharerDialogView.prototype.updateTitle = function sdv_updateTitle(stringId) {
   if (!this.stringIds[stringId])
     throw 'Undefined stringId ' + stringId;
 
-  // XXX: replace this with l10n library calls
-  this.titleElement.textContent = this.stringIds[stringId];
+  this.titleElement.textContent =
+    document.webL10n.get(this.stringIds[stringId]);
 };
 SharerDialogView.prototype.updateStatus = function sdv_updateStatus(stringId) {
   if (!this.stringIds[stringId])
     throw 'Undefined stringId ' + stringId;
 
-  // XXX: replace this with l10n library calls
-  this.statusElement.textContent = this.stringIds[stringId];
+  this.statusElement.textContent =
+    document.webL10n.get(this.stringIds[stringId]);
 };
 SharerDialogView.prototype.updateProgress =
   function sdv_updateProgress(progress, active) {
@@ -996,8 +994,7 @@ SharerDialogView.prototype.updateFacebookUI = function sdv_updateFacebookUI() {
     (this.type !== 'facebook' || this.hasFacebookPermission);
 };
 SharerDialogView.prototype.getCloudTitle = function sdv_getCloudTitle() {
-  // XXX l10n
-  return 'HTML5 Word Cloud';
+  return document.webL10n.get('app-title');
 };
 SharerDialogView.prototype.getCloudList = function sdv_getCloudList() {
   var list = this.app.data.list;
@@ -1007,9 +1004,9 @@ SharerDialogView.prototype.getCloudList = function sdv_getCloudList() {
     sharedItems[i] = list[i][0];
   } while (++i < this.SHARED_ITEM_LIMIT);
 
-  // XXX l10n
-  return 'most frequent terms: ' + sharedItems.join(', ') +
-        ((list.length > this.SHARED_ITEM_LIMIT) ? '...' : '');
+  return (list.length > this.SHARED_ITEM_LIMIT) ?
+        document.webL10n.get('frequent-terms-more') :
+        document.webL10n.get('frequent-terms');
 };
 SharerDialogView.prototype.shareText = function sdv_shareText() {
   var url = window.location.href;
@@ -1185,8 +1182,9 @@ SharerDialogView.prototype.sendImage = function sdv_sendImage() {
   switch (this.type) {
     case 'facebook':
       if (!this.hasFacebookPermission) {
-        // XXX l10n
-        alert(this.stringIds[this.LABEL_ALERT_NEED_FACEBOOK_LOGIN]);
+        alert(document.webL10n.get(
+            this.stringIds[this.LABEL_ALERT_NEED_FACEBOOK_LOGIN]
+          ));
 
         return;
       }
@@ -1195,9 +1193,12 @@ SharerDialogView.prototype.sendImage = function sdv_sendImage() {
       // once the image is uploaded.
       // Obviously this is not the optimal user experience.
 
-      // XXX l10n
-      var facebookWin = window.open('data:text/html,' +
-        encodeURIComponent(this.stringIds[this.LABEL_FACEBOOK_WINDOW_LOADING]));
+      var facebookWin =
+        window.open('data:text/html,' +
+            encodeURIComponent(document.webL10n.get(
+                this.stringIds[this.LABEL_FACEBOOK_WINDOW_LOADING])
+              )
+          );
 
       // XXX This is sad. We couldn't make a CORS XHR request
       // to Facebook Graph API to send our image directly,
@@ -1344,9 +1345,8 @@ FilePanelView.prototype.handleEvent = function fpv_handleEvent(evt) {
   this.updateLabel(count);
 };
 FilePanelView.prototype.updateLabel = function fpv_updateLabel(count) {
-  // XXX: l10n
   this.fileLabelElement.textContent =
-    count ? (count + 'file-selected') : 'no-file-selected';
+    document.webL10n.get('n-file-selected', {n: count});
 };
 FilePanelView.prototype.isSupported = !!window.FileReader;
 FilePanelView.prototype.submit = function fpv_submit() {
@@ -1359,8 +1359,7 @@ FilePanelView.prototype.submit = function fpv_submit() {
 
   var file = el.files[0];
   if (file.type !== 'text/plain') {
-    // XXX: l10n
-    alert('Please select a plain text file.');
+    alert(document.webL10n.get('plain-text-file-please'));
     return;
   }
 
@@ -1403,8 +1402,7 @@ WikipediaPanelView.prototype.submit = function wpv_submit() {
   // XXX maybe provide a <select> of largest Wikipedias here.
   // (automatically from this table or manually)
   // https://meta.wikimedia.org/wiki/List_of_Wikipedias/Table
-  // XXX l10n
-  var lang = 'en';
+  var lang = document.webL10n.getLanguage();
 
   this.dialog.submit('#wikipedia.' + lang + ':' + el.value);
 };
@@ -1415,11 +1413,17 @@ var FacebookPanelView = function FacebookPanelView(opts) {
     element: 'wc-panel-facebook',
     statusElement: 'wc-panel-facebook-status'
   });
+
+  this.stringIds = [
+    'facebook-ready',
+    'facebook-start-to-login'
+  ];
+
   this.loaded = false;
 };
 FacebookPanelView.prototype = new PanelView();
-FacebookPanelView.prototype.LABEL_LOGGED_IN = 'facebook-ready';
-FacebookPanelView.prototype.LABEL_NOT_LOGGED_IN = 'facebook-start-to-login';
+FacebookPanelView.prototype.LABEL_LOGGED_IN = 0;
+FacebookPanelView.prototype.LABEL_NOT_LOGGED_IN = 1;
 
 FacebookPanelView.prototype.beforeShow = function fbpv_beforeShow() {
   PanelView.prototype.beforeShow.apply(this, arguments);
@@ -1457,11 +1461,12 @@ FacebookPanelView.prototype.updateStatus = function fbpv_updateStatus(res) {
   }
 };
 FacebookPanelView.prototype.updateUI = function fbpv_updateUI() {
-  // XXX: l10n
   if (this.isReadyForFetch()) {
-    this.statusElement.textContent = this.LABEL_LOGGED_IN;
+    this.statusElement.textContent =
+      document.webL10n.get(this.stringIds[this.LABEL_LOGGED_IN]);
   } else {
-    this.statusElement.textContent = this.LABEL_NOT_LOGGED_IN;
+    this.statusElement.textContent =
+      document.webL10n.get(this.stringIds[this.LABEL_NOT_LOGGED_IN]);
   }
 };
 FacebookPanelView.prototype.submit = function fbpv_submit() {
@@ -1507,11 +1512,17 @@ var GooglePlusPanelView = function GooglePlusPanelView(opts) {
     statusElement: 'wc-panel-googleplus-status',
     idElement: 'wc-panel-googleplus-id'
   });
+
+  this.stringIds = [
+    'google-ready',
+    'google-start-to-login'
+  ];
+
   this.loaded = false;
 };
 GooglePlusPanelView.prototype = new PanelView();
-GooglePlusPanelView.prototype.LABEL_LOGGED_IN = 'google-ready';
-GooglePlusPanelView.prototype.LABEL_NOT_LOGGED_IN = 'google-start-to-login';
+GooglePlusPanelView.prototype.LABEL_LOGGED_IN = 0;
+GooglePlusPanelView.prototype.LABEL_NOT_LOGGED_IN = 1;
 GooglePlusPanelView.prototype.beforeShow = function gppv_beforeShow() {
   if (!GOOGLE_CLIENT_ID)
     throw 'No GOOGLE_CLIENT_ID defined.';
@@ -1577,11 +1588,12 @@ GooglePlusPanelView.prototype.isReadyForFetch =
     return !!this.accessToken;
   };
 GooglePlusPanelView.prototype.updateUI = function gppv_updateUI() {
-  // XXX: l10n
   if (this.isReadyForFetch()) {
-    this.statusElement.textContent = this.LABEL_LOGGED_IN;
+    this.statusElement.textContent =
+      document.webL10n.get(this.stringIds[this.LABEL_LOGGED_IN]);
   } else {
-    this.statusElement.textContent = this.LABEL_NOT_LOGGED_IN;
+    this.statusElement.textContent =
+      document.webL10n.get(this.stringIds[this.LABEL_NOT_LOGGED_IN]);
   }
 };
 GooglePlusPanelView.prototype.submit = function gppv_submit() {
