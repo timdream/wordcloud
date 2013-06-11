@@ -278,7 +278,6 @@ WordCloudApp.prototype.route = function wca_route() {
 
   if (!hash) {
     this.switchUIState(this.UI_STATE_SOURCE_DIALOG);
-    this.views.canvas.drawIdleCloud();
     return;
   }
 
@@ -1709,6 +1708,9 @@ AboutDialogView.prototype.loadContent = function adv_loadContent(lang, first) {
   if (first) {
     iframe.onerror = (function contentLoadError() {
       this.loaded = false;
+      if (! this.element.hidden) {
+        this.app.switchUIState(this.app.UI_STATE_SOURCE_DIALOG);
+      }
     }).bind(this);
   }
 };

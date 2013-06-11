@@ -89,6 +89,10 @@ $transition-time: 0.5s;
   }
 }
 
+#wc-about-dialog iframe {
+  display: none;
+}
+
 #wc-list-dialog, #wc-sharer-dialog, #wc-about-dialog {
   // XXX: Apply visibility transition to visible element
   // will stop element within from getting |focus()| programmatically.

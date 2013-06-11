@@ -55,6 +55,9 @@ body {
 #wc-dashboard .btn-group {
   margin-bottom: 5px; }
 
+#wc-about-dialog iframe {
+  display: none; }
+
 #wc-list-dialog, #wc-sharer-dialog, #wc-about-dialog {
   transition: opacity 0.5s ease, transform 0.5s ease;
   -webkit-transition: opacity 0.5s ease, -webkit-transform 0.5s ease; }
