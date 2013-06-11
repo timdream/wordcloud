@@ -67,7 +67,7 @@ var WordCloudApp = function WordCloudApp() {
           Math.floor(Math.random() * 128 + 48).toString(10) + ',' +
           Math.floor(Math.random() * 128 + 48).toString(10) + ')';
       },
-      backgroundColor: '#eee'  //opaque white
+      backgroundColor: '#eee'
     },
     {
       // http://ethantw.net/projects/lab/css-reset/
@@ -403,6 +403,23 @@ var CanvasView = function CanvasView(opts) {
     element: 'wc-canvas'
   });
 
+  window.addEventListener('resize', this);
+
+  this.documentWidth = window.innerWidth;
+  this.documentHeight = window.innerHeight;
+
+  var style = this.element.style;
+  ['transform',
+   'webkitTransform',
+   'msTransform',
+   'oTransform'].some((function findTransformProperty(prop) {
+    if (!(prop in style))
+      return false;
+
+    this.cssTransformProperty = prop;
+    return true;
+  }).bind(this));
+
   this.idleOption = {
     fontFamily: 'serif',
     color: 'rgba(255, 255, 255, 0.8)',
@@ -437,6 +454,7 @@ var CanvasView = function CanvasView(opts) {
   };
 };
 CanvasView.prototype = new View();
+CanvasView.prototype.TILT_DEPTH = 10;
 CanvasView.prototype.beforeShow =
 CanvasView.prototype.beforeHide = function cv_beforeShowHide(state, nextState) {
   switch (nextState) {
@@ -452,10 +470,30 @@ CanvasView.prototype.beforeHide = function cv_beforeShowHide(state, nextState) {
       break;
   }
 };
+CanvasView.prototype.handleEvent = function cv_handleEvent(evt) {
+  switch (evt.type) {
+    case 'resize':
+      this.documentWidth = window.innerWidth;
+      this.documentHeight = window.innerHeight;
+
+      break;
+
+    case 'mousemove':
+      var hw = this.documentWidth / 2;
+      var hh = this.documentHeight / 2;
+      var x = - (hw - evt.pageX) / hw * this.TILT_DEPTH;
+      var y = (hh - evt.pageY) / hh * this.TILT_DEPTH;
+
+      this.element.style[this.cssTransformProperty] =
+        'scale(1.2) translateZ(0) rotateX(' + y + 'deg) rotateY(' + x + 'deg)';
+
+      break;
+  }
+};
 CanvasView.prototype.setDimension = function cv_setDimension(width, height) {
   var el = this.element;
-  width = width ? width : document.documentElement.offsetWidth;
-  height = height ? height : document.documentElement.offsetHeight;
+  width = width ? width : this.documentWidth;
+  height = height ? height : this.documentHeight;
   el.setAttribute('width', width);
   el.setAttribute('height', height);
   el.style.marginLeft = (- width / 2) + 'px';
@@ -472,6 +510,9 @@ CanvasView.prototype.drawIdleCloud = function cv_drawIdleCloud() {
   var width = document.documentElement.offsetWidth;
   var height = document.documentElement.offsetHeight;
 
+  document.addEventListener('mousemove', this);
+  this.element.style[this.cssTransformProperty] = 'scale(1.2)';
+
   this.setDimension(width, height);
   this.idleOption.gridSize = Math.round(16 * width / 1024);
   this.idleOption.weightFactor = function weightFactor(size) {
@@ -484,6 +525,9 @@ CanvasView.prototype.drawIdleCloud = function cv_drawIdleCloud() {
   WordCloud(el, this.idleOption);
 };
 CanvasView.prototype.empty = function cv_empty() {
+  document.removeEventListener('mousemove', this);
+  this.element.style[this.cssTransformProperty] = '';
+
   WordCloud(this.element, {
     backgroundColor: 'transparent'
   });
