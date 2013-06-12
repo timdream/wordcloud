@@ -29,6 +29,16 @@ if (window.location.hostname === 'timc.idv.tw') {
   if (window.__ === undefined) {
     window.__ = document.webL10n.translate;
   }
+
+  // Depend on the browser support, one of these shouldn't exist,
+  // at least on the main event loop.
+  if (WordFreq.isSupported) {
+    WordFreqSync = null;
+  } else {
+    WordFreq = null;
+  }
+
+  // Start the app.
   var app = new WordCloudApp();
   if (!app.isSupported)
     return;

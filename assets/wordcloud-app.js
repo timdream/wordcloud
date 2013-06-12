@@ -2,7 +2,8 @@
 
 var WordCloudApp = function WordCloudApp() {
   // Special code here to handle non-supported browser case.
-  if (!WordFreq.isSupported ||
+  if (!((window.WordFreq && window.WordFreq.isSupported) ||
+        (window.WordFreqSync && window.WordFreqSync.isSupported)) ||
       !WordCloud.isSupported ||
       !Object.keys ||
       !Array.prototype.map ||
@@ -190,14 +191,40 @@ WordCloudApp.prototype.handleData = function wca_handleData(text) {
     this.views.loading.LABEL_ANALYZING);
 
   var volume;
-  this.wordfreq =
-    WordFreq(this.wordfreqOption).process(text)
-    .getVolume(function gotVolume(vol) {
-      volume = vol;
-    }).getList((function gotList(list) {
+  if (WordFreq) {
+    this.wordfreq =
+      WordFreq(this.wordfreqOption).process(text)
+      .getVolume(function gotVolume(vol) {
+        volume = vol;
+      }).getList((function gotList(list) {
+        this.wordfreq = undefined;
+        this.handleList(list, volume);
+      }).bind(this));
+  } else {
+    // Use WordFreqSync.
+    // Use setTimeout to leave this function loop first.
+    this.wordfreq = setTimeout((function runWordFreqSync() {
+      var wordfreqsync = WordFreqSync(this.wordfreqOption);
+      var list = wordfreqsync.process(text);
+      var volume = wordfreqsync.getVolume();
+
       this.wordfreq = undefined;
       this.handleList(list, volume);
     }).bind(this));
+  }
+};
+WordCloudApp.prototype.stopHandleData = function wca_stopHandleData() {
+  if (!this.wordfreq)
+    return;
+
+  // Stop any current WordFreq async operation,
+  // or the timer that would invoke WordFreqSync.
+  if (typeof this.wordfreq === 'object') {
+    this.wordfreq.stop(false);
+  } else {
+    clearTimeout(this.wordfreq);
+  }
+  this.wordfreq = undefined;
 };
 WordCloudApp.prototype.handleList = function wca_handleList(list, vol) {
   this.logAction('WordCloudApp::handleList', list.length);
@@ -270,11 +297,7 @@ WordCloudApp.prototype.route = function wca_route() {
     this.currentFetcher = undefined;
   }
 
-  // Stop any current WordFreq async operation
-  if (this.wordfreq) {
-    this.wordfreq.stop(false);
-    this.wordfreq = undefined;
-  }
+  this.stopHandleData();
 
   if (!hash) {
     this.switchUIState(this.UI_STATE_SOURCE_DIALOG);
@@ -332,6 +355,10 @@ WordCloudApp.prototype.handleEvent = function wca_handleEvent(evt) {
       this.route();
       break;
   }
+};
+WordCloudApp.prototype.uninit = function wca_uninit() {
+  window.removeEventListener('load', this);
+  window.removeEventListener('hashchange', this);
 };
 
 // Super light-weight prototype-based objects and inherences

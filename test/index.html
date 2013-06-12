@@ -12,10 +12,16 @@
     QUnit.config.testTimeout = 10*1E3;
   </script>
 
+  <!-- dependencies -->
+  <script src="../assets/wordfreq/src/wordfreq.js"></script>
+  <script src="../assets/wordfreq/src/wordfreq.worker.js"></script>
+  <script src="../assets/wordcloud2.js/src/wordcloud2.js"></script>
+
   <!-- script to test -->
   <script src="../assets/wordcloud-app.js"></script>
 
   <!-- test scripts -->
+  <script src="unit/app.js"></script>
   <script src="unit/fetchers.js"></script>
 </body>
 </html>
