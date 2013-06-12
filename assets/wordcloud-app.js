@@ -253,8 +253,8 @@ WordCloudApp.prototype.draw = function wca_draw() {
 };
 WordCloudApp.prototype.calculateWeightFactor =
   function wca_calculateWeightFactor(vol) {
-    var width = document.documentElement.offsetWidth;
-    var height = document.documentElement.offsetHeight;
+    var width = this.views.canvas.documentWidth;
+    var height = this.views.canvas.documentHeight;
     this.data.weightFactor = Math.sqrt(width * height / vol);
   };
 WordCloudApp.prototype.getWordCloudOption = function wca_getWordCloudOption() {
@@ -553,8 +553,8 @@ CanvasView.prototype.draw = function cv_draw(option) {
 };
 CanvasView.prototype.drawIdleCloud = function cv_drawIdleCloud() {
   var el = this.element;
-  var width = document.documentElement.offsetWidth;
-  var height = document.documentElement.offsetHeight;
+  var width = this.documentWidth;
+  var height = this.documentHeight;
 
   document.addEventListener('mousemove', this);
   this.element.style[this.cssTransformProperty] = 'scale(1.2)';
