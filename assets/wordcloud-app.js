@@ -1861,11 +1861,13 @@ JSONPFetcher.prototype.TIMEOUT = 30 * 1000;
 JSONPFetcher.prototype.reset =
 JSONPFetcher.prototype.stop = function jpf_stop() {
   this.currentRequest = undefined;
+  clearTimeout(this.timer);
 };
 JSONPFetcher.prototype.handleEvent = function jpf_handleEvent(evt) {
   var el = evt.target;
   window[el.dataset.callbackName] = undefined;
   this.currentRequest = undefined;
+  clearTimeout(this.timer);
 
   el.parentNode.removeChild(el);
 };
