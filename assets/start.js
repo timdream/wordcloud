@@ -3,6 +3,10 @@
 // start.js start the world. It is not be covered in the tests.
 
 (function start() {
+  // shortcut for document.webL10n.translate
+  if (window.__ === undefined) {
+    window.__ = document.webL10n.translate;
+  }
   var app = new WordCloudApp();
   if (!app.isSupported)
     return;
@@ -76,9 +80,4 @@
   app.addFetcher(new WikipediaFetcher());
   app.addFetcher(new FacebookFetcher());
   app.addFetcher(new GooglePlusFetcher());
-
-  // shortcut for document.webL10n.translate
-  if (window.__ === undefined) {
-    window.__ = document.webL10n.translate;
-  }
 })();
