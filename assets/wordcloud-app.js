@@ -1588,6 +1588,8 @@ GooglePlusPanelView.prototype = new PanelView();
 GooglePlusPanelView.prototype.LABEL_LOGGED_IN = 0;
 GooglePlusPanelView.prototype.LABEL_NOT_LOGGED_IN = 1;
 GooglePlusPanelView.prototype.beforeShow = function gppv_beforeShow() {
+  PanelView.prototype.beforeShow.apply(this, arguments);
+
   if (!GOOGLE_CLIENT_ID)
     throw 'No GOOGLE_CLIENT_ID defined.';
 
