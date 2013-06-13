@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en-US">
+<html>
 <head>
   <meta charset=UTF-8>
   <title>HTML5 Word Cloud</title>
@@ -40,7 +40,7 @@
     <div class="modal-header clearfix">
       <h3 data-l10n-id="source-dialog-title" id="wc-source-title" class="pull-left"></h3>
       <div class="pull-right">
-        <button id="wc-source-about-btn" class="btn btn-info">About</button>
+        <button data-l10n-id="source-dialog-about-btn" id="wc-source-about-btn" class="btn btn-info"></button>
       </div>
     </div>
     <div class="modal-body">
@@ -48,40 +48,40 @@
         <div class="span3 tabbable tabs-left">
           <ul id="wc-source-menu" class="nav nav-tabs">
             <li hidden>
-              <a href="#" data-panel="example">Examples</a>
+              <a href="#" data-l10n-id="source-example" data-panel="example"></a>
             </li>
 
             <li hidden>
-              <a href="#" data-panel="facebook">Facebook</a></li>
+              <a href="#" data-l10n-id="source-facebook" data-panel="facebook"></a></li>
 
             <li hidden>
-              <a href="#" data-panel="wikipedia">Wikipedia</a></li>
+              <a href="#" data-l10n-id="source-wikipedia" data-panel="wikipedia"></a></li>
 
             <li hidden>
-              <a href="#" data-panel="twitter">Twitter</a></li>
+              <a href="#" data-l10n-id="source-twitter" data-panel="twitter"></a></li>
             <li hidden>
-              <a href="#" data-panel="plurk">Plurk</a></li>
+              <a href="#" data-l10n-id="source-plurk" data-panel="plurk"></a></li>
             <li hidden>
-              <a href="#" data-panel="blogger">Blogger</a></li>
+              <a href="#" data-l10n-id="source-blogger" data-panel="blogger"></a></li>
             <li hidden>
-              <a href="#" data-panel="tumblr">Tumblr</a></li>
+              <a href="#" data-l10n-id="source-tumblr" data-panel="tumblr"></a></li>
             <li hidden>
-              <a href="#" data-panel="wordpresscom">WordPress.com</a></li>
+              <a href="#" data-l10n-id="source-wordpresscom" data-panel="wordpresscom"></a></li>
             <li hidden>
-              <a href="#" data-panel="pixnet">PIXNET</a></li>
+              <a href="#" data-l10n-id="source-pixnet" data-panel="pixnet"></a></li>
             <li hidden>
-              <a href="#" data-panel="wretchcc">Wretch</a></li>
+              <a href="#" data-l10n-id="source-wretchcc" data-panel="wretchcc"></a></li>
             <!-- In memory of Aaron Swartz -->
             <li hidden>
-              <a href="#" data-panel="feed">RSS Feed</a></li>
+              <a href="#" data-l10n-id="source-feed" data-panel="feed"></a></li>
 
             <li hidden>
-              <a href="#" data-panel="googleplus">Google+</a></li>
+              <a href="#" data-l10n-id="source-googleplus" data-panel="googleplus"></a></li>
 
             <li hidden>
-              <a href="#" data-panel="cp">Copy &amp; Paste</a></li>
+              <a href="#" data-l10n-id="source-cp" data-panel="cp"></a></li>
             <li hidden>
-              <a href="#" data-panel="file">File</a></li>
+              <a href="#" data-l10n-id="source-file" data-panel="file"></a></li>
           </ul>
         </div>
         <div id="wc-source-panels" class="span9">
@@ -90,92 +90,92 @@
             <label class="radio">
               <input type="radio" name="example"
                 value="feed:http://www.nytimes.com/services/xml/rss/nyt/GlobalHome.xml" checked>
-              New York Times News Feed (Global Edition)
+              <span data-l10n-id="panel-example-nytimes-global"></span>
             </label>
             <label class="radio">
               <input type="radio" name="example"
                 value="feed:http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml">
-              New York Times News Feed (U.S.)
+              <span data-l10n-id="panel-example-nytimes-us"></span>
             </label>
             <label class="radio">
               <input type="radio" name="example"
                 value="wikipedia:Cloud">
-              Wikipedia entry: Cloud
+              <span data-l10n-id="panel-example-wikipedia-cloud"></span>
             </label>
           </form>
 
           <form id="wc-panel-wikipedia" hidden>
-            <label for="wc-panel-wikipedia-title">Title</label>
+            <label data-l10n-id="panel-wikipedia" for="wc-panel-wikipedia-title"></label>
             <input type="text" id="wc-panel-wikipedia-title" class="input-medium" />
           </form>
 
           <form id="wc-panel-blogger" hidden>
-            <label for="wc-panel-blogger-id">Username</label>
+            <label data-l10n-id="panel-blogger-label" for="wc-panel-blogger-id"></label>
             <input type="text" id="wc-panel-blogger-id" class="input-small" />
-            <span class="help-block">Some blogs doesn't provide full text feed.</span>
+            <span data-l10n-id="panel-blogger-help" class="help-block"></span>
           </form>
 
           <form id="wc-panel-tumblr" hidden>
-            <label for="wc-panel-tumblr-id">Username</label>
+            <label data-l10n-id="panel-tumblr-label" for="wc-panel-tumblr-id"></label>
             <input type="text" id="wc-panel-tumblr-id" class="input-small" />
-            <span class="help-block">Some tumblrs doesn't provide full text feed.</span>
+            <span data-l10n-id="panel-tumblr-help" class="help-block"></span>
           </form>
 
           <form id="wc-panel-wordpresscom" hidden>
-            <label for="wc-panel-wordpresscom-id">Username</label>
+            <label data-l10n-id="panel-wordpresscom-label" for="wc-panel-wordpresscom-id"></label>
             <input type="text" id="wc-panel-wordpresscom-id" class="input-small" />
-            <span class="help-block">Some blogs doesn't provide full text feed.</span>
+            <span data-l10n-id="panel-wordpresscom-help" class="help-block"></span>
           </form>
 
           <form id="wc-panel-pixnet" hidden>
-            <label for="wc-panel-pixnet-id">Username</label>
+            <label data-l10n-id="panel-pixnet-label" for="wc-panel-pixnet-id"></label>
             <input type="text" id="wc-panel-pixnet-id" class="input-small" />
-            <span class="help-block">Some blogs doesn't provide full text feed.</span>
+            <span data-l10n-id="panel-pixnet-help" class="help-block"></span>
           </form>
 
           <form id="wc-panel-wretchcc" hidden>
-            <label for="wc-panel-wretchcc-id">Username</label>
+            <label data-l10n-id="panel-wretchcc-label" for="wc-panel-wretchcc-id"></label>
             <input type="text" id="wc-panel-wretchcc-id" class="input-small" />
-            <span class="help-block">Some blogs doesn't provide full text feed.</span>
+            <span data-l10n-id="panel-wretchcc-help" class="help-block"></span>
           </form>
 
           <form id="wc-panel-plurk" hidden>
-            <label for="wc-panel-plurk-id">Username</label>
+            <label data-l10n-id="panel-plurk-label" for="wc-panel-plurk-id"></label>
             <input type="text" id="wc-panel-plurk-id"  class="input-small" />
-            <span class="help-block">Only public Plurk timeline can be accessed.</span>
+            <span data-l10n-id="panel-plurk-help" class="help-block"></span>
           </form>
 
           <form id="wc-panel-twitter" hidden>
-            <label for="wc-panel-twitter-id">Username</label>
+            <label data-l10n-id="panel-twitter-label" for="wc-panel-twitter-id"></label>
             <div class="input-prepend">
               <span class="add-on">@</span>
               <input type="text" id="wc-panel-twitter-id" class="input-small" />
             </div>
-            <span class="help-block">Only public Twitter timeline can be accessed.</span>
+            <span data-l10n-id="panel-twitter-help" class="help-block"></span>
           </form>
 
           <form id="wc-panel-feed" hidden>
-            <label for="wc-panel-feed-url">Feed URL</label>
+            <label data-l10n-id="panel-feed-label" for="wc-panel-feed-url"></label>
             <input type="url" id="wc-panel-feed-url"  class="input-block-level" />
-            <span class="help-block">Only public feeds that has ever been subscribed (and indexed by Google) could be accessed.</span>
+            <span data-l10n-id="panel-feed-help" class="help-block"></span>
           </form>
 
           <form id="wc-panel-cp" hidden>
-            <label for="wc-panel-cp-textarea">Paste the text below</label>
+            <label data-l10n-id="panel-cp-label" for="wc-panel-cp-textarea"></label>
             <textarea id="wc-panel-cp-textarea" class="input-block-level" rows="10"></textarea>
-            <span class="help-block">The text will be processed locally without being uploaded.</span>
+            <span data-l10n-id="panel-cp-help" class="help-block"></span>
           </form>
 
           <form id="wc-panel-file" hidden>
-            <label for="wc-panel-file-file">File</label>
+            <label data-l10n-id="panel-file-label" for="wc-panel-file-file"></label>
             <a class="btn file-wrapper">
-              <span>Browse</span>
+              <span data-l10n-id="panel-file-browse"></span>
               <input type="file" accept="text/plain" id="wc-panel-file-file">
-            </a><span id="wc-panel-file-file-label"></span>
-            <span class="help-block">Plain text only. Will be processed locally without being uploaded.</span>
-            <label for="wc-panel-file-encoding">Character Encoding</label>
+            </a><span data-l10n-id="n-file-selected" data-l10n-args='{ "n": 0 }' id="wc-panel-file-file-label"></span>
+            <span data-l10n-id="panel-file-help" class="help-block"></span>
+            <label data-l10n-id="panel-file-encoding" for="wc-panel-file-encoding"></label>
             <input type="text" id="wc-panel-file-encoding" value="UTF-8">
-            <span class="help-block">UTF-8 is the usual value.</span>
+            <span data-l10n-id="panel-file-encoding-help" class="help-block"></span>
           </form>
 
           <form id="wc-panel-facebook" hidden>
@@ -183,12 +183,12 @@
           </form>
 
           <form id="wc-panel-googleplus" hidden>
-            <label for="wc-panel-googleplus-id">Profile ID</label>
+            <label data-l10n-id="panel-googleplus-label" for="wc-panel-googleplus-id"></label>
             <div class="input-prepend">
               <span class="add-on">https://plus.google.com/</span>
               <input type="text" id="wc-panel-googleplus-id" class="input-medium" placeholder="me" />
             </div>
-            <span class="help-block">Find the ID by copying it from the URL. Leave it empty to access your own profile.</span>
+            <span data-l10n-id="panel-googleplus-help" class="help-block"></span>
             <p id="wc-panel-googleplus-status">...</p>
           </form>
 
@@ -197,7 +197,7 @@
     </div>
     <div class="modal-footer">
 
-      <div class="input-prepend pull-left" title="Language">
+      <div data-l10n-id="language-title" class="input-prepend pull-left" title="Language">
         <span class="add-on"><i class="icon-globe"></i></span>
         <select id="wc-language" class="input-small">
           <option value="en-US" selected>English</option>
@@ -205,7 +205,7 @@
         </select>
       </div>
 
-      <button id="wc-source-start-btn" class="btn btn-primary">Start</button>
+      <button data-l10n-id="source-dialog-start-btn" id="wc-source-start-btn" class="btn btn-primary"></button>
 
     </div>
   </div>
@@ -215,37 +215,37 @@
       <div class="navbar">
         <div class="navbar-inner">
           <div class="btn-group">
-            <button data-action="back" class="btn" title="Back"><i class="icon-chevron-left"></i><span>Back</span></button>
+            <button data-l10n-id="dashboard-back-btn" data-action="back" class="btn" title="Back"><i class="icon-chevron-left"></i><span data-l10n-id="dashboard-back-span"></span></button>
           </div>
 
           <div class="btn-group">
-            <button data-canvas-ctl data-action="refresh" class="btn disabled hide-label" title="Refresh"><i class="icon-refresh"></i><span>Refresh</span></button>
-            <button data-canvas-ctl data-action="theme" class="btn disabled" title="Switch Theme"><i class="icon-gift"></i><span>Theme</span></button>
-            <button data-canvas-ctl data-action="shape" class="btn disabled" title="Switch Shape"><i class="icon-star"></i><span>Shape</span></button>
-            <button data-canvas-ctl data-action="edit" class="btn disabled" title="Back"><i class="icon-edit"></i><span>Edit List</span></button>
+            <button data-l10n-id="dashboard-refresh-btn" data-canvas-ctl data-action="refresh" class="btn disabled hide-label" title="Refresh"><i class="icon-refresh"></i><span data-l10n-id="dashboard-refresh-span"></span></button>
+            <button data-l10n-id="dashboard-theme-btn" data-canvas-ctl data-action="theme" class="btn disabled" title="Switch Theme"><i class="icon-gift"></i><span data-l10n-id="dashboard-theme-span"></span></button>
+            <button data-l10n-id="dashboard-shape-btn" data-canvas-ctl data-action="shape" class="btn disabled" title="Switch Shape"><i class="icon-star"></i><span data-l10n-id="dashboard-shape-span"></span></button>
+            <button data-l10n-id="dashboard-list-btn" data-canvas-ctl data-action="edit" class="btn disabled" title="Edit List"><i class="icon-edit"></i><span data-l10n-id="dashboard-list-span"></span></button>
           </div>
 
           <div class="btn-group">
-            <button data-canvas-ctl data-action="size+" class="btn disabled hide-label" title="Enlarge"><i class="icon-font"></i><span>Enlarge</span></button>
-            <button data-canvas-ctl data-action="size-" class="btn disabled hide-label" title="Shrink"><i class="icon-font smaller-icon"></i><span>Shrink</span></button>
+            <button data-l10n-id="dashboard-enlarge-btn" data-canvas-ctl data-action="size+" class="btn disabled hide-label" title="Enlarge"><i class="icon-font"></i><span data-l10n-id="dashboard-enlarge-span"></span></button>
+            <button data-l10n-id="dashboard-shrink-btn" data-canvas-ctl data-action="size-" class="btn disabled hide-label" title="Shrink"><i class="icon-font smaller-icon"></i><span data-l10n-id="dashboard-shrink-span"></span></button>
           </div>
 
           <div class="btn-group">
-            <button data-canvas-ctl data-action="gap+" class="btn disabled hide-label" title="Disperse"><i class="icon-resize-full"></i><span>Disperse</span></button>
-            <button data-canvas-ctl data-action="gap-" class="btn disabled hide-label" title="Gather Up"><i class="icon-resize-small"></i><span>Gather Up</span></button>
+            <button data-l10n-id="dashboard-disperse-btn" data-canvas-ctl data-action="gap+" class="btn disabled hide-label" title="Disperse"><i class="icon-resize-full"></i><span data-l10n-id="dashboard-disperse-span"></span></button>
+            <button data-l10n-id="dashboard-gather-up-btn" data-canvas-ctl data-action="gap-" class="btn disabled hide-label" title="Gather Up"><i class="icon-resize-small"></i><span data-l10n-id="dashboard-gather-up-span"></span></button>
           </div>
 
           <div class="pull-right">
 
             <div class="btn-group">
-              <button data-canvas-ctl data-action="facebook" class="btn disabled" title="Share on Facebook"><i class="favicons-facebook"></i></button>
-              <button data-canvas-ctl data-action="tumblr" class="btn disabled" title="Share on Tumblr"><i class="favicons-tumblr"></i></button>
-              <button data-canvas-ctl data-action="plurk" class="btn disabled" title="Share on Plurk"><i class="favicons-plurk"></i></button>
-              <button data-canvas-ctl data-action="twitter" class="btn disabled" title="Share on Twitter"><i class="favicons-twitter"></i></button>
+              <button data-l10n-id="dashboard-share-facebook-btn" data-canvas-ctl data-action="facebook" class="btn disabled" title="Share on Facebook"><i class="favicons-facebook"></i></button>
+              <button data-l10n-id="dashboard-share-tumblr-btn" data-canvas-ctl data-action="tumblr" class="btn disabled" title="Share on Tumblr"><i class="favicons-tumblr"></i></button>
+              <button data-l10n-id="dashboard-share-plurk-btn" data-canvas-ctl data-action="plurk" class="btn disabled" title="Share on Plurk"><i class="favicons-plurk"></i></button>
+              <button data-l10n-id="dashboard-share-twitter-btn" data-canvas-ctl data-action="twitter" class="btn disabled" title="Share on Twitter"><i class="favicons-twitter"></i></button>
             </div>
 
             <div class="btn-group">
-              <a data-canvas-ctl download="wordcloud.png" href="#" data-action="save" class="btn disabled btn-primary hide-label" title="Save to disk"><i class="icon-hdd"></i><span>Save</span></a>
+              <a data-l10n-id="dashboard-save-disk-btn" data-canvas-ctl download="wordcloud.png" href="#" data-action="save" class="btn disabled btn-primary hide-label" title="Save to disk"><i class="icon-hdd"></i><span data-l10n-id="dashboard-save-disk-span"></span></a>
             </div>
 
           </div>
@@ -256,13 +256,13 @@
 
   <div id="wc-list-dialog" class="modal" hidden>
     <div class="modal-body">
-      <label for="wc-list-edit">Modify List</label>
+      <label data-l10n-id="list-dialog-label" for="wc-list-edit"></label>
         <textarea id="wc-list-edit" class="input-block-level" rows="14"></textarea>
-        <span class="help-block">For advance usage, <a href="http://timdream.org/wordcloud2.js/">wordcloud2.js</a> page provide finer control over resulting canvas. You could copy the list here.</span>
+        <span data-l10n-id="list-dialog-help" class="help-block"></span>
     </div>
     <div class="modal-footer">
-      <button id="wc-list-cancel-btn" class="btn">Cancel</button>
-      <button id="wc-list-confirm-btn" class="btn btn-primary">Confirm</button>
+      <button data-l10n-id="list-dialog-cancel-btn" id="wc-list-cancel-btn" class="btn"></button>
+      <button data-l10n-id="list-dialog-confirm-btn" id="wc-list-confirm-btn" class="btn btn-primary"></button>
     </div>
   </div>
 
@@ -282,20 +282,20 @@
             <div class="bar" id="wc-sharer-progress"></div>
           </div>
           <p id="wc-sharer-status">...</p>
-          <button id="wc-sharer-facebook-login-btn" class="btn" hidden>Facebook Login</button>
+          <button data-l10n-id="share-dialog-facebook-login-btn" id="wc-sharer-facebook-login-btn" class="btn" hidden></button>
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button id="wc-sharer-cancel-btn" class="btn">Cancel</button>
-      <button id="wc-sharer-reupload-btn" class="btn">New Upload</button>
-      <button id="wc-sharer-share-btn" class="btn btn-primary">Share</button>
+      <button data-l10n-id="share-dialog-cancel-btn" id="wc-sharer-cancel-btn" class="btn"></button>
+      <button data-l10n-id="share-dialog-reupload-btn" id="wc-sharer-reupload-btn" class="btn"></button>
+      <button data-l10n-id="share-dialog-share-btn" id="wc-sharer-share-btn" class="btn btn-primary"></button>
     </div>
   </div>
 
   <div id="wc-about-dialog" class="modal" hidden>
     <div class="modal-header">
-      <h3 id="wc-about-title">About</h3>
+      <h3 data-l10n-id="about-dialog-title" id="wc-about-title"></h3>
     </div>
     <div class="modal-body">
       <div id="wc-about-icon" class="well">
@@ -306,15 +306,15 @@
       <div id="wc-about-content">...</div>
     </div>
     <div class="modal-footer">
-      <button id="wc-about-close-btn" class="btn btn-primary">Close</button>
+      <button data-l10n-id="about-dialog-close-btn" id="wc-about-close-btn" class="btn btn-primary"></button>
     </div>
   </div>
 
   <div id="wc-browser-support" hidden>
     <div class="container">
       <div class="alert alert-block alert-error">
-        <h4>Your browser is not supported!</h4>
-        To use HTML5 Word Cloud, please use the lastest version of Firefox, Chrome, Safari, or Internet Explorer.
+        <h4 data-l10n-id="browser-support-title"></h4>
+        <span data-l10n-id="browser-support-message">To use HTML5 Word Cloud, please use the lastest version of Firefox, Chrome, Safari, or Internet Explorer.</span>
       </div>
     </div>
   </div>
