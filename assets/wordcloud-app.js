@@ -1402,7 +1402,7 @@ WikipediaPanelView.prototype.submit = function wpv_submit() {
   // XXX maybe provide a <select> of largest Wikipedias here.
   // (automatically from this table or manually)
   // https://meta.wikimedia.org/wiki/List_of_Wikipedias/Table
-  var lang = document.webL10n.getLanguage();
+  var lang = document.webL10n.getLanguage().substr(0, 2);
 
   this.dialog.submit('#wikipedia.' + lang + ':' + el.value);
 };
