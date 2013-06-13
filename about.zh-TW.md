@@ -19,7 +19,7 @@
 另外，會收集製作圖片的資料來源資訊。
 
 這些資訊不會透漏給本站作者與貢獻者以外的第三方。
-閱讀 [Google Analytics 安全性與隱私權原則](http://www.google.com/analytics/learn/privacy.html)以了解 Google 如何使用此類資訊。
+閱讀 [Google Analytics 安全性與隱私權原則](https://www.google.com/analytics/learn/privacy.html)以了解 Google 如何使用此類資訊。
 
 ### 第三方網路服務
 
@@ -28,7 +28,7 @@
 您可以從以下列表了解該服務之隱私權保護政策。
 
 - [Facebook Data Use Policy](https://www.facebook.com/about/privacy)
-- [Google Privacy Policy](http://www.google.com/policies/privacy/)
+- [Google Privacy Policy](https://www.google.com/policies/privacy/)
 - [Privacy Policy - Imgur](http://imgur.com/privacy)
 - [Plurk Privacy Policy](http://www.plurk.com/privacy)
 - [Tumblr Privacy Policy](http://www.tumblr.com/policy/en/privacy)

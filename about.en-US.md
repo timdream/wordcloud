@@ -19,7 +19,7 @@ In order to improve user experience based on the usage, Google Analytics is used
 Additionally, the identifier of the source selected to generated the image will be collected.
 
 These information will not be shared with people other than the author and contributors.
-Read [Google Analytics security and privacy principles](http://www.google.com/analytics/learn/privacy.html) on how Google utilize these data.
+Read [Google Analytics security and privacy principles](https://www.google.com/analytics/learn/privacy.html) on how Google utilize these data.
 
 ### External Services
 
@@ -28,7 +28,7 @@ These feature will by marked with name of the external providers.
 You should check and read the privacy policy of these external providers.
 
 - [Facebook Data Use Policy](https://www.facebook.com/about/privacy)
-- [Google Privacy Policy](http://www.google.com/policies/privacy/)
+- [Google Privacy Policy](https://www.google.com/policies/privacy/)
 - [Privacy Policy - Imgur](http://imgur.com/privacy)
 - [Plurk Privacy Policy](http://www.plurk.com/privacy)
 - [Tumblr Privacy Policy](http://www.tumblr.com/policy/en/privacy)
