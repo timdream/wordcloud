@@ -76,4 +76,9 @@
   app.addFetcher(new WikipediaFetcher());
   app.addFetcher(new FacebookFetcher());
   app.addFetcher(new GooglePlusFetcher());
+
+  // shortcut for document.webL10n.translate
+  if (window.__ === undefined) {
+    window.__ = document.webL10n.translate;
+  }
 })();
