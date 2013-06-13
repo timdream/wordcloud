@@ -565,8 +565,8 @@ LoadingView.prototype.updateLabel = function l_updateLabel(stringId) {
   if (!this.stringIds[stringId])
     throw 'Undefined stringId ' + stringId;
 
-  this.labelElement.textContent =
-    document.webL10n.get(this.stringIds[stringId]);
+  this.labelElement.setAttribute('data-l10n-id', this.stringIds[stringId]);
+  __(this.labelElement);
 };
 
 var SourceDialogView = function SourceDialogView(opts) {
@@ -760,7 +760,7 @@ DashboardView.prototype.handleEvent = function dv_handleEvent(evt) {
         }, 0);
       } else {
         evt.preventDefault();
-        alert(document.webL10n.get('right-click-to-save'));
+        alert(_('right-click-to-save'));
         window.open(url, '_blank', 'width=500,height=300,menubar=yes');
       }
 
@@ -972,15 +972,15 @@ SharerDialogView.prototype.updateTitle = function sdv_updateTitle(stringId) {
   if (!this.stringIds[stringId])
     throw 'Undefined stringId ' + stringId;
 
-  this.titleElement.textContent =
-    document.webL10n.get(this.stringIds[stringId]);
+  this.titleElement.setAttribute('data-l10n-id', this.stringIds[stringId]);
+  __(this.titleElement);
 };
 SharerDialogView.prototype.updateStatus = function sdv_updateStatus(stringId) {
   if (!this.stringIds[stringId])
     throw 'Undefined stringId ' + stringId;
 
-  this.statusElement.textContent =
-    document.webL10n.get(this.stringIds[stringId]);
+  this.statusElement.setAttribute('data-l10n-id', this.stringIds[stringId]);
+  __(this.statusElement);
 };
 SharerDialogView.prototype.updateProgress =
   function sdv_updateProgress(progress, active) {
@@ -994,7 +994,7 @@ SharerDialogView.prototype.updateFacebookUI = function sdv_updateFacebookUI() {
     (this.type !== 'facebook' || this.hasFacebookPermission);
 };
 SharerDialogView.prototype.getCloudTitle = function sdv_getCloudTitle() {
-  return document.webL10n.get('app-title');
+  return _('app-title');
 };
 SharerDialogView.prototype.getCloudList = function sdv_getCloudList() {
   var list = this.app.data.list;
@@ -1005,8 +1005,8 @@ SharerDialogView.prototype.getCloudList = function sdv_getCloudList() {
   } while (++i < this.SHARED_ITEM_LIMIT);
 
   return (list.length > this.SHARED_ITEM_LIMIT) ?
-        document.webL10n.get('frequent-terms-more') :
-        document.webL10n.get('frequent-terms');
+        _('frequent-terms-more') :
+        _('frequent-terms');
 };
 SharerDialogView.prototype.shareText = function sdv_shareText() {
   var url = window.location.href;
@@ -1182,7 +1182,7 @@ SharerDialogView.prototype.sendImage = function sdv_sendImage() {
   switch (this.type) {
     case 'facebook':
       if (!this.hasFacebookPermission) {
-        alert(document.webL10n.get(
+        alert(_(
             this.stringIds[this.LABEL_ALERT_NEED_FACEBOOK_LOGIN]
           ));
 
@@ -1195,7 +1195,7 @@ SharerDialogView.prototype.sendImage = function sdv_sendImage() {
 
       var facebookWin =
         window.open('data:text/html,' +
-            encodeURIComponent(document.webL10n.get(
+            encodeURIComponent(_(
                 this.stringIds[this.LABEL_FACEBOOK_WINDOW_LOADING])
               )
           );
@@ -1345,8 +1345,8 @@ FilePanelView.prototype.handleEvent = function fpv_handleEvent(evt) {
   this.updateLabel(count);
 };
 FilePanelView.prototype.updateLabel = function fpv_updateLabel(count) {
-  this.fileLabelElement.textContent =
-    document.webL10n.get('n-file-selected', {n: count});
+  this.fileLabelElement.setAttribute('data-l10n-args', '{ "n": ' + count + '}');
+  __(this.fileLabelElement);
 };
 FilePanelView.prototype.isSupported = !!window.FileReader;
 FilePanelView.prototype.submit = function fpv_submit() {
@@ -1359,7 +1359,7 @@ FilePanelView.prototype.submit = function fpv_submit() {
 
   var file = el.files[0];
   if (file.type !== 'text/plain') {
-    alert(document.webL10n.get('plain-text-file-please'));
+    alert(_('plain-text-file-please'));
     return;
   }
 
@@ -1462,12 +1462,13 @@ FacebookPanelView.prototype.updateStatus = function fbpv_updateStatus(res) {
 };
 FacebookPanelView.prototype.updateUI = function fbpv_updateUI() {
   if (this.isReadyForFetch()) {
-    this.statusElement.textContent =
-      document.webL10n.get(this.stringIds[this.LABEL_LOGGED_IN]);
+    this.statusElement.setAttribute(
+      'data-l10n-id', this.stringIds[this.LABEL_LOGGED_IN]);
   } else {
-    this.statusElement.textContent =
-      document.webL10n.get(this.stringIds[this.LABEL_NOT_LOGGED_IN]);
+    this.statusElement.setAttribute(
+      'data-l10n-id', this.stringIds[this.LABEL_NOT_LOGGED_IN]);
   }
+  __(this.statusElement);
 };
 FacebookPanelView.prototype.submit = function fbpv_submit() {
   // Return if the status is never updated.
@@ -1589,12 +1590,13 @@ GooglePlusPanelView.prototype.isReadyForFetch =
   };
 GooglePlusPanelView.prototype.updateUI = function gppv_updateUI() {
   if (this.isReadyForFetch()) {
-    this.statusElement.textContent =
-      document.webL10n.get(this.stringIds[this.LABEL_LOGGED_IN]);
+    this.statusElement.setAttribute(
+      'data-l10n-id', this.stringIds[this.LABEL_LOGGED_IN]);
   } else {
-    this.statusElement.textContent =
-      document.webL10n.get(this.stringIds[this.LABEL_NOT_LOGGED_IN]);
+    this.statusElement.setAttribute(
+      'data-l10n-id', this.stringIds[this.LABEL_NOT_LOGGED_IN]);
   }
+  __(this.statusElement);
 };
 GooglePlusPanelView.prototype.submit = function gppv_submit() {
   if (!window.GO2 || !this.loaded)
