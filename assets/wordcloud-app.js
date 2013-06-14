@@ -654,7 +654,7 @@ SourceDialogView.prototype.handleEvent = function sd_handleEvent(evt) {
 
   switch (evt.currentTarget) {
     case this.menuElement:
-      var panelName = evt.target.dataset.panel;
+      var panelName = evt.target.getAttribute('data-panel');
       if (!panelName || !this.panels[panelName])
         return;
 
@@ -696,7 +696,7 @@ SourceDialogView.prototype.addPanel = function sd_addPanel(panel) {
 
   if ('isSupported' in panel && !panel.isSupported) {
     panel.menuItemElement.parentNode.classList.add('disabled');
-    panel.menuItemElement.dataset.panel = undefined;
+    panel.menuItemElement.removeAttribute('data-panel');
     return;
   }
 
@@ -742,7 +742,7 @@ DashboardView.prototype.handleEvent = function dv_handleEvent(evt) {
     return;
 
   var app = this.app;
-  var action = el.dataset.action;
+  var action = el.getAttribute('data-action');
 
   this.app.logAction('DashboardView::action', action);
 
@@ -1879,7 +1879,7 @@ JSONPFetcher.prototype.stop = function jpf_stop() {
 };
 JSONPFetcher.prototype.handleEvent = function jpf_handleEvent(evt) {
   var el = evt.target;
-  window[el.dataset.callbackName] = undefined;
+  window[el.getAttribute('data-callback-name')] = undefined;
   this.currentRequest = undefined;
   clearTimeout(this.timer);
 
@@ -1912,7 +1912,7 @@ JSONPFetcher.prototype.requestData = function jpf_requestJSONData(url) {
 
   var el = this.scriptElement = document.createElement('script');
   el.src = url;
-  el.dataset.callbackName = callbackName;
+  el.setAttribute('data-callback-name', callbackName);
   el.addEventListener('load', this);
   el.addEventListener('error', this);
 
