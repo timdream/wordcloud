@@ -132,13 +132,13 @@ WordCloudApp.prototype.pushUrlHash = function wca_pushUrlHash(hash) {
   // of the dashboard is pressed, reset() can actually go back one step
   // in the browser history instead of always pushing a new url hash.
   // This is not bullet-proof, unfortunately.
-  this.backToReset = (window.location.hash === '');
+  this.backToReset = !window.location.hash.substr(1);
   this.lastUrlHashChangePushedByScript = true;
 
   window.location.hash = hash;
 };
 WordCloudApp.prototype.reset = function wca_reset() {
-  if (!window.location.hash)
+  if (!window.location.hash.substr(1))
     return;
 
   if (this.backToReset) {
@@ -282,7 +282,7 @@ WordCloudApp.prototype.showSharer = function wca_showSharer(type) {
   this.switchUIState(this.UI_STATE_SHARER_DIALOG);
 };
 WordCloudApp.prototype.route = function wca_route() {
-  var hash = window.location.hash;
+  var hash = window.location.hash.substr(1);
 
   this.logAction('WordCloudApp::route', hash.substr(0, 128));
 
@@ -305,7 +305,7 @@ WordCloudApp.prototype.route = function wca_route() {
   }
 
   var dataType, data;
-  hash.substr(1).match(/^([^:]+):?(.*)$/).forEach(function matchHash(str, i) {
+  hash.match(/^([^:]+):?(.*)$/).forEach(function matchHash(str, i) {
     switch (i) {
       case 1:
         dataType = str;
