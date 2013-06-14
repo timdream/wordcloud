@@ -1359,7 +1359,7 @@ var ExamplePanelView = function ExamplePanelView(opts) {
 };
 ExamplePanelView.prototype = new PanelView();
 ExamplePanelView.prototype.submit = function epv_submit() {
-  var els = this.element.example;
+  var els = this.element.querySelectorAll('[name="example"]');
   for (var el in els) {
     if (els[el].checked) {
       this.dialog.submit('#' + els[el].value);
