@@ -384,7 +384,7 @@ View.prototype.show = function v_show(currentState, nextState) {
     return false;
   }
 
-  this.element.hidden = false;
+  this.element.removeAttribute('hidden');
 
   if ('afterShow' in this) {
     this.afterShow.apply(this, arguments);
@@ -397,7 +397,7 @@ View.prototype.hide = function v_hide(currentState, nextState) {
     return false;
   }
 
-  this.element.hidden = true;
+  this.element.setAttribute('hidden', true);
 
   if ('afterHide' in this) {
     this.afterHide.apply(this, arguments);
@@ -684,7 +684,7 @@ SourceDialogView.prototype.addPanel = function sd_addPanel(panel) {
   if (!panel.menuItemElement)
     throw 'menuItemElement not found.';
 
-  panel.menuItemElement.parentNode.hidden = false;
+  panel.menuItemElement.parentNode.removeAttribute('hidden');
   panel.dialog = this;
 
   if ('isSupported' in panel && !panel.isSupported) {
@@ -1041,8 +1041,11 @@ SharerDialogView.prototype.updateProgress =
       'progress progress-striped' + (active ? ' active' : '');
   };
 SharerDialogView.prototype.updateFacebookUI = function sdv_updateFacebookUI() {
-  this.facebookLoginElement.hidden =
-    (this.type !== 'facebook' || this.hasFacebookPermission);
+  if (this.type !== 'facebook' || this.hasFacebookPermission) {
+    this.facebookLoginElement.setAttribute('hidden', true);
+  } else {
+    this.facebookLoginElement.removeAttribute('hidden');
+  }
 };
 SharerDialogView.prototype.getCloudTitle = function sdv_getCloudTitle() {
   return _('app-title');
@@ -1538,7 +1541,8 @@ FacebookPanelView.prototype.submit = function fbpv_submit() {
       // XXX: There is no way to cancel the login pop-up midway if
       // the user navigates away from the panel (or the source dialog).
       // We shall do some checking here to avoid accidently switches the UI.
-      if (this.element.hidden || this.dialog.element.hidden)
+      if (this.element.hasAttribute('hidden') ||
+          this.dialog.element.hasAttribute('hidden'))
         return;
 
       this.facebookResponse = res;
@@ -1634,7 +1638,8 @@ GooglePlusPanelView.prototype.beforeShow = function gppv_beforeShow() {
         // XXX: There is no way to cancel the login pop-up midway if
         // the user navigates away from the panel (or the source dialog).
         // We shall do some checking here to avoid accidently switches the UI.
-        if (this.element.hidden || this.dialog.element.hidden)
+        if (this.element.hasAttribute('hidden') ||
+            this.dialog.element.hasAttribute('hidden'))
           return;
 
         this.realSubmit();
@@ -1737,7 +1742,7 @@ AboutDialogView.prototype.loadContent = function adv_loadContent(lang, first) {
   if (first) {
     iframe.onerror = (function contentLoadError() {
       this.loaded = false;
-      if (! this.element.hidden) {
+      if (!this.element.hasAttribute('hidden')) {
         this.app.switchUIState(this.app.UI_STATE_SOURCE_DIALOG);
       }
     }).bind(this);

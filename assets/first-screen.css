@@ -16,6 +16,9 @@ body {
   height: 100%;
   overflow-x: hidden; }
 
+*[hidden] {
+  display: none; }
+
 /*
 Based on <i> cloud, design by daneden
 
