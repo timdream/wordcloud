@@ -410,15 +410,22 @@ var LanguageSwitcherView = function LanguageSwitcher(opts) {
     element: 'wc-language'
   });
 
+  // webL10n doesn't handle this IE property yet.
+  if (navigator.userLanguage) {
+    document.webL10n.setLanguage(navigator.userLanguage);
+  }
+
+  var defaultLanguage = navigator.language || navigator.userLanguage;
+
   // Collect the information about available languages from HTML.
   var langs = this.langs = [];
   Array.prototype.forEach.call(this.element.children, function lang(el) {
     langs.push(el.value);
-    if (el.value === navigator.language)
+    if (el.value === defaultLanguage)
       el.selected = true;
   });
 
-  if (langs.indexOf(navigator.language) === -1) {
+  if (langs.indexOf(defaultLanguage) === -1) {
     // Default to the first one.
     this.element.selectedIndex = 0;
     document.webL10n.setLanguage(langs[0]);
