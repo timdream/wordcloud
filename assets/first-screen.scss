@@ -58,7 +58,7 @@ $shadow-length: $icon-width * 0.05;
   width: $icon-width;
   height: $icon-height;
 
-  font: $icon-width serif;
+  font: $icon-width Times, serif;
   font-weight: bold;
   line-height: 1em;
   text-shadow: 0 $shadow-length $shadow-length rgba(0, 0, 0, 0.1);

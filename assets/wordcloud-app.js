@@ -467,7 +467,7 @@ var CanvasView = function CanvasView(opts) {
   }).bind(this));
 
   this.idleOption = {
-    fontFamily: 'serif',
+    fontFamily: 'Times, serif',
     color: 'rgba(255, 255, 255, 0.8)',
     rotateRatio: 0.5,
     backgroundColor: 'transparent',

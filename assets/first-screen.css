@@ -53,7 +53,7 @@ https://gist.github.com/2945570
   display: block;
   width: 100px;
   height: 33.33px;
-  font: 100px serif;
+  font: 100px Times, serif;
   font-weight: bold;
   line-height: 1em;
   text-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
