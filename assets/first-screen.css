@@ -16,6 +16,10 @@ body {
   height: 100%;
   overflow-x: hidden; }
 
+body:lang(zh-tw), body:lang(zh-tw) label, body:lang(zh-tw) input, body:lang(zh-tw) textarea, body:lang(zh-tw) select, body:lang(zh-tw) button,
+body:lang(zh-tw) .btn {
+  font-size: 15px; }
+
 *[hidden] {
   display: none; }
 

@@ -22,6 +22,13 @@ body {
   overflow-x: hidden;
 }
 
+body:lang(zh-tw) {
+  &, label, input, textarea, select, button,
+  .btn {
+    font-size: 15px;
+  }
+}
+
 *[hidden] {
   display: none;
 }
