@@ -17,7 +17,8 @@ if (window.location.hostname === 'timc.idv.tw') {
   })();
 } else if (console) {
   _gaq.push = function pushWithLog() {
-    console.log.apply(console, arguments);
+    // console.log.apply() does not exist on IE9
+    Function.prototype.apply.call(console.log, console, arguments);
     Array.prototype.push.apply(this, arguments);
   };
 }
