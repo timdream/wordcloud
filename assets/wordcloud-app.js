@@ -1799,8 +1799,11 @@ TextFetcher.prototype.stop = function tf_stop() {
   clearTimeout(this.timer);
 };
 TextFetcher.prototype.getData = function tf_getData(dataType, data) {
-  if (dataType === 'base64')
+  if (dataType === 'base64') {
     data = decodeURIComponent(escape(window.atob(data)));
+  } else {
+    data = decodeURIComponent(data);
+  }
 
   // Make sure we call the handler methods as async callback.
   this.timer = setTimeout((function tf_gotData() {
@@ -1849,7 +1852,7 @@ ListFetcher.prototype.stop = function lf_stop() {
 };
 ListFetcher.prototype.getData = function lf_getData(dataType, data) {
   var text = (dataType === 'base64-list') ?
-    decodeURIComponent(escape(window.atob(data))) : data;
+    decodeURIComponent(escape(window.atob(data))) : decodeURIComponent(data);
 
   var vol = 0;
   var list = [];
