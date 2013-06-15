@@ -93,6 +93,11 @@
         <div id="wc-source-panels" class="span9">
 
           <form id="wc-panel-example" hidden>
+            <div id="wc-panel-example-support-msg" class="alert alert-block alert-warning" hidden>
+              <h4 data-l10n-id="browser-partial-support-title"></h4>
+              <span data-l10n-id="browser-partial-support-message"></span>
+            </div>
+
             <label class="radio">
               <input type="radio" name="example"
                 value="feed:http://www.nytimes.com/services/xml/rss/nyt/GlobalHome.xml" checked>
@@ -108,6 +113,7 @@
                 value="wikipedia:Cloud">
               <span data-l10n-id="panel-example-wikipedia-cloud"></span>
             </label>
+
           </form>
 
           <form id="wc-panel-wikipedia" hidden>

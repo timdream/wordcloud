@@ -17,11 +17,37 @@ var WordCloudApp = function WordCloudApp() {
       view.removeAttribute('hidden');
     };
     this.isSupported = false;
+    this.logAction('WordCloudApp::isSupported', false);
 
     return;
   }
   this.isSupported = true;
-  this.logAction('WordCloudApp::isSupported');
+  this.logAction('WordCloudApp::isSupported', true);
+
+  this.isFullySupported = (function checkFullySupport() {
+    if (!FilePanelView.prototype.isSupported)
+      return false;
+
+    // Check for real canvas.toBlob() method.
+    if (window.HTMLCanvasElement.prototype.toBlob)
+      return true;
+
+    // If not, see if we should shim it.
+    var hasBlobConstructor = window.Blob && (function tryBlob() {
+      try {
+        return Boolean(new Blob());
+      } catch (e) {
+        return false;
+      }
+    }());
+    var BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder ||
+      window.MozBlobBuilder || window.MSBlobBuilder;
+
+    return !!((hasBlobConstructor || BlobBuilder) && window.atob &&
+      window.ArrayBuffer && window.Uint8Array);
+  })();
+
+  this.logAction('WordCloudApp::isFullySupported', this.isFullySupported);
 
   window.addEventListener('load', this);
 
@@ -1355,10 +1381,24 @@ PanelView.prototype.beforeHide = function pv_beforeHide() {
 var ExamplePanelView = function ExamplePanelView(opts) {
   this.load(opts, {
     name: 'example',
-    element: 'wc-panel-example'
+    element: 'wc-panel-example',
+    supportMsgElement: 'wc-panel-example-support-msg'
   });
+
+  this.checked = false;
 };
 ExamplePanelView.prototype = new PanelView();
+ExamplePanelView.prototype.beforeShow = function epv_beforeShow() {
+  PanelView.prototype.beforeShow.apply(this, arguments);
+
+  if (this.checked)
+    return;
+
+  if (!this.parentView.app.isFullySupported)
+    this.supportMsgElement.removeAttribute('hidden');
+
+  this.checked = true;
+};
 ExamplePanelView.prototype.submit = function epv_submit() {
   var els = this.element.querySelectorAll('[name="example"]');
   for (var el in els) {

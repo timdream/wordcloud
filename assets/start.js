@@ -47,7 +47,16 @@ if (window.location.hostname === 'timc.idv.tw') {
   var langSwitcherView = new LanguageSwitcherView();
   langSwitcherView.app = app;
 
+  app.addView(new CanvasView());
+  app.addView(new LoadingView());
+  app.addView(new DashboardView());
+  app.addView(new ListDialogView());
+  app.addView(new SharerDialogView());
+  app.addView(new AboutDialogView());
+
   var sourceDialogView = new SourceDialogView();
+  app.addView(sourceDialogView);
+
   sourceDialogView.addPanel(new ExamplePanelView());
   sourceDialogView.addPanel(new CPPanelView());
   sourceDialogView.addPanel(new FilePanelView());
@@ -98,14 +107,6 @@ if (window.location.hostname === 'timc.idv.tw') {
     inputElement: 'wc-panel-twitter-id',
     template: 'http://twitter.com/statuses/user_timeline/%s.rss'
   }));
-
-  app.addView(new CanvasView());
-  app.addView(new LoadingView());
-  app.addView(new DashboardView());
-  app.addView(new ListDialogView());
-  app.addView(new SharerDialogView());
-  app.addView(new AboutDialogView());
-  app.addView(sourceDialogView);
 
   app.addFetcher(new TextFetcher());
   app.addFetcher(new FileFetcher());
