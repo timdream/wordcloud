@@ -35,6 +35,18 @@ To test your local code with keys associated with `timc.idv.tw`, you must connec
 
 All pull requests must go through review process before being accepted.
 
+### Browsers to support and test
+
+HTML5 Word Cloud intend to support all modern browsers (inc. IE10), with degraded experience for IE9.
+That means these APIs can **not** be taken for granted:
+
+* classList
+* dataset property
+* CSS 3D transfrom
+* ...
+
+Proper feature detection should be put in place for IE9. Quirks in IE10 needs to be tested if possible.
+
 ## Contact & Ask for help
 
 The author is very responsive to personal e-mail;
