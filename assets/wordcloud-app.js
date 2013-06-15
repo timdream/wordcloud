@@ -609,9 +609,9 @@ LoadingView.prototype.LABEL_ERROR_DATA = 3;
 LoadingView.prototype.LABEL_ERROR_LIST = 4;
 LoadingView.prototype.beforeShow = function l_beforeShow(state, nextState) {
   if (nextState === this.app.UI_STATE_ERROR_WITH_DASHBOARD) {
-    this.element.classList.add('error');
+    this.element.className = 'error';
   } else {
-    this.element.classList.remove('error');
+    this.element.className = '';
   }
 };
 LoadingView.prototype.updateLabel = function l_updateLabel(stringId) {
@@ -695,7 +695,7 @@ SourceDialogView.prototype.addPanel = function sd_addPanel(panel) {
   panel.dialog = this;
 
   if ('isSupported' in panel && !panel.isSupported) {
-    panel.menuItemElement.parentNode.classList.add('disabled');
+    panel.menuItemElement.parentNode.className += ' disabled';
     panel.menuItemElement.removeAttribute('data-panel');
     return;
   }
@@ -726,19 +726,21 @@ DashboardView.prototype.beforeHide =
       var i = ctlBtns.length;
       while (i--) {
         var el = ctlBtns[i];
-        el.classList.remove('disabled');
+        el.className = el.className.replace(/ disabled/g, '');
       }
     } else {
       var i = ctlBtns.length;
       while (i--) {
         var el = ctlBtns[i];
-        el.classList.add('disabled');
+        // We might add extra disabled here, but all of them will be removed,
+        // so don't worry.
+        el.className += ' disabled';
       }
     }
   };
 DashboardView.prototype.handleEvent = function dv_handleEvent(evt) {
   var el = evt.currentTarget;
-  if (el.classList.contains('disabled'))
+  if (el.className.indexOf('disabled') !== -1)
     return;
 
   var app = this.app;
@@ -1043,7 +1045,6 @@ SharerDialogView.prototype.updateStatus = function sdv_updateStatus(stringId) {
 SharerDialogView.prototype.updateProgress =
   function sdv_updateProgress(progress, active) {
     this.progressElement.style.width = Math.floor(progress * 100) + '%';
-    // Don't use classList here for IE9
     this.progressElement.parentNode.className =
       'progress progress-striped' + (active ? ' active' : '');
   };
