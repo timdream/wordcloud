@@ -1402,6 +1402,10 @@ var FilePanelView = function FilePanelView(opts) {
     fileLabelElement: 'wc-panel-file-file-label',
     encodingElement: 'wc-panel-file-encoding'
   });
+
+  if (!this.isSupported)
+    return;
+
   var count = this.fileElement.files.length;
   this.updateLabel(count);
   this.fileElement.addEventListener('change', this);
