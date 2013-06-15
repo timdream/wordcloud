@@ -132,13 +132,13 @@ WordCloudApp.prototype.pushUrlHash = function wca_pushUrlHash(hash) {
   // of the dashboard is pressed, reset() can actually go back one step
   // in the browser history instead of always pushing a new url hash.
   // This is not bullet-proof, unfortunately.
-  this.backToReset = (window.location.hash === '');
+  this.backToReset = !window.location.hash.substr(1);
   this.lastUrlHashChangePushedByScript = true;
 
   window.location.hash = hash;
 };
 WordCloudApp.prototype.reset = function wca_reset() {
-  if (!window.location.hash)
+  if (!window.location.hash.substr(1))
     return;
 
   if (this.backToReset) {
@@ -282,7 +282,7 @@ WordCloudApp.prototype.showSharer = function wca_showSharer(type) {
   this.switchUIState(this.UI_STATE_SHARER_DIALOG);
 };
 WordCloudApp.prototype.route = function wca_route() {
-  var hash = window.location.hash;
+  var hash = window.location.hash.substr(1);
 
   this.logAction('WordCloudApp::route', hash.substr(0, 128));
 
@@ -305,7 +305,7 @@ WordCloudApp.prototype.route = function wca_route() {
   }
 
   var dataType, data;
-  hash.substr(1).match(/^([^:]+):?(.*)$/).forEach(function matchHash(str, i) {
+  hash.match(/^([^:]+):?(.*)$/).forEach(function matchHash(str, i) {
     switch (i) {
       case 1:
         dataType = str;
@@ -384,7 +384,7 @@ View.prototype.show = function v_show(currentState, nextState) {
     return false;
   }
 
-  this.element.hidden = false;
+  this.element.removeAttribute('hidden');
 
   if ('afterShow' in this) {
     this.afterShow.apply(this, arguments);
@@ -397,7 +397,7 @@ View.prototype.hide = function v_hide(currentState, nextState) {
     return false;
   }
 
-  this.element.hidden = true;
+  this.element.setAttribute('hidden', true);
 
   if ('afterHide' in this) {
     this.afterHide.apply(this, arguments);
@@ -410,15 +410,22 @@ var LanguageSwitcherView = function LanguageSwitcher(opts) {
     element: 'wc-language'
   });
 
+  // webL10n doesn't handle this IE property yet.
+  if (navigator.userLanguage) {
+    document.webL10n.setLanguage(navigator.userLanguage);
+  }
+
+  var defaultLanguage = navigator.language || navigator.userLanguage;
+
   // Collect the information about available languages from HTML.
   var langs = this.langs = [];
   Array.prototype.forEach.call(this.element.children, function lang(el) {
     langs.push(el.value);
-    if (el.value === navigator.language)
+    if (el.value === defaultLanguage)
       el.selected = true;
   });
 
-  if (langs.indexOf(navigator.language) === -1) {
+  if (langs.indexOf(defaultLanguage) === -1) {
     // Default to the first one.
     this.element.selectedIndex = 0;
     document.webL10n.setLanguage(langs[0]);
@@ -467,7 +474,7 @@ var CanvasView = function CanvasView(opts) {
   }).bind(this));
 
   this.idleOption = {
-    fontFamily: 'serif',
+    fontFamily: 'Times, serif',
     color: 'rgba(255, 255, 255, 0.8)',
     rotateRatio: 0.5,
     backgroundColor: 'transparent',
@@ -602,9 +609,9 @@ LoadingView.prototype.LABEL_ERROR_DATA = 3;
 LoadingView.prototype.LABEL_ERROR_LIST = 4;
 LoadingView.prototype.beforeShow = function l_beforeShow(state, nextState) {
   if (nextState === this.app.UI_STATE_ERROR_WITH_DASHBOARD) {
-    this.element.classList.add('error');
+    this.element.className = 'error';
   } else {
-    this.element.classList.remove('error');
+    this.element.className = '';
   }
 };
 LoadingView.prototype.updateLabel = function l_updateLabel(stringId) {
@@ -647,7 +654,7 @@ SourceDialogView.prototype.handleEvent = function sd_handleEvent(evt) {
 
   switch (evt.currentTarget) {
     case this.menuElement:
-      var panelName = evt.target.dataset.panel;
+      var panelName = evt.target.getAttribute('data-panel');
       if (!panelName || !this.panels[panelName])
         return;
 
@@ -684,12 +691,12 @@ SourceDialogView.prototype.addPanel = function sd_addPanel(panel) {
   if (!panel.menuItemElement)
     throw 'menuItemElement not found.';
 
-  panel.menuItemElement.parentNode.hidden = false;
+  panel.menuItemElement.parentNode.removeAttribute('hidden');
   panel.dialog = this;
 
   if ('isSupported' in panel && !panel.isSupported) {
-    panel.menuItemElement.parentNode.classList.add('disabled');
-    panel.menuItemElement.dataset.panel = undefined;
+    panel.menuItemElement.parentNode.className += ' disabled';
+    panel.menuItemElement.removeAttribute('data-panel');
     return;
   }
 
@@ -719,23 +726,25 @@ DashboardView.prototype.beforeHide =
       var i = ctlBtns.length;
       while (i--) {
         var el = ctlBtns[i];
-        el.classList.remove('disabled');
+        el.className = el.className.replace(/ disabled/g, '');
       }
     } else {
       var i = ctlBtns.length;
       while (i--) {
         var el = ctlBtns[i];
-        el.classList.add('disabled');
+        // We might add extra disabled here, but all of them will be removed,
+        // so don't worry.
+        el.className += ' disabled';
       }
     }
   };
 DashboardView.prototype.handleEvent = function dv_handleEvent(evt) {
   var el = evt.currentTarget;
-  if (el.classList.contains('disabled'))
+  if (el.className.indexOf('disabled') !== -1)
     return;
 
   var app = this.app;
-  var action = el.dataset.action;
+  var action = el.getAttribute('data-action');
 
   this.app.logAction('DashboardView::action', action);
 
@@ -1036,13 +1045,15 @@ SharerDialogView.prototype.updateStatus = function sdv_updateStatus(stringId) {
 SharerDialogView.prototype.updateProgress =
   function sdv_updateProgress(progress, active) {
     this.progressElement.style.width = Math.floor(progress * 100) + '%';
-    // Don't use classList here for IE9
     this.progressElement.parentNode.className =
       'progress progress-striped' + (active ? ' active' : '');
   };
 SharerDialogView.prototype.updateFacebookUI = function sdv_updateFacebookUI() {
-  this.facebookLoginElement.hidden =
-    (this.type !== 'facebook' || this.hasFacebookPermission);
+  if (this.type !== 'facebook' || this.hasFacebookPermission) {
+    this.facebookLoginElement.setAttribute('hidden', true);
+  } else {
+    this.facebookLoginElement.removeAttribute('hidden');
+  }
 };
 SharerDialogView.prototype.getCloudTitle = function sdv_getCloudTitle() {
   return _('app-title');
@@ -1349,7 +1360,7 @@ var ExamplePanelView = function ExamplePanelView(opts) {
 };
 ExamplePanelView.prototype = new PanelView();
 ExamplePanelView.prototype.submit = function epv_submit() {
-  var els = this.element.example;
+  var els = this.element.querySelectorAll('[name="example"]');
   for (var el in els) {
     if (els[el].checked) {
       this.dialog.submit('#' + els[el].value);
@@ -1392,6 +1403,10 @@ var FilePanelView = function FilePanelView(opts) {
     fileLabelElement: 'wc-panel-file-file-label',
     encodingElement: 'wc-panel-file-encoding'
   });
+
+  if (!this.isSupported)
+    return;
+
   var count = this.fileElement.files.length;
   this.updateLabel(count);
   this.fileElement.addEventListener('change', this);
@@ -1538,7 +1553,8 @@ FacebookPanelView.prototype.submit = function fbpv_submit() {
       // XXX: There is no way to cancel the login pop-up midway if
       // the user navigates away from the panel (or the source dialog).
       // We shall do some checking here to avoid accidently switches the UI.
-      if (this.element.hidden || this.dialog.element.hidden)
+      if (this.element.hasAttribute('hidden') ||
+          this.dialog.element.hasAttribute('hidden'))
         return;
 
       this.facebookResponse = res;
@@ -1634,7 +1650,8 @@ GooglePlusPanelView.prototype.beforeShow = function gppv_beforeShow() {
         // XXX: There is no way to cancel the login pop-up midway if
         // the user navigates away from the panel (or the source dialog).
         // We shall do some checking here to avoid accidently switches the UI.
-        if (this.element.hidden || this.dialog.element.hidden)
+        if (this.element.hasAttribute('hidden') ||
+            this.dialog.element.hasAttribute('hidden'))
           return;
 
         this.realSubmit();
@@ -1737,7 +1754,7 @@ AboutDialogView.prototype.loadContent = function adv_loadContent(lang, first) {
   if (first) {
     iframe.onerror = (function contentLoadError() {
       this.loaded = false;
-      if (! this.element.hidden) {
+      if (!this.element.hasAttribute('hidden')) {
         this.app.switchUIState(this.app.UI_STATE_SOURCE_DIALOG);
       }
     }).bind(this);
@@ -1867,7 +1884,7 @@ JSONPFetcher.prototype.stop = function jpf_stop() {
 };
 JSONPFetcher.prototype.handleEvent = function jpf_handleEvent(evt) {
   var el = evt.target;
-  window[el.dataset.callbackName] = undefined;
+  window[el.getAttribute('data-callback-name')] = undefined;
   this.currentRequest = undefined;
   clearTimeout(this.timer);
 
@@ -1900,7 +1917,7 @@ JSONPFetcher.prototype.requestData = function jpf_requestJSONData(url) {
 
   var el = this.scriptElement = document.createElement('script');
   el.src = url;
-  el.dataset.callbackName = callbackName;
+  el.setAttribute('data-callback-name', callbackName);
   el.addEventListener('load', this);
   el.addEventListener('error', this);
 

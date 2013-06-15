@@ -1,6 +1,6 @@
 html {
   min-height: 100%;
-  background: #fff;
+  background: #d9dddf;
   background: linear-gradient(#b4bcbf, #ffffff) no-repeat;
   background: -webkit-linear-gradient(#b4bcbf, white) no-repeat; }
 
@@ -15,6 +15,13 @@ body {
   width: 100%;
   height: 100%;
   overflow-x: hidden; }
+
+body:lang(zh-tw), body:lang(zh-tw) label, body:lang(zh-tw) input, body:lang(zh-tw) textarea, body:lang(zh-tw) select, body:lang(zh-tw) button,
+body:lang(zh-tw) .btn {
+  font-size: 15px; }
+
+*[hidden] {
+  display: none; }
 
 /*
 Based on <i> cloud, design by daneden
@@ -50,7 +57,7 @@ https://gist.github.com/2945570
   display: block;
   width: 100px;
   height: 33.33px;
-  font: 100px serif;
+  font: 100px Times, serif;
   font-weight: bold;
   line-height: 1em;
   text-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);

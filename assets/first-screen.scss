@@ -3,7 +3,7 @@
 
 html {
   min-height: 100%;
-  background: #fff;
+  background: tint(#b4bcbf, 50%);
   background: linear-gradient(#b4bcbf, white) no-repeat;
   background: -webkit-linear-gradient(#b4bcbf, white) no-repeat;
 }
@@ -20,6 +20,17 @@ body {
   width: 100%;
   height: 100%;
   overflow-x: hidden;
+}
+
+body:lang(zh-tw) {
+  &, label, input, textarea, select, button,
+  .btn {
+    font-size: 15px;
+  }
+}
+
+*[hidden] {
+  display: none;
 }
 
 /*
@@ -54,7 +65,7 @@ $shadow-length: $icon-width * 0.05;
   width: $icon-width;
   height: $icon-height;
 
-  font: $icon-width serif;
+  font: $icon-width Times, serif;
   font-weight: bold;
   line-height: 1em;
   text-shadow: 0 $shadow-length $shadow-length rgba(0, 0, 0, 0.1);
