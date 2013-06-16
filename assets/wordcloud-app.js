@@ -725,7 +725,6 @@ SourceDialogView.prototype.showPanel = function sd_showPanel(panel) {
 };
 SourceDialogView.prototype.addPanel = function sd_addPanel(panel) {
   this.panels[panel.name] = panel;
-  panel.parentView = this;
   panel.menuItemElement =
     this.menuElement.querySelector('[data-panel="' + panel.name + '"]');
 
@@ -1405,7 +1404,7 @@ ExamplePanelView.prototype.beforeShow = function epv_beforeShow() {
   if (this.checked)
     return;
 
-  if (!this.parentView.app.isFullySupported)
+  if (!this.dialog.app.isFullySupported)
     this.supportMsgElement.removeAttribute('hidden');
 
   this.checked = true;
@@ -1619,12 +1618,12 @@ FacebookPanelView.prototype.submit = function fbpv_submit() {
       this.facebookResponse = res;
 
       if (res.status !== 'connected') {
-        this.parentView.app.
+        this.dialog.app.
           logAction('FacebookPanelView::login', 'cancelled');
         return;
       }
 
-      this.parentView.app.
+      this.dialog.app.
         logAction('FacebookPanelView::login', 'success');
 
       // Note that we assume we have the permission already
