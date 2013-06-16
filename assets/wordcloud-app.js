@@ -154,6 +154,14 @@ WordCloudApp.prototype.addFetcher = function wca_addFetcher(fetcher) {
   fetcher.app = this;
 };
 WordCloudApp.prototype.pushUrlHash = function wca_pushUrlHash(hash) {
+  if (hash === window.location.hash) {
+    // Simply ask to re-reute the same hash we have here
+    // without creating a new history stack.
+    this.route();
+
+    return true;
+  }
+
   // This two flags are introduced so that when [Back] button
   // of the dashboard is pressed, reset() can actually go back one step
   // in the browser history instead of always pushing a new url hash.
@@ -161,7 +169,14 @@ WordCloudApp.prototype.pushUrlHash = function wca_pushUrlHash(hash) {
   this.backToReset = !window.location.hash.substr(1);
   this.lastUrlHashChangePushedByScript = true;
 
-  window.location.hash = hash;
+  // If the hash exceeds URL length limit set by IE,
+  // we will catch an error here.
+  try {
+    window.location.hash = hash;
+  } catch (e) {
+    return false;
+  }
+  return true;
 };
 WordCloudApp.prototype.reset = function wca_reset() {
   if (!window.location.hash.substr(1))
@@ -697,7 +712,7 @@ SourceDialogView.prototype.handleEvent = function sd_handleEvent(evt) {
   }
 };
 SourceDialogView.prototype.submit = function sd_submit(hash) {
-  this.app.pushUrlHash(hash);
+  return this.app.pushUrlHash(hash);
 };
 SourceDialogView.prototype.showPanel = function sd_showPanel(panel) {
   if (this.currentPanel)
@@ -883,9 +898,6 @@ ListDialogView.prototype.beforeShow = function ldv_beforeShow() {
 ListDialogView.prototype.afterShow = function ldv_afterShow() {
   this.textElement.focus();
 };
-ListDialogView.prototype.afterHide = function ldv_afterHide() {
-  this.textElement.value = '';
-};
 ListDialogView.prototype.handleEvent = function ldv_handleEvent(evt) {
   switch (evt.target) {
     case this.confirmBtnElement:
@@ -911,12 +923,11 @@ ListDialogView.prototype.submit = function ldv_submit() {
     hash = '#list:' + encodeURIComponent(el.value);
   }
 
-  if (hash !== window.location.hash) {
-    this.app.pushUrlHash(hash);
-  } else {
-    // It's useless to push the same hash here;
-    // Let's close ourselves.
-    this.app.switchUIState(this.app.UI_STATE_DASHBOARD);
+  var hashPushed = this.app.pushUrlHash(hash);
+  if (!hashPushed) {
+    // The hash is too long and is being rejected in IE.
+    // let's use the short hash instead.
+    this.app.pushUrlHash('#list');
   }
 };
 ListDialogView.prototype.close = function ldv_close() {
@@ -1425,13 +1436,21 @@ CPPanelView.prototype.submit = function cpv_submit() {
     return;
   }
 
+  var submitted;
+
   if (window.btoa) {
     // Protect the encoded string with base64 to workaround Safari bug,
     // which improve sharability of the URL.
-    this.dialog.submit(
+    submitted = this.dialog.submit(
       '#base64:' + window.btoa(unescape(encodeURIComponent(el.value))));
   } else {
-    this.dialog.submit('#text:' + encodeURIComponent(el.value));
+    submitted = this.dialog.submit('#text:' + encodeURIComponent(el.value));
+  }
+
+  if (!submitted) {
+    // The hash is too long and is being rejected in IE.
+    // let's use the short hash instead.
+    this.dialog.submit('#text');
   }
 };
 
@@ -1839,7 +1858,9 @@ TextFetcher.prototype.stop = function tf_stop() {
   clearTimeout(this.timer);
 };
 TextFetcher.prototype.getData = function tf_getData(dataType, data) {
-  if (dataType === 'base64') {
+  if (dataType === 'text' && !data) {
+    data = this.app.views['source-dialog'].panels['cp'].textareaElement.value;
+  } else if (dataType === 'base64') {
     data = decodeURIComponent(escape(window.atob(data)));
   } else {
     data = decodeURIComponent(data);
@@ -1891,8 +1912,14 @@ ListFetcher.prototype.stop = function lf_stop() {
   clearTimeout(this.timer);
 };
 ListFetcher.prototype.getData = function lf_getData(dataType, data) {
-  var text = (dataType === 'base64-list') ?
-    decodeURIComponent(escape(window.atob(data))) : decodeURIComponent(data);
+  var text;
+  if (dataType === 'list' && !data) {
+    text = this.app.views['list-dialog'].textElement.value;
+  } else if (dataType === 'base64-list') {
+    text = decodeURIComponent(escape(window.atob(data)));
+  } else {
+    text = decodeURIComponent(data);
+  }
 
   var vol = 0;
   var list = [];
