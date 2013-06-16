@@ -861,7 +861,27 @@ DashboardView.prototype.handleEvent = function dv_handleEvent(evt) {
       } else {
         evt.preventDefault();
         alert(_('right-click-to-save'));
-        window.open(url, '_blank', 'width=500,height=300,menubar=yes');
+        var win = window.open('blank.html', '_blank',
+                              'width=500,height=300,resizable=yes,menubar=yes');
+
+        // XXX IE won't attach the standard addEventListener interface
+        // until the dead code below is evaluated.
+        win.attachEvent;
+
+        win.addEventListener('load', function dv_popupLoaded() {
+          win.removeEventListener('load', dv_popupLoaded);
+          var doc = win.document;
+
+          while (doc.body.firstElementChild) {
+            doc.body.removeChild(doc.body.firstElementChild);
+          }
+          var img = doc.createElement('img');
+          img.id = 'popup-image';
+          img.src = url;
+          doc.getElementsByTagName('title')[0].textContent =
+            _('image-popup-title');
+          doc.body.appendChild(img);
+        });
       }
 
       break;
@@ -1297,12 +1317,20 @@ SharerDialogView.prototype.sendImage = function sdv_sendImage() {
       // once the image is uploaded.
       // Obviously this is not the optimal user experience.
 
-      var facebookWin =
-        window.open('data:text/html,' +
-            encodeURIComponent(_(
-                this.stringIds[this.LABEL_FACEBOOK_WINDOW_LOADING])
-              )
-          );
+      var facebookWin = window.open('blank.html');
+      var loadingLabel = _(this.stringIds[this.LABEL_FACEBOOK_WINDOW_LOADING]);
+      var insertLoadingLabel = function sdv_insertLoadingLabel() {
+        facebookWin.removeEventListener('load', insertLoadingLabel);
+
+        var doc = facebookWin.document;
+        doc.getElementsByTagName('title')[0].textContent = loadingLabel;
+      };
+
+      // XXX IE won't attach the standard addEventListener interface
+      // until the dead code below is evaluated.
+      facebookWin.attachEvent;
+
+      facebookWin.addEventListener('load', insertLoadingLabel);
 
       // XXX This is sad. We couldn't make a CORS XHR request
       // to Facebook Graph API to send our image directly,
@@ -1312,6 +1340,8 @@ SharerDialogView.prototype.sendImage = function sdv_sendImage() {
         message: this.getCloudTitle() + '\n\n' +
           this.getCloudList() + '\n\n' + url
       }, (function sdv_facebookImageUploaded(res) {
+        facebookWin.removeEventListener('load', insertLoadingLabel);
+
         if (!res || !res.id) {
           facebookWin.close();
 

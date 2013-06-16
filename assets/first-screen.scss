@@ -1,5 +1,5 @@
 // This file should only contains CSS style rules critical to
-// render the first screen (i.e. the shaking cloud animation.)
+// render the first screen and blank.html (i.e. the shaking cloud animation.)
 
 html {
   min-height: 100%;
@@ -130,4 +130,8 @@ $shadow-length: $icon-width * 0.05;
     top: - $icon-height * .7333;
     right: $icon-width * .1333;
   }
+}
+
+#popup-image {
+  width: 100%;
 }
