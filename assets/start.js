@@ -15,7 +15,7 @@ if (window.location.hostname === 'timc.idv.tw') {
     var s = document.getElementsByTagName('script')[0];
     s.parentNode.insertBefore(ga, s);
   })();
-} else if (console) {
+} else if (window.console) {
   _gaq.push = function pushWithLog() {
     // console.log.apply() does not exist on IE9
     Function.prototype.apply.call(console.log, console, arguments);
