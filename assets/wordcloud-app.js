@@ -451,11 +451,6 @@ var LanguageSwitcherView = function LanguageSwitcher(opts) {
     element: 'wc-language'
   });
 
-  // webL10n doesn't handle this IE property yet.
-  if (navigator.userLanguage) {
-    document.webL10n.setLanguage(navigator.userLanguage);
-  }
-
   var defaultLanguage = navigator.language || navigator.userLanguage;
 
   // Collect the information about available languages from HTML.
@@ -469,7 +464,6 @@ var LanguageSwitcherView = function LanguageSwitcher(opts) {
   if (langs.indexOf(defaultLanguage) === -1) {
     // Default to the first one.
     this.element.selectedIndex = 0;
-    document.webL10n.setLanguage(langs[0]);
   }
 
   // 'localized' is a CustomEvent dispatched by l10n.js
@@ -485,8 +479,8 @@ LanguageSwitcherView.prototype.handleEvent = function lsv_handleEvent(evt) {
       break;
 
     case 'localized':
-      document.documentElement.lang = evt.language;
-      this.app.logAction('LanguageSwitcherView::localized', evt.language);
+      this.app.logAction('LanguageSwitcherView::localized',
+                          document.documentElement.lang);
       break;
   }
 };
