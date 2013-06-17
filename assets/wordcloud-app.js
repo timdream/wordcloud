@@ -860,16 +860,13 @@ DashboardView.prototype.handleEvent = function dv_handleEvent(evt) {
         }, 0);
       } else {
         evt.preventDefault();
-        alert(_('right-click-to-save'));
         var win = window.open('blank.html', '_blank',
                               'width=500,height=300,resizable=yes,menubar=yes');
+        var loadImage = function loadImage() {
+          win.removeEventListener('load', loadImage);
+          if (win.detachEvent)
+            win.detachEvent('onload', loadImage);
 
-        // XXX IE won't attach the standard addEventListener interface
-        // until the dead code below is evaluated.
-        win.attachEvent;
-
-        win.addEventListener('load', function dv_popupLoaded() {
-          win.removeEventListener('load', dv_popupLoaded);
           var doc = win.document;
 
           while (doc.body.firstElementChild) {
@@ -881,7 +878,22 @@ DashboardView.prototype.handleEvent = function dv_handleEvent(evt) {
           doc.getElementsByTagName('title')[0].textContent =
             _('image-popup-title');
           doc.body.appendChild(img);
-        });
+        };
+
+        // XXX IE9 won't attach the standard addEventListener interface
+        // until the document is loaded.
+        // It would also refuse to fire the onload event if the document is
+        // considered ready.
+        if (win.attachEvent) {
+          if (win.document.readyState === 'complete') {
+            loadImage();
+          } else {
+            win.attachEvent('onload', loadImage);
+          }
+        } else {
+          // Simple syntax for the rest of us.
+          win.addEventListener('load', loadImage);
+        }
       }
 
       break;
@@ -1326,8 +1338,9 @@ SharerDialogView.prototype.sendImage = function sdv_sendImage() {
         doc.getElementsByTagName('title')[0].textContent = loadingLabel;
       };
 
-      // XXX IE won't attach the standard addEventListener interface
+      // XXX IE10 won't attach the standard addEventListener interface
       // until the dead code below is evaluated.
+      // (we are not dealing with IE9 here.)
       facebookWin.attachEvent;
 
       facebookWin.addEventListener('load', insertLoadingLabel);

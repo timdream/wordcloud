@@ -107,4 +107,5 @@ https://gist.github.com/2945570
     right: 13.33px; }
 
 #popup-image {
-  width: 100%; }
+  width: 100%;
+  height: auto; }
