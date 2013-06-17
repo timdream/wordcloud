@@ -13,8 +13,12 @@ var WordCloudApp = function WordCloudApp() {
       !('onhashchange' in window)) {
     window.onload = function wca_browserDisabled() {
       var view = document.getElementById('wc-browser-support');
-      delete view.hidden;
-      view.removeAttribute('hidden');
+      try {
+        delete view.hidden;
+      } catch (e) {}
+      if (view.removeAttribute) {
+        view.removeAttribute('hidden');
+      }
     };
     this.isSupported = false;
     this.logAction('WordCloudApp::isSupported', false);
