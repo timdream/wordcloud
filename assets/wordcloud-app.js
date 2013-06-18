@@ -669,6 +669,7 @@ var SourceDialogView = function SourceDialogView(opts) {
     name: 'source-dialog',
     element: 'wc-source-dialog',
     menuElement: 'wc-source-menu',
+    selectionElement: 'wc-source-selection',
     startBtnElement: 'wc-source-start-btn',
     panelContainerElement: 'wc-source-panels',
     aboutBtnElement: 'wc-source-about-btn'
@@ -677,7 +678,18 @@ var SourceDialogView = function SourceDialogView(opts) {
   this.currentPanel = null;
   this.panels = {};
 
+  var selectionElement = this.selectionElement;
+  var menuLinks = this.menuElement.getElementsByTagName('a');
+  Array.prototype.forEach.call(menuLinks, function item(el) {
+    var option = document.createElement('option');
+    option.value = el.getAttribute('data-panel');
+    option.setAttribute('data-l10n-id', el.getAttribute('data-l10n-id'));
+    option.appendChild(document.createTextNode(el.textContent));
+    selectionElement.appendChild(option);
+  });
+
   this.menuElement.addEventListener('click', this);
+  this.selectionElement.addEventListener('change', this);
   this.startBtnElement.addEventListener('click', this);
   this.panelContainerElement.addEventListener('submit', this);
   this.aboutBtnElement.addEventListener('click', this);
@@ -697,6 +709,14 @@ SourceDialogView.prototype.handleEvent = function sd_handleEvent(evt) {
   switch (evt.currentTarget) {
     case this.menuElement:
       var panelName = evt.target.getAttribute('data-panel');
+      if (!panelName || !this.panels[panelName])
+        return;
+
+      this.showPanel(this.panels[panelName]);
+      break;
+
+    case this.selectionElement:
+      var panelName = evt.target.value;
       if (!panelName || !this.panels[panelName])
         return;
 
@@ -728,6 +748,10 @@ SourceDialogView.prototype.addPanel = function sd_addPanel(panel) {
   this.panels[panel.name] = panel;
   panel.menuItemElement =
     this.menuElement.querySelector('[data-panel="' + panel.name + '"]');
+  panel.selectionIndex = Array.prototype.indexOf.call(
+      this.menuElement.children, panel.menuItemElement.parentNode);
+
+  console.log(panel.selectionIndex);
 
   if (!panel.menuItemElement)
     throw 'menuItemElement not found.';
@@ -1422,6 +1446,7 @@ var PanelView = function PanelView() {
 PanelView.prototype = new View();
 PanelView.prototype.beforeShow = function pv_beforeShow() {
   this.menuItemElement.parentNode.className = 'active';
+  this.dialog.selectionElement.selectedIndex = this.selectionIndex;
 };
 PanelView.prototype.afterShow = function pv_afterShow() {
   var el = this.element.querySelector('input, button, select, textarea');

@@ -72,13 +72,21 @@ $transition-time: 0.5s;
   }
 }
 
+#wc-source-selection {
+  display: none;
+}
+
 @media (max-width: 767px) {
-  #wc-source-menu {
-    float: none;
+  #wc-source-dialog .tabs-left {
+    display: none;
+  }
+  #wc-source-selection {
+    display: inline;
   }
 }
 
-.modal-footer .input-prepend {
+.modal-footer .input-prepend,
+.modal-header select {
   margin: 0;
 }
 
