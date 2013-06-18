@@ -602,7 +602,10 @@ CanvasView.prototype.drawIdleCloud = function cv_drawIdleCloud() {
   var width = this.documentWidth;
   var height = this.documentHeight;
 
-  document.addEventListener('mousemove', this);
+  // Only enable the rotation effect on non-touch capable browser.
+  if (!('ontouchstart' in window))
+    document.addEventListener('mousemove', this);
+
   this.element.style[this.cssTransformProperty] = 'scale(1.2)';
 
   this.setDimension(width, height);

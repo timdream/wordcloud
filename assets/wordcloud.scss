@@ -1,12 +1,19 @@
 body {
   perspective: 500px;
   -webkit-perspective: 300px;
-
-  // Overwrite background-color rule in bootstrap
-  background-color: transparent;
 }
 
 $transition-time: 0.5s;
+
+#wc-canvas-container {
+  position: fixed;
+  top: 0; left: 0;
+  height: 100%; width: 100%;
+  overflow: hidden;
+
+  perspective: 500px;
+  -webkit-perspective: 300px;
+}
 
 #wc-canvas {
   position: absolute;

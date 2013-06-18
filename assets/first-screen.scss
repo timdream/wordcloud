@@ -2,10 +2,8 @@
 // render the first screen and blank.html (i.e. the shaking cloud animation.)
 
 html {
-  min-height: 100%;
-  background: tint(#b4bcbf, 50%);
-  background: linear-gradient(#b4bcbf, white) no-repeat;
-  background: -webkit-linear-gradient(#b4bcbf, white) no-repeat;
+  height: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -15,11 +13,13 @@ body {
   padding: 0;
   margin: 0;
   color: #333;
+  min-height: 100%;
 
-  position: absolute;
-  width: 100%;
-  height: 100%;
   overflow-x: hidden;
+
+  background: tint(#b4bcbf, 50%);
+  background: linear-gradient(#b4bcbf, white) no-repeat;
+  background: -webkit-linear-gradient(#b4bcbf, white) no-repeat;
 }
 
 body:lang(zh-tw) {

@@ -1,7 +1,16 @@
 body {
   perspective: 500px;
-  -webkit-perspective: 300px;
-  background-color: transparent; }
+  -webkit-perspective: 300px; }
+
+#wc-canvas-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  perspective: 500px;
+  -webkit-perspective: 300px; }
 
 #wc-canvas {
   position: absolute;
