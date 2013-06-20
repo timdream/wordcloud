@@ -456,6 +456,9 @@ var LanguageSwitcherView = function LanguageSwitcher(opts) {
   });
 
   var defaultLanguage = navigator.language || navigator.userLanguage;
+  defaultLanguage = defaultLanguage.replace(/-[a-z]{2}$/i, function(str) {
+    return str.toUpperCase();
+  });
 
   // Collect the information about available languages from HTML.
   var langs = this.langs = [];
