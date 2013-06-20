@@ -751,8 +751,6 @@ SourceDialogView.prototype.addPanel = function sd_addPanel(panel) {
   panel.selectionIndex = Array.prototype.indexOf.call(
       this.menuElement.children, panel.menuItemElement.parentNode);
 
-  console.log(panel.selectionIndex);
-
   if (!panel.menuItemElement)
     throw 'menuItemElement not found.';
 
