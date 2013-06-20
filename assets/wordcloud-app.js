@@ -1296,6 +1296,8 @@ SharerDialogView.prototype.uploadImage = function sdv_uploadImage() {
     if (xhr.readyState !== XMLHttpRequest.DONE || !this.type)
       return;
 
+    this.checkImgurCredits();
+
     this.xhr = null;
     var response;
     try {
@@ -1442,6 +1444,34 @@ SharerDialogView.prototype.sendImage = function sdv_sendImage() {
       throw 'Unknown shareDialogView type ' + this.type;
   }
 };
+SharerDialogView.prototype.checkImgurCredits =
+  function sdv_checkImgurCredits() {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'https://api.imgur.com/3/credits');
+    xhr.setRequestHeader('Authorization', 'Client-ID ' + IMGUR_CLIENT_ID);
+    xhr.onreadystatechange = (function sdv_xhrFinish(evt) {
+      if (xhr.readyState !== XMLHttpRequest.DONE)
+        return;
+
+      var response;
+      try {
+        response = JSON.parse(xhr.responseText);
+      } catch (e) {}
+
+      if (!response || !response.success)
+        return;
+
+      this.imgurCreditsData = response.data;
+
+      this.app.logAction(
+        'SharerDialogView::checkImgurCredits::ClientRemaining',
+        response.data.ClientRemaining);
+
+    }).bind(this);
+
+    xhr.send();
+  };
+
 
 var PanelView = function PanelView() {
 };
