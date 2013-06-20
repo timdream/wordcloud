@@ -1955,6 +1955,9 @@ var SNSPushView = function SNSPushView(opts) {
     googlePlusElement: 'wc-google-plus-iframe'
   });
 
+  if (document.webL10n.getReadyState() === 'complete') {
+    this.loadButtons();
+  }
   window.addEventListener('localized', this);
 };
 SNSPushView.prototype = new View();
