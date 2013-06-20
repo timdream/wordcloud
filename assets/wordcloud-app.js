@@ -76,6 +76,7 @@ var WordCloudApp = function WordCloudApp() {
   };
 
   this.shapes = [
+    { shape: 'circle' },
     {
       shape: function shapeSquare(theta) {
         var thetaPrime = (theta + Math.PI / 4) % (2 * Math.PI / 4);
@@ -84,7 +85,6 @@ var WordCloudApp = function WordCloudApp() {
     },
     { shape: 'triangle-forward',
       ellipticity: 1 },
-    { shape: 'circle' },
     { shape: 'star',
       ellipticity: 1 }
   ];
@@ -294,6 +294,7 @@ WordCloudApp.prototype.draw = function wca_draw() {
   canvasView.setDimension();
   canvasView.draw(this.getWordCloudOption());
 
+  var hash = window.location.hash;
   this.logAction('WordCloudApp::draw', hash.substr(0, 128));
 };
 WordCloudApp.prototype.calculateWeightFactor =
