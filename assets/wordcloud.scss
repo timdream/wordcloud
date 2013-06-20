@@ -41,6 +41,11 @@ $transition-time: 0.5s;
   z-index: 3050;
 }
 
+:lang(zh-TW) .only-en-US,
+:lang(en-US) .only-zh-TW {
+  display: none;
+}
+
 #wc-source-dialog,
 #wc-dashboard {
   // XXX: Apply visibility transition to visible element

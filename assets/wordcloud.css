@@ -33,6 +33,10 @@ body {
   height: 30%;
   z-index: 3050; }
 
+:lang(zh-TW) .only-en-US,
+:lang(en-US) .only-zh-TW {
+  display: none; }
+
 #wc-source-dialog,
 #wc-dashboard {
   transition: opacity 0.5s ease, transform 0.5s ease;

@@ -87,9 +87,9 @@
               <a href="#" data-l10n-id="source-tumblr" data-panel="tumblr"></a></li>
             <li hidden>
               <a href="#" data-l10n-id="source-wordpresscom" data-panel="wordpresscom"></a></li>
-            <li hidden>
+            <li class="only-zh-TW" hidden>
               <a href="#" data-l10n-id="source-pixnet" data-panel="pixnet"></a></li>
-            <li hidden>
+            <li class="only-zh-TW" hidden>
               <a href="#" data-l10n-id="source-wretchcc" data-panel="wretchcc"></a></li>
             <!-- In memory of Aaron Swartz -->
             <li hidden>
@@ -117,17 +117,46 @@
                 value="feed:http://www.nytimes.com/services/xml/rss/nyt/GlobalHome.xml" checked>
               <span data-l10n-id="panel-example-nytimes-global"></span>
             </label>
-            <label class="radio">
+            <label class="radio only-en-US">
               <input type="radio" name="example"
                 value="feed:http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml">
               <span data-l10n-id="panel-example-nytimes-us"></span>
             </label>
-            <label class="radio">
+            <label class="radio only-zh-TW">
+              <input type="radio" name="example"
+                value="feed:http://tw.news.yahoo.com/rss/politics">
+              <span data-l10n-id="panel-example-ynews-politics"></span>
+            </label>
+            <label class="radio only-zh-TW">
+              <input type="radio" name="example"
+                value="feed:http://tw.news.yahoo.com/rss/entertainment">
+              <span data-l10n-id="panel-example-ynews-entertainment"></span>
+            </label>
+            <label class="radio only-en-US">
+              <input type="radio" name="example"
+                value="feed:http://daringfireball.net/index.xml">
+              <span data-l10n-id="panel-example-daringfireball"></span>
+            </label>
+            <label class="radio only-en-US">
               <input type="radio" name="example"
                 value="wikipedia:Cloud">
               <span data-l10n-id="panel-example-wikipedia-cloud"></span>
             </label>
-
+            <label class="radio only-zh-TW">
+              <input type="radio" name="example"
+                value="wikipedia.zh:雲">
+              <span data-l10n-id="panel-example-wikipedia-zh-cloud"></span>
+            </label>
+            <label class="radio only-zh-TW">
+              <input type="radio" name="example"
+                value="feed:http://www.president.gov.tw/RSS.aspx?tabid=1104&amp;moduleid=2074">
+              <span data-l10n-id="panel-example-roc-president"></span>
+            </label>
+            <label class="radio only-zh-TW">
+              <input type="radio" name="example"
+                value="feed:http://feeds.feedburner.com/Pansci">
+              <span data-l10n-id="panel-example-pansci"></span>
+            </label>
           </form>
 
           <form id="wc-panel-wikipedia" hidden>
