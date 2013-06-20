@@ -52,6 +52,32 @@ body {
 #wc-source-selection {
   display: none; }
 
+#wc-source-selection {
+  display: none; }
+
+#wc-source-menu {
+  margin-top: -10px;
+  padding: 10px 0;
+  width: 124px; }
+  #wc-source-menu li {
+    position: relative; }
+    #wc-source-menu li.active:before, #wc-source-menu li.active:after {
+      width: 10px;
+      height: 10px;
+      content: ' ';
+      position: absolute;
+      right: -1px;
+      border-right: 1px solid #DDD;
+      box-shadow: 4px 0 0 white; }
+    #wc-source-menu li.active:before {
+      top: -10px;
+      border-bottom: 1px solid #DDD;
+      border-radius: 0 0 5px 0; }
+    #wc-source-menu li.active:after {
+      bottom: -10px;
+      border-top: 1px solid #DDD;
+      border-radius: 0 5px 0 0; }
+
 @media (max-width: 767px) {
   #wc-source-dialog .tabs-left {
     display: none; }
@@ -68,8 +94,10 @@ body {
 .btn[hidden] {
   display: none; }
 
-#wc-dashboard .btn-group {
-  margin-bottom: 5px; }
+#wc-dashboard {
+  z-index: 15; }
+  #wc-dashboard .btn-group {
+    margin-bottom: 5px; }
 
 #wc-about-dialog iframe {
   display: none; }
@@ -146,6 +174,41 @@ body {
       display: none; } }
   #wc-dashboard .btn > span {
     padding-left: 5px; }
+
+#wc-sns-push {
+  position: absolute;
+  top: 10%;
+  right: 0;
+  z-index: 1060; }
+  @media (max-width: 767px) {
+    #wc-sns-push {
+      top: 600px;
+      right: 17px; } }
+  @media (max-width: 480px) {
+    #wc-sns-push {
+      top: 600px;
+      right: 7px; } }
+  #wc-sns-push > .button {
+    background-color: #fff;
+    border: 1px solid #aaa;
+    border-bottom: 1px solid #eee;
+    height: 65px;
+    width: 50px;
+    padding: 10px;
+    text-align: center;
+    margin: 3px;
+    right: 0;
+    opacity: 1;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 3px 7px 0px; }
+    #wc-sns-push > .button:first-child {
+      border-radius: 5px 5px 0 0; }
+    #wc-sns-push > .button:last-child {
+      border-radius: 0 0 5px 5px; }
+    #wc-sns-push > .button > iframe {
+      border: none;
+      overflow: hidden;
+      width: 50px;
+      height: 65px; }
 
 .favicons-sprite, .favicons-facebook, .favicons-plurk, .favicons-tumblr, .favicons-twitter {
   background: url('images/favicons-se0bb177de3.png') no-repeat; }

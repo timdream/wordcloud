@@ -23,6 +23,22 @@ if (window.location.hostname === 'timc.idv.tw') {
   };
 }
 
+(function checkOgImages() {
+  var hostname = window.location.hostname;
+  if (!document.querySelectorAll || !window.console)
+    return;
+
+  var ogImage = document.querySelector('meta[property="og:image"]').content;
+  var ogUrl = document.querySelector('meta[property="og:url"]').content;
+  var fbAppId = document.querySelector('meta[property="fb:app_id"]').content;
+
+  if (ogImage.substr(0, hostname.length) !== window.location.hostname ||
+      ogUrl.substr(0, hostname.length) !== window.location.hostname ||
+      (window.FACEBOOK_APP_ID && fbAppId !== window.FACEBOOK_APP_ID)) {
+    console.warn('Remember to change the content of <meta> tags in HTML.');
+  }
+})();
+
 // start.js start the world. It is not be covered in the tests.
 
 (function start() {
@@ -46,6 +62,9 @@ if (window.location.hostname === 'timc.idv.tw') {
 
   var langSwitcherView = new LanguageSwitcherView();
   langSwitcherView.app = app;
+
+  var snsPushView = new SNSPushView();
+  snsPushView.show();
 
   app.addView(new CanvasView());
   app.addView(new LoadingView());

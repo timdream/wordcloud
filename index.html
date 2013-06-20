@@ -6,6 +6,17 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
   <title>HTML5 Word Cloud</title>
+
+  <meta name="description" content="Get the most frequent terms of posts of feeds in an tag cloud representation, powered by HTML5.">
+  <meta property="og:description" content="Get the most frequent terms of posts of feeds in an tag cloud representation, powered by HTML5." />
+
+  <!-- Unfortunately we need to hard-code these in HTML -->
+  <meta property="og:url" content="http://timc.idv.tw/wordcloud/" />
+  <meta property="og:title" content="HTML5 Word Cloud" />
+  <meta property="og:image" content="http://timc.idv.tw/wordcloud/assets/images/wordcloud-logo.png" />
+  <meta property="fb:admins" content="541998202" />
+  <meta property="fb:app_id" content="221493074531416" />
+
   <link rel="stylesheet" type="text/css" href="./assets/first-screen.css">
   <!-- Le styles -->
   <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css" rel="stylesheet">
@@ -322,6 +333,15 @@
     </div>
     <div class="modal-footer">
       <button data-l10n-id="about-dialog-close-btn" id="wc-about-close-btn" class="btn btn-primary"></button>
+    </div>
+  </div>
+
+  <div id="wc-sns-push" hidden>
+    <div class="button">
+      <iframe id="wc-sns-facebook-iframe" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
+    </div>
+    <div class="button">
+      <iframe id="wc-google-plus-iframe" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
     </div>
   </div>
 

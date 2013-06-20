@@ -1915,6 +1915,50 @@ AboutDialogView.prototype.close = function adv_close() {
   this.app.switchUIState(this.app.UI_STATE_SOURCE_DIALOG);
 };
 
+var SNSPushView = function SNSPushView(opts) {
+  this.load(opts, {
+    name: 'sns-push',
+    element: 'wc-sns-push',
+    facebookElement: 'wc-sns-facebook-iframe',
+    googlePlusElement: 'wc-google-plus-iframe'
+  });
+
+  window.addEventListener('localized', this);
+};
+SNSPushView.prototype = new View();
+SNSPushView.prototype.FACEBOOK_BUTTON_URL =
+  'https://www.facebook.com/plugins/like.php?href=%url&' +
+  'layout=box_count&show_faces=false&width=55&' +
+  'action=like&font=trebuchet+ms&colorscheme=light&height=65&locale=%lang';
+SNSPushView.prototype.GOOGLEPLUS_BUTTON_URL =
+  'https://plusone.google.com/u/0/_/+1/fastbutton?url=%url&' +
+  'size=tall&count=true&annotation=bubble&lang=%lang';
+SNSPushView.prototype.loadButtons = function spv_loadButtons() {
+  var url = window.location.href;
+  if (url.indexOf('#') !== -1) {
+    url = url.replace(/#.*$/, '');
+  }
+  var lang = document.documentElement.lang;
+
+  this.facebookElement.src =
+    this.FACEBOOK_BUTTON_URL
+    .replace(/%url/, encodeURIComponent(url))
+    .replace(/%lang/, lang.replace(/-/, '_'));
+  this.googlePlusElement.src =
+    this.GOOGLEPLUS_BUTTON_URL
+    .replace(/%url/, encodeURIComponent(url))
+    .replace(/%lang/, lang);
+};
+SNSPushView.prototype.handleEvent = function spv_handleEvent(evt) {
+  switch (evt.type) {
+    case 'localized':
+      this.loadButtons();
+
+      break;
+  }
+
+};
+
 var Fetcher = function Fetcher() { };
 Fetcher.prototype.LABEL_VERB = LoadingView.prototype.LABEL_LOADING;
 
@@ -2334,7 +2378,6 @@ FacebookSDKLoader.prototype.load = function fsl_load(callback) {
     js.src = '//connect.facebook.net/en_US/all.js';
     fjs.parentNode.insertBefore(js, fjs);
   }(document, 'script', 'facebook-jssdk'));
-
   var channelUrl = window.FACEBOOK_CHANNEL_URL ||
     document.location.href.replace(/\/(index.html)?(#.*)?$/i,
                                    '/facebook-channel.html');
