@@ -1951,8 +1951,8 @@ var SNSPushView = function SNSPushView(opts) {
   this.load(opts, {
     name: 'sns-push',
     element: 'wc-sns-push',
-    facebookElement: 'wc-sns-facebook-iframe',
-    googlePlusElement: 'wc-google-plus-iframe'
+    facebookElement: 'wc-sns-facebook',
+    googlePlusElement: 'wc-sns-google-plus'
   });
 
   if (document.webL10n.getReadyState() === 'complete') {
@@ -1975,14 +1975,27 @@ SNSPushView.prototype.loadButtons = function spv_loadButtons() {
   }
   var lang = document.documentElement.lang;
 
-  this.facebookElement.src =
+  this.updateFrame(this.facebookElement,
     this.FACEBOOK_BUTTON_URL
     .replace(/%url/, encodeURIComponent(url))
-    .replace(/%lang/, lang.replace(/-/, '_'));
-  this.googlePlusElement.src =
+    .replace(/%lang/, lang.replace(/-/, '_')));
+
+  this.updateFrame(this.googlePlusElement,
     this.GOOGLEPLUS_BUTTON_URL
     .replace(/%url/, encodeURIComponent(url))
-    .replace(/%lang/, lang);
+    .replace(/%lang/, lang));
+};
+SNSPushView.prototype.updateFrame = function spv_updateFrame(container, url) {
+  while (container.firstElementChild) {
+    container.removeChild(container.firstElementChild);
+  }
+
+  var iframe = document.createElement('iframe');
+  iframe.src = url;
+  iframe.setAttribute('scrolling', 'no');
+  iframe.setAttribute('frameborder', '0');
+  iframe.setAttribute('allowTransparency', 'true');
+  container.appendChild(iframe);
 };
 SNSPushView.prototype.handleEvent = function spv_handleEvent(evt) {
   switch (evt.type) {
