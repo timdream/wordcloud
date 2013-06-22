@@ -17,13 +17,19 @@ module.exports = function(grunt) {
       'canvas-to-blob': {
         expand: true,
         src: 'assets/canvas-to-blob/canvas-to-blob.min.js',
+        dest: 'production' },
+      'go2': {
+        expand: true,
+        src: 'assets/go2/src/google-oauth2.js',
         dest: 'production' }
     },
     uglify: {
       options: {
         banner: '/*! <%= pkg.name %> ' +
                 ' <%= grunt.template.today("yyyy-mm-dd") %> */\n'
-      }
+      },
+      'production/assets/go2/src/google-oauth2.js':
+        'production/assets/go2/src/google-oauth2.js'
     },
     useminPrepare: {
       html: 'index.html',
