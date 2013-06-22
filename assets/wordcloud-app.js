@@ -521,6 +521,7 @@ var CanvasView = function CanvasView(opts) {
     color: 'rgba(255, 255, 255, 0.8)',
     rotateRatio: 0.5,
     backgroundColor: 'transparent',
+    wait: 75,
     list: (function generateLoveList() {
       var list = [];
       var nums = [5, 4, 3, 2, 2];
