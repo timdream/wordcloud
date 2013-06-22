@@ -89,10 +89,51 @@ var WordCloudApp = function WordCloudApp() {
       ellipticity: 1 }
   ];
 
+  var sansSerifFonts = '"Trebuchet MS", "Heiti TC", "微軟正黑體", ' +
+    '"Arial Unicode MS", "Droid Fallback Sans", sans-serif';
+
+  // http://ethantw.net/projects/lab/css-reset/
+  var serifFonts = 'Baskerville, "Times New Roman", "華康儷金黑 Std", ' +
+    '"華康儷宋 Std",  DFLiKingHeiStd-W8, DFLiSongStd-W5, ' +
+    '"Hiragino Mincho Pro", "LiSong Pro Light", "新細明體", serif';
+
+  var randomColorGenerator = function randomColorGenerator(colors) {
+    return (function getRandomColor() {
+      return colors[Math.floor(Math.random() * colors.length)];
+    });
+  };
+
   this.themes = [
     {
-      fontFamily: '"Trebuchet MS", "Heiti TC", "微軟正黑體", ' +
-                  '"Arial Unicode MS", "Droid Fallback Sans", sans-serif',
+      fontFamily: serifFonts,
+      // Sublime Text 2 colors
+      color: randomColorGenerator(['#66d9ef', '#a6e22d', '#fd9720', '#a6e22a',
+                                   '#a581ff', '#f92772']),
+      backgroundColor: '#272822'
+    },
+    {
+      fontFamily: sansSerifFonts,
+      // http://colorschemedesigner.com/#3o51Ay9OG-dM6
+      color: randomColorGenerator(['#07ABDA', '#63D6F6', '#0F7BDC', '#69B4F7',
+                                  '#00DBB6', '#376F65', '#004438', '#5FF7DD']),
+      backgroundColor: '#AAF7EA'
+    },
+    {
+      fontFamily: serifFonts,
+      // http://colorschemedesigner.com/#3P12ps0JkrdYC
+      color: randomColorGenerator(['#2F55D1', '#4058A5', '#133193', '#98AFFD']),
+      backgroundColor: '#e3e9fd'
+    },
+    {
+      fontFamily: sansSerifFonts,
+      // http://colorschemedesigner.com/#0052fMBoqHVtk
+      color: randomColorGenerator(['#c30000', '#c37a00', '#650281',
+                                   '#de3333', '#de5c5c', '#7e602c',
+                                   '#633e00', '#481e53']),
+      backgroundColor: '#edd1a4'
+    },
+    {
+      fontFamily: sansSerifFonts,
       color: function getRandomDarkColor() {
         return 'rgb(' +
           Math.floor(Math.random() * 128 + 48).toString(10) + ',' +
@@ -102,39 +143,34 @@ var WordCloudApp = function WordCloudApp() {
       backgroundColor: '#eee'
     },
     {
-      // http://ethantw.net/projects/lab/css-reset/
-      fontFamily: 'Baskerville, "Times New Roman", "華康儷金黑 Std", ' +
-                  '"華康儷宋 Std",  DFLiKingHeiStd-W8, DFLiSongStd-W5, ' +
-                  '"Hiragino Mincho Pro", "LiSong Pro Light", "新細明體", serif',
+      fontFamily: serifFonts,
       color: 'random-light',
       backgroundColor: '#000'
     },
     {
-      // http://ethantw.net/projects/lab/css-reset/
-      fontFamily: 'Baskerville, "Times New Roman", "華康儷金黑 Std", ' +
-                  '"華康儷宋 Std",  DFLiKingHeiStd-W8, DFLiSongStd-W5, ' +
-                  '"Hiragino Mincho Pro", "LiSong Pro Light", "新細明體", serif',
-      color: '#fff',
-      backgroundColor: '#000'
+      fontFamily: serifFonts,
+      // http://colorschemedesigner.com/#0c31R3Wd1wyfM
+      color: randomColorGenerator(['#3a3f42', '#575d51', '#42361d']),
+      backgroundColor: '#8d8380'
     },
     {
-      // http://ethantw.net/projects/lab/css-reset/
-      fontFamily: 'Baskerville, "Times New Roman", "華康儷金黑 Std", ' +
-                  '"華康儷宋 Std",  DFLiKingHeiStd-W8, DFLiSongStd-W5, ' +
-                  '"Hiragino Mincho Pro", "LiSong Pro Light", "新細明體", serif',
+      fontFamily: serifFonts,
+      // http://colorschemedesigner.com/#3M42q7muY.l1e
+      color: randomColorGenerator(['#f7e4be', '#f0f4bc', '#9a80a4', '#848da6']),
+      backgroundColor: '#223564'
+    },
+    {
+      fontFamily: serifFonts,
       color: '#d0d0d0',
       backgroundColor: '#999'
     },
     {
-      fontFamily: '"Myriad Pro", "Lucida Grande", Helvetica, "Heiti TC", ' +
-                  '"微軟正黑體", "Arial Unicode MS", "Droid Fallback Sans", ' +
-                  'sans-serif',
+      fontFamily: sansSerifFonts,
       color: 'rgba(255,255,255,0.8)',
       backgroundColor: '#353130'
     },
     {
-      fontFamily: '"Trebuchet MS", "Heiti TC", "微軟正黑體", ' +
-                  '"Arial Unicode MS", "Droid Fallback Sans", sans-serif',
+      fontFamily: sansSerifFonts,
       color: 'rgba(0,0,0,0.7)',
       backgroundColor: 'rgba(255, 255, 255, 1)' //opaque white
     }
@@ -285,6 +321,7 @@ WordCloudApp.prototype.handleList = function wca_handleList(list, vol) {
 
   this.data.list = list;
   this.data.gridSize = 4;
+  this.data.theme = Math.floor(Math.random() * this.themes.length);
   this.calculateWeightFactor(vol);
 
   this.draw();
