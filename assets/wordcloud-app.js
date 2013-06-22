@@ -500,6 +500,7 @@ var CanvasView = function CanvasView(opts) {
   });
 
   window.addEventListener('resize', this);
+  this.element.addEventListener('wordcloudstop', this);
 
   this.documentWidth = window.innerWidth;
   this.documentHeight = window.innerHeight;
@@ -575,6 +576,20 @@ CanvasView.prototype.handleEvent = function cv_handleEvent(evt) {
 
       break;
 
+    case 'wordclouddrawn':
+      if (evt.detail.drawn)
+        break;
+
+      // Stop the draw.
+      evt.preventDefault();
+
+      break;
+
+    case 'wordcloudstop':
+      this.element.removeEventListener('wordclouddrawn', this);
+
+      break;
+
     case 'mousemove':
       var hw = this.documentWidth / 2;
       var hh = this.documentHeight / 2;
@@ -621,6 +636,10 @@ CanvasView.prototype.drawIdleCloud = function cv_drawIdleCloud() {
 
   // Make sure Latin characters looks correct for non-English the UI language
   el.lang = 'en';
+
+  // As soon as there is one word cannot be fit,
+  // stop the draw entirely.
+  el.addEventListener('wordclouddrawn', this);
 
   WordCloud(el, this.idleOption);
 };
