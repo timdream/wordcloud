@@ -28,22 +28,22 @@
 
   <link rel="prefetch" type="application/l10n" href="./locales/locales.ini" />
 
-  <script defer type="text/javascript"
-    src="./assets/vars.js"></script>
-  <script defer type="text/javascript"
-    src="./assets/web-l10n/l10n.js"></script>
-  <script defer type="text/javascript"
-    src="./assets/wordfreq/src/wordfreq.js"></script>
   <!-- For browser without Web Workers support, run the calculation
-       on the main event loop with the worker script -->
-  <script defer type="text/javascript"
-    src="./assets/wordfreq/src/wordfreq.worker.js"></script>
-  <script defer type="text/javascript"
-    src="./assets/wordcloud2.js/src/wordcloud2.js"></script>
-  <script defer type="text/javascript"
-    src="./assets/wordcloud-app.js"></script>
-  <script defer type="text/javascript"
-    src="./assets/start.js"></script>
+       on the main event loop with the worker script. -->
+  <!-- build:js assets/wordfreq/src/wordfreq.worker.js -->
+  <!-- For production, we also happen to minify and copy the
+       script here -->
+  <script src="./assets/wordfreq/src/wordfreq.worker.js" defer></script>
+  <!-- endbuild -->
+
+  <!-- build:js assets/app.min.js -->
+  <script src="./assets/vars.js" defer></script>
+  <script src="./assets/web-l10n/l10n.js" defer></script>
+  <script src="./assets/wordfreq/src/wordfreq.js" defer></script>
+  <script src="./assets/wordcloud2.js/src/wordcloud2.js" defer></script>
+  <script src="./assets/wordcloud-app.js" defer></script>
+  <script src="./assets/start.js" defer></script>
+  <!-- endbuild -->
 
 </head>
 <body>
