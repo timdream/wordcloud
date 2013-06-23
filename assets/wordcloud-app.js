@@ -1401,6 +1401,9 @@ SharerDialogView.prototype.sendImage = function sdv_sendImage() {
   this.app.logAction('SharerDialogView::sendImage', this.type);
 
   var url = window.location.href;
+  if (url.length > 128)
+    url = url.replace(/#.*$/, '');
+
   switch (this.type) {
     case 'facebook':
       if (!this.hasFacebookPermission) {
