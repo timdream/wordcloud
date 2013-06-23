@@ -7,6 +7,7 @@
 歡迎貢獻。
 
 閱讀 [README](https://github.com/timdream/wordcloud/blob/master/README.md) 了解使用的技術與網路服務。
+問題與其他事項請聯絡作者或是在 [Github 留言](https://github.com/timdream/wordcloud/issues)。
 
 ## 隱私權保護政策
 

@@ -7,6 +7,7 @@ Released under [the MIT license](./MIT-LICENSE.txt).
 Contribution welcome.
 
 Read the [README](https://github.com/timdream/wordcloud/blob/master/README.md) to know more about the technologies and services employed.
+Contact the author or leave [an issue on Github](https://github.com/timdream/wordcloud/issues) for questions and inquiries.
 
 ## Privacy Policy
 
