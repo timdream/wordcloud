@@ -23,6 +23,17 @@ module.exports = function(grunt) {
         src: 'assets/go2/src/google-oauth2.js',
         dest: 'production' }
     },
+    shell: {
+      deploy: {
+        command: 'rsync -azzvP --delete --exclude .git ' +
+                 './production/ h2:timc-www/www/wordcloud/',
+        options: {
+          stdout: true,
+          stderr: true,
+          failOnError: true
+        }
+      }
+    },
     uglify: {
       options: {
         banner: '/*! <%= pkg.name %> ' +
@@ -49,9 +60,11 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-useMin');
 
   // Default task(s).
   grunt.registerTask('default',
       ['clean', 'copy', 'useminPrepare', 'concat', 'uglify', 'usemin']);
+  grunt.registerTask('deploy', ['shell:deploy']);
 };
