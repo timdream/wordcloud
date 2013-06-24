@@ -33,5 +33,11 @@ tumblr.png:
 	 mv tumblr-0.png tumblr.png && rm tumblr-1.png && \
 	 rm tumblr.ico)
 
+imgur.png:
+	(wget http://imgur.com/favicon.ico -O imgur.ico && \
+		rm -f imgur.png && \
+	 convert imgur.ico imgur.png && \
+	 rm imgur.ico)
+
 clean:
-	rm -f facebook.png facebook.ico plurk.ico plurk.png twitter.ico twitter.png tumblr.png
+	rm -f facebook.png facebook.ico plurk.ico plurk.png twitter.ico twitter.png tumblr.png imgur.png

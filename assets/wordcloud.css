@@ -168,16 +168,31 @@ body {
   height: 100%; }
   #wc-dashboard > .container {
     margin-top: 10px; }
-  #wc-dashboard button.hide-label > span {
+  #wc-dashboard .hide-label > span {
     display: none; }
   @media (min-width: 1200px) {
-    #wc-dashboard button.hide-label > span {
+    #wc-dashboard .hide-label > span {
       display: inherit; } }
   @media (max-width: 979px) {
-    #wc-dashboard button > span {
+    #wc-dashboard button > span, #wc-dashboard a > span {
       display: none; } }
   #wc-dashboard .btn > span {
     padding-left: 5px; }
+
+.wc-sharer-service-title {
+  font-weight: bold; }
+  .wc-sharer-service-title > [class^="favicons-"], .wc-sharer-service-title [class*=" favicons-"] {
+    vertical-align: middle;
+    margin-right: 4px; }
+  .wc-sharer-service-title::after {
+    content: ': ';
+    font-weight: normal; }
+
+.wc-sharer-service > a.disabled {
+  color: #333;
+  cursor: text; }
+  .wc-sharer-service > a.disabled:hover {
+    text-decoration: none; }
 
 #wc-sns-push {
   position: absolute;
@@ -214,20 +229,23 @@ body {
       width: 50px;
       height: 65px; }
 
-.favicons-sprite, .favicons-facebook, .favicons-plurk, .favicons-tumblr, .favicons-twitter {
-  background: url('images/favicons-se0bb177de3.png') no-repeat; }
+.favicons-sprite, .favicons-facebook, .favicons-imgur, .favicons-plurk, .favicons-tumblr, .favicons-twitter {
+  background: url('images/favicons-s9fa3ae4dd8.png') no-repeat; }
 
 .favicons-facebook {
-  background-position: 0 -32px; }
-
-.favicons-plurk {
   background-position: 0 -48px; }
 
+.favicons-imgur {
+  background-position: 0 0; }
+
+.favicons-plurk {
+  background-position: 0 -64px; }
+
 .favicons-tumblr {
-  background-position: 0 -16px; }
+  background-position: 0 -32px; }
 
 .favicons-twitter {
-  background-position: 0 0; }
+  background-position: 0 -16px; }
 
 [class^="favicons-"], [class*=" favicons-"] {
   display: inline-block;

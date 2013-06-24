@@ -251,22 +251,44 @@ $shadow-length: $icon-width * 0.05;
     margin-top: 10px;
   }
 
-  button.hide-label > span {
+  .hide-label > span {
     display: none;
   }
   @media (min-width: 1200px) {
-    button.hide-label > span {
+    .hide-label > span {
       display: inherit;
     }
   }
   @media (max-width: 979px) {
-    button > span {
+    button > span, a > span {
       display: none;
     }
   }
 
   .btn > span {
     padding-left: 5px;
+  }
+}
+
+.wc-sharer-service-title {
+  > [class^="favicons-"], [class*=" favicons-"] {
+    vertical-align: middle;
+    margin-right: 4px;
+  }
+
+  font-weight: bold;
+  &::after {
+    content: ': ';
+    font-weight: normal;
+  }
+}
+.wc-sharer-service {
+  > a.disabled {
+    color: #333;
+    cursor: text;
+    &:hover {
+      text-decoration: none;
+    }
   }
 }
 

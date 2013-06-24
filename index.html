@@ -301,14 +301,11 @@
           <div class="pull-right">
 
             <div class="btn-group">
-              <button data-l10n-id="dashboard-share-facebook-btn" data-canvas-ctl data-action="facebook" class="btn disabled" title="Share on Facebook"><i class="favicons-facebook"></i></button>
-              <button data-l10n-id="dashboard-share-tumblr-btn" data-canvas-ctl data-action="tumblr" class="btn disabled" title="Share on Tumblr"><i class="favicons-tumblr"></i></button>
-              <button data-l10n-id="dashboard-share-plurk-btn" data-canvas-ctl data-action="plurk" class="btn disabled" title="Share on Plurk"><i class="favicons-plurk"></i></button>
-              <button data-l10n-id="dashboard-share-twitter-btn" data-canvas-ctl data-action="twitter" class="btn disabled" title="Share on Twitter"><i class="favicons-twitter"></i></button>
+              <a data-l10n-id="dashboard-save-disk-btn" data-canvas-ctl download="wordcloud.png" href="#" data-action="save" class="btn disabled" title="Save to disk"><i class="icon-hdd"></i><span data-l10n-id="dashboard-save-disk-span"></span></a>
             </div>
 
             <div class="btn-group">
-              <a data-l10n-id="dashboard-save-disk-btn" data-canvas-ctl download="wordcloud.png" href="#" data-action="save" class="btn disabled btn-primary hide-label" title="Save to disk"><i class="icon-hdd"></i><span data-l10n-id="dashboard-save-disk-span"></span></a>
+              <button data-l10n-id="dashboard-share-btn" data-canvas-ctl data-action="share" class="btn disabled btn-primary" title="Share"><i class="icon-share"></i><span data-l10n-id="dashboard-share-span"</button>
             </div>
 
           </div>
@@ -331,28 +328,57 @@
 
   <div id="wc-sharer-dialog" class="modal" hidden>
     <div class="modal-header">
-      <h3 id="wc-sharer-title"></h3>
+      <h3 id="wc-sharer-title" data-l10n-id="share-dialog-title"></h3>
     </div>
     <div class="modal-body">
       <div class="row-fluid">
         <div class="span3">
-          <a class="thumbnail" id="wc-sharer-img-link" target="_blank">
+          <a class="thumbnail" id="wc-sharer-img-link" target="_blank" hidden>
             <img id="wc-sharer-img" />
           </a>
         </div>
         <div class="span9">
+          <label for="wc-sharer-title-input" data-l10n-id="share-dialog-title-input"></label>
+          <input type="text" id="wc-sharer-title-input" class="input-block-level" />
+          <label for="wc-sharer-caption" data-l10n-id="share-dialog-caption-input"></label>
+          <textarea id="wc-sharer-caption" class="input-block-level" rows="5"></textarea>
+
           <div class="progress progress-striped active">
             <div class="bar" id="wc-sharer-progress"></div>
           </div>
-          <p id="wc-sharer-status" data-l10n-id="loading"></p>
-          <button data-l10n-id="share-dialog-facebook-login-btn" id="wc-sharer-facebook-login-btn" class="btn" hidden></button>
+
+          <p data-l10n-id="cors-description"></p>
+
+          <p class="wc-sharer-service">
+            <span class="wc-sharer-service-title"><i class="favicons-imgur"></i>Imgur</span>
+            <a target="_blank" id="wc-sharer-imgur-status" class="disabled" data-l10n-id="loading"></a>
+          </p>
+
+          <p class="wc-sharer-service">
+            <span class="wc-sharer-service-title"><i class="favicons-facebook"></i>Facebook</span>
+            <a target="_blank" id="wc-sharer-facebook-status" class="disabled" data-l10n-id="loading"></a>
+          </p>
+
+          <p class="wc-sharer-service">
+            <span class="wc-sharer-service-title"><i class="favicons-tumblr"></i>Tumblr</span>
+            <a target="_blank" id="wc-sharer-tumblr-status" class="disabled" data-l10n-id="loading"></a>
+          </p>
+
+          <p class="wc-sharer-service">
+            <span class="wc-sharer-service-title"><i class="favicons-twitter"></i>Twitter</span>
+            <a target="_blank" id="wc-sharer-twitter-status" class="disabled" data-l10n-id="loading"></a>
+          </p>
+
+          <p class="wc-sharer-service">
+            <span class="wc-sharer-service-title"><i class="favicons-plurk"></i>Plurk</span>
+            <a target="_blank" id="wc-sharer-plurk-status" class="disabled" data-l10n-id="loading"></a>
+          </p>
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button data-l10n-id="share-dialog-cancel-btn" id="wc-sharer-cancel-btn" class="btn"></button>
       <button data-l10n-id="share-dialog-reupload-btn" id="wc-sharer-reupload-btn" class="btn"></button>
-      <button data-l10n-id="share-dialog-share-btn" id="wc-sharer-share-btn" class="btn btn-primary"></button>
+      <button data-l10n-id="share-dialog-done-btn" id="wc-sharer-done-btn" class="btn btn-primary">Done</button>
     </div>
   </div>
 
