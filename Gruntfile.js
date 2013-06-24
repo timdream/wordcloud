@@ -63,8 +63,49 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-useMin');
 
-  // Default task(s).
+  // Build web app for production
   grunt.registerTask('default',
       ['clean', 'copy', 'useminPrepare', 'concat', 'uglify', 'usemin']);
+
+  // Quick shell command to rsync the code to my site
   grunt.registerTask('deploy', ['shell:deploy']);
+
+  // Simple target to check remaining client credit.
+  grunt.registerTask('check-imgur-credit', function checkImgurCredit() {
+    var https = require('https');
+    var fs = require('fs');
+    var StringDecoder = require('string_decoder').StringDecoder;
+
+    var IMGUR_CLIENT_ID =
+      (fs.readFileSync('./assets/vars.js', {
+        encoding: 'utf8' }).match(/var IMGUR_CLIENT_ID = \'(.+)\';/) || [])[1];
+
+    if (!IMGUR_CLIENT_ID) {
+      grunt.fail.fatal('No IMGUR_CLIENT_ID found.');
+
+      return;
+    }
+    grunt.log.writeln('IMGUR_CLIENT_ID: ' + IMGUR_CLIENT_ID);
+
+    var done = this.async();
+
+    https.get({
+      hostname: 'api.imgur.com', path: '/3/credits',
+      headers: {
+        'Authorization': 'Client-ID ' + IMGUR_CLIENT_ID }
+    }, function(res) {
+      res.on('data', function(data) {
+        var decoder = new StringDecoder('utf8');
+
+        var response = JSON.parse(decoder.write(data));
+        grunt.log.writeln('ClientLimit: ' + response.data.ClientLimit);
+        grunt.log.writeln('ClientRemaining: ' + response.data.ClientRemaining);
+
+        done(true);
+      });
+    }).on('error', function(err) {
+      grunt.log.error(err);
+      done(false);
+    });
+  });
 };
