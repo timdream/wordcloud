@@ -2031,7 +2031,7 @@ SNSPushView.prototype.GOOGLEPLUS_BUTTON_URL =
 SNSPushView.prototype.loadButtons = function spv_loadButtons() {
   var url = window.location.href;
   if (url.indexOf('#') !== -1) {
-    url = url.replace(/#.*$/, '');
+    url = url.replace(/#.*$/, '').replace(/\?.*$/, '');
   }
   var lang = document.documentElement.lang;
 
