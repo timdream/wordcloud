@@ -32,8 +32,11 @@ if (window.location.hostname === 'timc.idv.tw') {
   var ogUrl = document.querySelector('meta[property="og:url"]').content;
   var fbAppId = document.querySelector('meta[property="fb:app_id"]').content;
 
-  if (ogImage.substr(0, hostname.length) !== window.location.hostname ||
-      ogUrl.substr(0, hostname.length) !== window.location.hostname ||
+  var matchingUrl = window.location.href
+                    .replace(/#.*$/, '').replace(/\?.*$/, '');
+
+  if (ogImage.substr(0, matchingUrl.length) !== matchingUrl ||
+      ogUrl.substr(0, matchingUrl.length) !== matchingUrl ||
       (window.FACEBOOK_APP_ID && fbAppId !== window.FACEBOOK_APP_ID)) {
     console.warn('Remember to change the content of <meta> tags in HTML.');
   }
