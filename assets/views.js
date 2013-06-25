@@ -183,6 +183,8 @@ var AboutDialogView = function AboutDialogView(opts) {
   this.load(opts, {
     name: 'about-dialog',
     element: 'wc-about-dialog',
+    donateElement: 'wc-about-donate',
+    donateContentElement: 'wc-about-donate-content',
     contentElement: 'wc-about-content',
     closeBtnElement: 'wc-about-close-btn'
   });
@@ -191,6 +193,7 @@ var AboutDialogView = function AboutDialogView(opts) {
 
   this.closeBtnElement.addEventListener('click', this);
   this.contentElement.addEventListener('click', this);
+  this.donateContentElement.addEventListener('submit', this);
   document.addEventListener('localized', this);
 };
 AboutDialogView.prototype = new View();
@@ -234,6 +237,13 @@ AboutDialogView.prototype.loadContent = function adv_loadContent(lang, first) {
       }
     }).bind(this);
   }
+
+  if (window.DONATE_HTML) {
+    var lang = document.documentElement.lang;
+    this.donateElement.removeAttribute('hidden');
+    this.donateContentElement.innerHTML =
+      window.DONATE_HTML.replace(/%lang/, lang.replace(/-/, '_'));
+  }
 };
 AboutDialogView.prototype.handleEvent = function adv_handleEvent(evt) {
   if (evt.type === 'localized') {
@@ -250,6 +260,11 @@ AboutDialogView.prototype.handleEvent = function adv_handleEvent(evt) {
       evt.preventDefault();
       window.open(evt.target.href);
       this.app.logAction('AboutDialogView::externalLink', evt.target.href);
+
+      break;
+
+    case this.donateContentElement:
+      this.app.logAction('AboutDialogView::donateLink');
 
       break;
 
