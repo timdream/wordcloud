@@ -386,18 +386,10 @@ WordCloudApp.prototype.route = function wca_route() {
     return;
   }
 
-  var dataType, data;
-  hash.match(/^([^:]+):?(.*)$/).forEach(function matchHash(str, i) {
-    switch (i) {
-      case 1:
-        dataType = str;
-        break;
-
-      case 2:
-        data = str;
-        break;
-    }
-  });
+  var parsedHash = this.parseHash();
+  var dataType = parsedHash[0];
+  var data = parsedHash[1];
+  parsedHash = undefined;
 
   var fetcherType = (dataType.indexOf('.') === -1) ?
     dataType : dataType.split('.')[0];
@@ -427,6 +419,23 @@ WordCloudApp.prototype.logAction = function wca_logAction(action, label, val) {
     }
   }
   window._gaq.push(msgs);
+};
+WordCloudApp.prototype.parseHash = function wca_parseHash() {
+  var hash = window.location.hash.substr(1);
+  var dataType, data;
+  hash.match(/^([^:]+):?(.*)$/).forEach(function matchHash(str, i) {
+    switch (i) {
+      case 1:
+        dataType = str;
+        break;
+
+      case 2:
+        data = str;
+        break;
+    }
+  });
+
+  return [dataType, data];
 };
 WordCloudApp.prototype.handleEvent = function wca_handleEvent(evt) {
   switch (evt.type) {
