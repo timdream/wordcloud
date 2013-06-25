@@ -1392,6 +1392,8 @@ SharerDialogView.prototype.uploadImage = function sdv_uploadImage() {
   if (!window.IMGUR_CLIENT_ID)
     throw 'IMGUR_CLIENT_ID is not set.';
 
+  this.app.logAction('SharerDialogView::uploadImage');
+
   this.imgurData = undefined;
   this.facebookPhotoUrl = undefined;
   this.imgLinkElement.href = '#';
@@ -1436,6 +1438,9 @@ SharerDialogView.prototype.uploadImage = function sdv_uploadImage() {
         alert(_('imgur-limit-msg'));
       }
 
+      this.app.logAction('SharerDialogView::uploadImage::failed',
+        response ? response.status : 'N/A');
+
       this.updateProgress(0.05, false);
       this.updateUI();
       return;
@@ -1444,6 +1449,8 @@ SharerDialogView.prototype.uploadImage = function sdv_uploadImage() {
     // Upload succeed
     this.imgurData = response.data;
     this.imgLinkElement.href = this.IMGUR_URL + this.imgurData.id;
+
+    this.app.logAction('SharerDialogView::uploadImage::success');
 
     this.updateProgress(1, false);
     this.updateUI();
