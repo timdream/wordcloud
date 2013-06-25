@@ -412,14 +412,21 @@ WordCloudApp.prototype.route = function wca_route() {
     this.reset();
   }
 };
-WordCloudApp.prototype.logAction = function wca_logAction(action, label) {
+WordCloudApp.prototype.logAction = function wca_logAction(action, label, val) {
   if (!window._gaq)
     return;
 
-  // This converts arguments object into an array so it can be arr.concat().
-  var msg = Array.prototype.slice.call(arguments);
-
-  window._gaq.push(['_trackEvent', 'Word Cloud'].concat(msg));
+  var msgs = ['_trackEvent', 'Word Cloud'];
+  if (action !== undefined) {
+    msgs.push(action.toString());
+    if (label !== undefined) {
+      msgs.push(label.toString());
+      if (val !== undefined) {
+        msgs.push(parseFloat(val, 10));
+      }
+    }
+  }
+  window._gaq.push(msgs);
 };
 WordCloudApp.prototype.handleEvent = function wca_handleEvent(evt) {
   switch (evt.type) {
