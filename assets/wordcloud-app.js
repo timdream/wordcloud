@@ -1408,11 +1408,17 @@ SharerDialogView.prototype.uploadImage = function sdv_uploadImage() {
       response = JSON.parse(xhr.responseText);
     } catch (e) {}
 
-    if (!response || !response.success) {
+    var success = response ? response.success : false;
+    if (!success) {
       // Upload failed
+
+      if (response && response.status === 429) {
+        // Additional message on rate limiting
+        alert(_('imgur-limit-msg'));
+      }
+
       this.updateProgress(0.05, false);
       this.updateUI();
-
       return;
     }
 
@@ -1548,10 +1554,6 @@ SharerDialogView.prototype.checkImgurCredits =
       this.app.logAction(
         'SharerDialogView::checkImgurCredits::ClientRemaining',
         response.data.ClientRemaining);
-
-      if (response.data.ClientRemaining == 0) {
-        alert(_('imgur-limit-msg'));
-      }
 
     }).bind(this);
 
