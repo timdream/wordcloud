@@ -21,12 +21,12 @@ var WordCloudApp = function WordCloudApp() {
       }
     };
     this.isSupported = false;
-    this.logAction('WordCloudApp::isSupported', false);
+    this.logAction('WordCloudApp::isSupported::false');
 
     return;
   }
   this.isSupported = true;
-  this.logAction('WordCloudApp::isSupported', true);
+  this.logAction('WordCloudApp::isSupported::true');
 
   this.isFullySupported = (function checkFullySupport() {
     if (!FilePanelView.prototype.isSupported)
@@ -51,7 +51,7 @@ var WordCloudApp = function WordCloudApp() {
       window.ArrayBuffer && window.Uint8Array);
   })();
 
-  this.logAction('WordCloudApp::isFullySupported', this.isFullySupported);
+  this.logAction('WordCloudApp::isFullySupported::' + this.isFullySupported);
 
   window.addEventListener('load', this);
 
@@ -331,8 +331,9 @@ WordCloudApp.prototype.draw = function wca_draw() {
   canvasView.setDimension();
   canvasView.draw(this.getWordCloudOption());
 
-  var hash = window.location.hash;
-  this.logAction('WordCloudApp::draw', hash.substr(0, 128));
+  var parsedHash = this.parseHash();
+  this.logAction('WordCloudApp::draw::' + parsedHash[0],
+                  parsedHash[1].substr(0, 128));
 };
 WordCloudApp.prototype.calculateWeightFactor =
   function wca_calculateWeightFactor(vol) {
@@ -366,8 +367,6 @@ WordCloudApp.prototype.showSharer = function wca_showSharer() {
 WordCloudApp.prototype.route = function wca_route() {
   var hash = window.location.hash.substr(1);
 
-  this.logAction('WordCloudApp::route', hash.substr(0, 128));
-
   if (this.backToReset && !this.lastUrlHashChangePushedByScript)
     this.backToReset = false;
 
@@ -383,6 +382,8 @@ WordCloudApp.prototype.route = function wca_route() {
 
   if (!hash) {
     this.switchUIState(this.UI_STATE_SOURCE_DIALOG);
+    this.logAction('WordCloudApp::route::source-dialog');
+
     return;
   }
 
@@ -390,6 +391,8 @@ WordCloudApp.prototype.route = function wca_route() {
   var dataType = parsedHash[0];
   var data = parsedHash[1];
   parsedHash = undefined;
+
+  this.logAction('WordCloudApp::route::' + dataType, data.substr(0, 128));
 
   var fetcherType = (dataType.indexOf('.') === -1) ?
     dataType : dataType.split('.')[0];
@@ -1472,8 +1475,12 @@ SharerDialogView.prototype.shareImage = function sdv_shareImage(type) {
           // XXX: There is no way to cancel the login pop-up midway if
           // the user navigates away from the panel (or the source dialog).
           // We shall do some checking here to avoid accidently switches the UI.
-          if (this.element.hasAttribute('hidden'))
+          if (this.element.hasAttribute('hidden')) {
+            this.app.logAction('SharerDialogView::facebook-login::cancelled');
             return;
+          }
+
+          this.app.logAction('SharerDialogView::facebook-login::success');
 
           if (res.status !== 'connected')
             return;
@@ -1504,8 +1511,10 @@ SharerDialogView.prototype.shareImage = function sdv_shareImage(type) {
       }, (function sdv_facebookImageUploaded(res) {
         this.facebookLoading = false;
 
-        if (!res || !res.id)
+        if (!res || !res.id) {
+          this.updateUI();
           return;
+        }
 
         this.facebookPhotoUrl = this.FACEBOOK_PHOTO_URL + res.id;
         this.updateUI();
@@ -1824,12 +1833,12 @@ FacebookPanelView.prototype.submit = function fbpv_submit() {
 
       if (res.status !== 'connected') {
         this.dialog.app.
-          logAction('FacebookPanelView::login', 'cancelled');
+          logAction('FacebookPanelView::login::cancelled');
         return;
       }
 
       this.dialog.app.
-        logAction('FacebookPanelView::login', 'success');
+        logAction('FacebookPanelView::login::success');
 
       // Note that we assume we have the permission already
       // if the user logged in through here.
@@ -2388,7 +2397,7 @@ GooglePlusFetcher.prototype.getData = function gpf_getData(dataType, data) {
   if (!accessToken) {
     // XXX: can we login user from here?
     // User would lost the id kept in hash here.
-    this.app.logAction('GooglePlusFetcher::getData', 'reset');
+    this.app.logAction('GooglePlusFetcher::getData::reset');
     this.app.reset();
     this.app.views['source-dialog'].showPanel(googlePlusPanelView);
     return;
@@ -2439,7 +2448,7 @@ FacebookFetcher.prototype.getData = function fbf_getData(dataType, data) {
 
     // XXX: can we login user from here?
     // User would lost the id kept in hash here.
-    this.app.logAction('FacebookFetcher::getData', 'reset');
+    this.app.logAction('FacebookFetcher::getData::reset');
     this.app.reset();
     this.app.views['source-dialog'].showPanel(facebookPanelView);
     return;
