@@ -292,8 +292,7 @@ SharerDialogView.prototype.shareText = function sdv_shareText(type) {
         encodeURIComponent(
           shortUrl + ' (' +
           this.titleInputElement.value + ') ' +
-          this.captionInputElement.value + ' ' +
-          this.HASHTAG));
+          this.captionInputElement.value));
       break;
 
     case 'twitter':
@@ -301,8 +300,7 @@ SharerDialogView.prototype.shareText = function sdv_shareText(type) {
         encodeURIComponent(
           shortUrl + ' ' +
           this.titleInputElement.value + ' ' +
-          this.captionInputElement.value + ' ' +
-          this.HASHTAG));
+          this.captionInputElement.value));
       break;
 
     case 'tumblr':
@@ -478,8 +476,7 @@ SharerDialogView.prototype.shareImage = function sdv_shareImage(type) {
         encodeURIComponent(
           this.imgurData.link + ' ' +
           url + ' (' + this.titleInputElement.value + ') ' +
-          this.captionInputElement.value + ' ' +
-          this.HASHTAG));
+          this.captionInputElement.value));
 
       break;
 
@@ -489,8 +486,7 @@ SharerDialogView.prototype.shareImage = function sdv_shareImage(type) {
           url + ' ' +
           this.titleInputElement.value + ' ' +
           this.captionInputElement.value + ' ' +
-          this.imgurData.link + ' ' +
-          this.HASHTAG));
+          this.imgurData.link));
 
       break;
 
