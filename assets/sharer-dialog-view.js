@@ -32,9 +32,11 @@ var SharerDialogView = function SharerDialogView(opts) {
   this.doneBtnElement.addEventListener('click', this);
   this.reUploadBtnElement.addEventListener('click', this);
 
-  this.imgElement.addEventListener('load', function sdv_imgLoaded(evt) {
-    window.URL.revokeObjectURL(this.src);
-  });
+  if (window.URL) {
+    this.imgElement.addEventListener('load', function sdv_imgLoaded(evt) {
+      window.URL.revokeObjectURL(this.src);
+    });
+  }
 
   if (!window.HTMLCanvasElement.prototype.toBlob) {
     // Load canvas-to-blob library to see if we could shim it.
@@ -397,7 +399,11 @@ SharerDialogView.prototype.uploadImage = function sdv_uploadImage() {
     if (this.xhr !== xhr)
       return;
 
-    this.imgElement.src = window.URL.createObjectURL(blob);
+    if (window.URL) {
+      this.imgElement.src = window.URL.createObjectURL(blob);
+    } else {
+      this.imgElement.src = this.app.views.canvas.element.toDataURL();
+    }
     this.imgLinkElement.removeAttribute('hidden');
 
     formdata.append('image', blob);
