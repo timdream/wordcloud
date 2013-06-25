@@ -23,6 +23,11 @@ if (window.location.hostname === 'timc.idv.tw') {
   };
 }
 
+window.onerror = function onerror(message, url, line) {
+  _gaq.push(['_trackEvent',
+            'JavaScript Exceptions', message, (url + ' (' + line + ')')]);
+};
+
 (function checkOgImages() {
   var hostname = window.location.hostname;
   if (!document.querySelectorAll || !window.console)
