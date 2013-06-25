@@ -268,6 +268,8 @@ SharerDialogView.prototype.shareText = function sdv_shareText(type) {
   this.app.logAction('SharerDialogView::shareText', type);
 
   var url = window.location.href;
+  var shortUrl = (url.length > 128) ? url.replace(/#.*$/, '') : url;
+
   switch (type) {
     case 'facebook':
       // Load Facebook SDK at this point;
@@ -288,7 +290,7 @@ SharerDialogView.prototype.shareText = function sdv_shareText(type) {
     case 'plurk':
       window.open(this.PLURK_SHARE_URL +
         encodeURIComponent(
-          url + ' (' +
+          shortUrl + ' (' +
           this.titleInputElement.value + ') ' +
           this.captionInputElement.value + ' ' +
           this.HASHTAG));
@@ -297,7 +299,7 @@ SharerDialogView.prototype.shareText = function sdv_shareText(type) {
     case 'twitter':
       window.open(this.TWITTER_SHARE_URL +
         encodeURIComponent(
-          url + ' ' +
+          shortUrl + ' ' +
           this.titleInputElement.value + ' ' +
           this.captionInputElement.value + ' ' +
           this.HASHTAG));
