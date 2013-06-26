@@ -109,7 +109,7 @@ SharerDialogView.prototype.updateTermsUI = function sdv_updateTermsUI() {
 SharerDialogView.prototype.getCloudTitle = function sdv_getCloudTitle() {
   // XXX: To be replaced with title fetched from fetcher,
   // e.g. "Timothy Chien's Facebook"
-  return _('app-title');
+  return this.app.data.title || _('my-word-cloud');
 };
 SharerDialogView.prototype.getCloudList = function sdv_getCloudList() {
   var list = this.app.data.list;

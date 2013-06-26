@@ -257,8 +257,8 @@ WordCloudApp.prototype.switchUIState = function wca_switchUIState(state) {
 
   this.currentUIState = state;
 };
-WordCloudApp.prototype.handleData = function wca_handleData(text) {
-  this.logAction('WordCloudApp::handleData', text.length);
+WordCloudApp.prototype.handleData = function wca_handleData(text, title) {
+  this.logAction('WordCloudApp::handleData', title + ' (' + text.length + ')');
 
   if (!text.length) {
     this.switchUIState(this.UI_STATE_ERROR_WITH_DASHBOARD);
@@ -270,6 +270,8 @@ WordCloudApp.prototype.handleData = function wca_handleData(text) {
   this.currentFetcher = undefined;
   this.views.loading.updateLabel(
     this.views.loading.LABEL_ANALYZING);
+
+  this.data.title = title;
 
   var volume;
   if (WordFreq) {

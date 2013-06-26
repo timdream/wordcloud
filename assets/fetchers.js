@@ -198,7 +198,8 @@ FeedFetcher.prototype.handleResponse = function rf_handleResponse(contextValue,
     text.push(entry.content.replace(this.ENTRY_REGEXP, ''));
     text.push('');
   }).bind(this));
-  this.app.handleData(text.join('\n'));
+  this.app.handleData(text.join('\n'),
+    _('feed-title', { title: responseObject.feed.title }));
 };
 
 var WikipediaFetcher = function WikipediaFetcher(opts) {
@@ -252,7 +253,7 @@ WikipediaFetcher.prototype.handleResponse = function wf_handleResponse(res) {
   }
 
   var text = page.revisions[0]['*'].replace(this.PARSED_WIKITEXT_REGEXP, '');
-  this.app.handleData(text);
+  this.app.handleData(text, _('wikipedia-title', { title: page.title }));
 };
 
 var GooglePlusFetcher = function GooglePlusFetcher(opts) {
@@ -303,7 +304,8 @@ GooglePlusFetcher.prototype.handleResponse = function gpf_handleResponse(res) {
     return item.object.content.replace(this.POST_REGEXP, '');
   }).bind(this)).join('');
 
-  this.app.handleData(text);
+  // XXX: we cannot get the user's name from this request
+  this.app.handleData(text, _('google-plus-title'));
 };
 
 var FacebookFetcher = function FacebookFetcher() {
@@ -312,7 +314,7 @@ var FacebookFetcher = function FacebookFetcher() {
 FacebookFetcher.prototype = new Fetcher();
 FacebookFetcher.prototype.LABEL_VERB = LoadingView.prototype.LABEL_DOWNLOADING;
 FacebookFetcher.prototype.FACEBOOK_GRAPH_FIELDS =
-  'notes.limit(500).fields(subject,message),' +
+  'name,notes.limit(500).fields(subject,message),' +
   'feed.limit(2500).fields(from.fields(id),message)';
 FacebookFetcher.prototype.NOTE_REGEXP =
   /<[^>]+?>|\(.+?\.\.\.\)|\&\w+\;|<script.+?\/script\>/ig;
@@ -373,5 +375,5 @@ FacebookFetcher.prototype.handleResponse = function fbf_handleResponse(res) {
       text.push(entry.message);
   });
 
-  this.app.handleData(text.join('\n'));
+  this.app.handleData(text.join('\n'), _('facebook-title', { name: res.name }));
 };
