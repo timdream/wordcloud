@@ -339,16 +339,18 @@
     </div>
     <div class="modal-body">
       <div class="row-fluid">
-        <div class="span3">
+        <div class="span4">
           <a class="thumbnail" id="wc-sharer-img-link" target="_blank" hidden>
             <img id="wc-sharer-img" />
           </a>
+          <p data-l10n-id="share-dialog-terms"></p>
+          <p class="well well-small" id="wc-sharer-terms"></p>
+          <p data-l10n-id="share-dialog-hashtag"></p>
+          <p class="well well-small" id="wc-sharer-hashtag"></p>
         </div>
-        <div class="span9">
-          <label for="wc-sharer-title-input" data-l10n-id="share-dialog-title-input"></label>
-          <input type="text" id="wc-sharer-title-input" class="input-block-level" />
-          <label for="wc-sharer-caption" data-l10n-id="share-dialog-caption-input"></label>
-          <textarea id="wc-sharer-caption" class="input-block-level" rows="5"></textarea>
+        <div class="span8">
+          <input type="text" data-l10n-id="share-dialog-title-input" id="wc-sharer-title-input" class="input-block-level" />
+          <textarea id="wc-sharer-desc" class="input-block-level"  data-l10n-id="share-dialog-desc-input" rows="5"></textarea>
 
           <div class="progress progress-striped active">
             <div class="bar" id="wc-sharer-progress"></div>

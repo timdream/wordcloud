@@ -175,6 +175,13 @@ $transition-time: 0.5s;
   }
 }
 
+#wc-sharer-img-link {
+  &[hidden] {
+    display: none;
+  }
+  margin-bottom: 20px;
+}
+
 #wc-about-icon {
   position: relative;
   height: 120px;

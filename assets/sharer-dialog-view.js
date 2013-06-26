@@ -9,7 +9,10 @@ var SharerDialogView = function SharerDialogView(opts) {
     imgLinkElement: 'wc-sharer-img-link',
     progressElement: 'wc-sharer-progress',
     titleInputElement: 'wc-sharer-title-input',
-    captionInputElement: 'wc-sharer-caption',
+    descInputElement: 'wc-sharer-desc',
+
+    termsElement: 'wc-sharer-terms',
+    hashTagElement: 'wc-sharer-hashtag',
 
     imgurStatusElement: 'wc-sharer-imgur-status',
     facebookStatusElement: 'wc-sharer-facebook-status',
@@ -20,6 +23,8 @@ var SharerDialogView = function SharerDialogView(opts) {
     reUploadBtnElement: 'wc-sharer-reupload-btn',
     doneBtnElement: 'wc-sharer-done-btn'
   });
+
+  this.hashTagElement.textContent = this.HASHTAG;
 
   this.imgLinkElement.addEventListener('click', this);
 
@@ -92,26 +97,30 @@ SharerDialogView.prototype.beforeShow = function sdv_beforeShow() {
   this.uploadSupported = !!(window.HTMLCanvasElement.prototype.toBlob &&
     window.XMLHttpRequest && window.FormData);
 
-  // XXX: To be replaced with text from fetcher
-  this.titleInputElement.value = _('app-title');
-
-  this.captionInputElement.value = (function getCloudList(list) {
-    var list = this.app.data.list;
-    var i = 0;
-    var sharedItems = [];
-    do {
-      sharedItems[i] = list[i][0];
-    } while (++i < this.SHARED_ITEM_LIMIT);
-
-    return sharedItems.join(_('sep').replace(/"/g, '')) +
-      ((list.length > this.SHARED_ITEM_LIMIT) ? _('frequent-terms-more') : '');
-  }).call(this) + '\n\n' + this.HASHTAG;
-
   if (this.uploadSupported && !this.imgurData) {
     this.uploadImage();
   } else {
     this.updateUI();
   }
+};
+SharerDialogView.prototype.updateTermsUI = function sdv_updateTermsUI() {
+  this.termsElement.textContent = this.getCloudList();
+};
+SharerDialogView.prototype.getCloudTitle = function sdv_getCloudTitle() {
+  // XXX: To be replaced with title fetched from fetcher,
+  // e.g. "Timothy Chien's Facebook"
+  return _('app-title');
+};
+SharerDialogView.prototype.getCloudList = function sdv_getCloudList() {
+  var list = this.app.data.list;
+  var i = 0;
+  var sharedItems = [];
+  do {
+    sharedItems[i] = list[i][0];
+  } while (++i < this.SHARED_ITEM_LIMIT);
+
+  return sharedItems.join(_('sep').replace(/"/g, '')) +
+    ((list.length > this.SHARED_ITEM_LIMIT) ? _('frequent-terms-more') : '');
 };
 SharerDialogView.prototype.updateStatusElement =
   function sdv_updateStatusElement(el, stringId, href) {
@@ -144,7 +153,6 @@ SharerDialogView.prototype.updateUI = function sdv_updateUI() {
     var imageUrl = this.imgurData.link;
     var imgurPageUrl = this.IMGUR_URL + this.imgurData.id;
 
-
     this.reUploadBtnElement.disabled = false;
 
     this.updateStatusElement(
@@ -168,7 +176,13 @@ SharerDialogView.prototype.updateUI = function sdv_updateUI() {
       this.plurkStatusElement, this.LABEL_CLICK_TO_SHARE, '#');
 
   } else { // text upload only
+    // If upload is not supported, terms should match
+    // the current on-canvas image.
+    if (!this.uploadSupported)
+      this.updateTermsUI();
+
     this.reUploadBtnElement.disabled = true;
+
     if (this.uploadSupported) {
       this.updateStatusElement(
         this.imgurStatusElement, this.LABEL_IMAGE_UPLOAD_FAILED);
@@ -267,6 +281,10 @@ SharerDialogView.prototype.share = function sdv_share(type) {
 SharerDialogView.prototype.shareText = function sdv_shareText(type) {
   this.app.logAction('SharerDialogView::shareText', type);
 
+  var title = this.titleInputElement.value || this.getCloudTitle();
+  var desc = this.descInputElement.value ||
+    this.getCloudList() + '\n\n' + this.HASHTAG;
+
   var url = window.location.href;
   var shortUrl = (url.length > 128) ? url.replace(/#.*$/, '') : url;
 
@@ -276,12 +294,19 @@ SharerDialogView.prototype.shareText = function sdv_shareText(type) {
       // We won't wrap other FB.xxx calls in other functions
       // because this is the only entry point for FacebookPanelView.
       (new FacebookSDKLoader()).load((function sdv_bindFacebookSDK() {
-        // XXX This will be blocked by pop-up blocker.
+        var ogImageUrl =
+          document.querySelector('meta[property="og:image"]').content;
+
         FB.ui({
           method: 'feed',
+          picture: (this.imgurData) ? this.imgurData.link : ogImageUrl,
           link: url,
-          name: this.titleInputElement.value,
-          description: this.captionInputElement.value,
+          // We cannot bring what the user had just typed in the sharer dialog
+          // because Facebook doesn't allow us to.
+          name: this.getCloudTitle(),
+          description: this.getCloudList() + ' -- ' + this.HASHTAG,
+          // This will be blocked by pop-up blocker
+          // so we will use iframe instead
           display: 'iframe'
         });
       }).bind(this));
@@ -290,23 +315,19 @@ SharerDialogView.prototype.shareText = function sdv_shareText(type) {
     case 'plurk':
       window.open(this.PLURK_SHARE_URL +
         encodeURIComponent(
-          shortUrl + ' (' +
-          this.titleInputElement.value + ') ' +
-          this.captionInputElement.value));
+          shortUrl + ' (' + title + ') ' + desc));
       break;
 
     case 'twitter':
       window.open(this.TWITTER_SHARE_URL +
         encodeURIComponent(
-          shortUrl + ' ' +
-          this.titleInputElement.value + ' ' +
-          this.captionInputElement.value));
+          shortUrl + ' ' + title + ' ' + desc), null, 'width=575,height=216');
       break;
 
     case 'tumblr':
       window.open('http://www.tumblr.com/share/link?=description=' +
-         encodeURIComponent(this.captionInputElement.value) +
-         '&name=' + encodeURIComponent(this.titleInputElement.value) +
+         encodeURIComponent(desc) +
+         '&name=' + encodeURIComponent(title) +
          '&url=' + encodeURIComponent(url));
       this.close();
 
@@ -337,11 +358,20 @@ SharerDialogView.prototype.uploadImage = function sdv_uploadImage() {
   this.imgLinkElement.href = '#';
   this.updateProgress(0.05, true);
 
+  var title = this.titleInputElement.value || this.getCloudTitle();
+  var desc = this.descInputElement.value ||
+    this.getCloudList() + '\n\n' + this.HASHTAG;
+
+  var url = window.location.href;
+  if (url.length > 128)
+    url = url.replace(/#.*$/, '');
+
+  this.cloudUrl = url;
+
   var formdata = new FormData();
-  formdata.append('title', this.titleInputElement.value);
+  formdata.append('title', title);
   formdata.append('name', 'wordcloud.png');
-  formdata.append('description',
-    this.captionInputElement.value + '\n\n' + window.location.href);
+  formdata.append('description', desc + '\n\n' + url);
 
   var xhr = this.xhr = new XMLHttpRequest();
   xhr.open('POST', this.IMGUR_API_URL);
@@ -395,6 +425,7 @@ SharerDialogView.prototype.uploadImage = function sdv_uploadImage() {
   }).bind(this);
 
   this.updateUI();
+  this.updateTermsUI();
   this.getCanvasBlob(function sdv_gotBlob(blob) {
     if (this.xhr !== xhr)
       return;
@@ -413,9 +444,11 @@ SharerDialogView.prototype.uploadImage = function sdv_uploadImage() {
 SharerDialogView.prototype.shareImage = function sdv_shareImage(type) {
   this.app.logAction('SharerDialogView::shareImage2', type);
 
-  var url = window.location.href;
-  if (url.length > 128)
-    url = url.replace(/#.*$/, '');
+  var title = this.titleInputElement.value || this.getCloudTitle();
+  var desc = this.descInputElement.value ||
+    this.getCloudList() + '\n\n' + this.HASHTAG;
+
+  var url = this.cloudUrl;
 
   switch (type) {
     case 'facebook':
@@ -455,12 +488,18 @@ SharerDialogView.prototype.shareImage = function sdv_shareImage(type) {
       this.updateUI();
       FB.api('/me/photos', 'post', {
         url: this.imgurData.link,
+        // Facebook strictly require the message here to be what user typed.
+        // pre-filling or supplying default will be in violation of
+        // Facebook Platform Policies, section IV.2.
         message: this.titleInputElement.value + '\n\n' +
-          this.captionInputElement.value + '\n\n' + url
+          this.descInputElement.value + '\n\n' + url
       }, (function sdv_facebookImageUploaded(res) {
         this.facebookLoading = false;
 
         if (!res || !res.id) {
+          // If we failed to send an image,
+          // use the feed dialog instead.
+          this.shareText(type);
           this.updateUI();
           return;
         }
@@ -474,28 +513,21 @@ SharerDialogView.prototype.shareImage = function sdv_shareImage(type) {
     case 'plurk':
       window.open(this.PLURK_SHARE_URL +
         encodeURIComponent(
-          this.imgurData.link + ' ' +
-          url + ' (' + this.titleInputElement.value + ') ' +
-          this.captionInputElement.value));
+          this.imgurData.link + ' ' + url + ' (' + title + ') ' + desc));
 
       break;
 
     case 'twitter':
       window.open(this.TWITTER_SHARE_URL +
         encodeURIComponent(
-          url + ' ' +
-          this.titleInputElement.value + ' ' +
-          this.captionInputElement.value + ' ' +
-          this.imgurData.link));
+          url + ' ' + title + ' ' + desc + ' ' + this.imgurData.link));
 
       break;
 
     case 'tumblr':
       window.open('http://www.tumblr.com/share/photo?source=' +
          encodeURIComponent(this.imgurData.link) +
-         '&caption=' + encodeURIComponent(
-            this.titleInputElement.value + '\n' +
-            this.captionInputElement.value) +
+         '&desc=' + encodeURIComponent(title + '\n' + desc + '\n\n' + url) +
          '&clickthru=' + encodeURIComponent(url));
 
       break;

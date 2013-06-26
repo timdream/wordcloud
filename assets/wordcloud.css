@@ -118,6 +118,11 @@ body {
     visibility: hidden;
     opacity: 0; }
 
+#wc-sharer-img-link {
+  margin-bottom: 20px; }
+  #wc-sharer-img-link[hidden] {
+    display: none; }
+
 #wc-about-icon {
   position: relative;
   height: 120px; }
