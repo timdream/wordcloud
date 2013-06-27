@@ -343,7 +343,9 @@ SharerDialogView.prototype.updateFacebookStatus =
   function sdv_updateFacebookStatus(res) {
     if (res.status === 'connected') {
       FB.api('/me/permissions', (function checkPermissions(res) {
-        this.hasFacebookPermission = (res.data[0]['publish_stream'] == 1);
+        this.hasFacebookPermission =
+          res && res.data && res.data[0] &&
+          (res.data[0]['publish_stream'] == 1);
         this.updateUI();
       }).bind(this));
     } else {
