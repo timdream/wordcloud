@@ -71,6 +71,8 @@ SharerDialogView.prototype.FACEBOOK_PHOTO_URL =
   'https://www.facebook.com/photo.php?fbid=';
 SharerDialogView.prototype.IMGUR_URL =
   'http://imgur.com/';
+SharerDialogView.prototype.IMGUR_IMAGE_LARGE_URL =
+  'http://i.imgur.com/%idl.png';
 SharerDialogView.prototype.IMGUR_API_URL =
   'https://api.imgur.com/3/upload.json';
 SharerDialogView.prototype.SHARED_ITEM_LIMIT = 10;
@@ -299,7 +301,9 @@ SharerDialogView.prototype.shareText = function sdv_shareText(type) {
 
         FB.ui({
           method: 'feed',
-          picture: (this.imgurData) ? this.imgurData.link : ogImageUrl,
+          picture: (this.imgurData) ?
+            this.IMGUR_IMAGE_LARGE_URL.replace(/%id/, this.imgurData.id) :
+            ogImageUrl,
           link: url,
           // We cannot bring what the user had just typed in the sharer dialog
           // because Facebook doesn't allow us to.
