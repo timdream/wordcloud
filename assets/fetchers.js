@@ -349,14 +349,14 @@ FacebookFetcher.prototype.getData = function fbf_getData(dataType, data) {
   }).bind(this));
 };
 FacebookFetcher.prototype.handleResponse = function fbf_handleResponse(res) {
-  if (res.error) {
+  if (!res || res.error) {
     this.app.handleData('');
     return;
   }
 
   var text = [];
 
-  if (res.notes) {
+  if (res.notes && res.notes.data) {
     var NOTE_REGEXP = this.NOTE_REGEXP;
     res.notes.data.forEach(function forEachNote(note) {
       if (note.subject)
@@ -366,14 +366,16 @@ FacebookFetcher.prototype.handleResponse = function fbf_handleResponse(res) {
     });
   }
 
-  res.feed.data.forEach(function forEachData(entry) {
-    // Get rid of birthday messages on the wall.
-    if (entry.from.id !== res.id)
-      return;
+  if (res.feed && res.feed.data) {
+    res.feed.data.forEach(function forEachData(entry) {
+      // Get rid of birthday messages on the wall.
+      if (entry.from.id !== res.id)
+        return;
 
-    if (entry.message)
-      text.push(entry.message);
-  });
+      if (entry.message)
+        text.push(entry.message);
+    });
+  }
 
   this.app.handleData(text.join('\n'), _('facebook-title', { name: res.name }));
 };
