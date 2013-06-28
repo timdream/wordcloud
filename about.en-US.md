@@ -11,7 +11,7 @@ Contact the author or leave [an issue on Github](https://github.com/timdream/wor
 
 ## Privacy Policy
 
-The actual content of the feed, file, or copy-pasted text is **not** transmitted to our server in any form.
+**The actual content of the feed, file, or copy-pasted text is not transmitted to our server in any form.**
 Everything is processed on your computer directly, employed technologies in the browser known collectively as *HTML5*.
 
 ### Information collected
