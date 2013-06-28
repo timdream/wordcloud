@@ -210,7 +210,8 @@ FacebookPanelView.prototype.updateStatus = function fbpv_updateStatus(res) {
   this.facebookResponse = res;
   if (this.facebookResponse.status === 'connected') {
     FB.api('/me/permissions', (function checkPermissions(res) {
-      this.hasPermission = (res.data[0]['read_stream'] == 1);
+      this.hasPermission =
+        res && res.data && (res.data[0]['read_stream'] == 1);
       this.updateUI();
     }).bind(this));
   } else {
