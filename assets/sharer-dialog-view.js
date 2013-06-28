@@ -335,6 +335,8 @@ SharerDialogView.prototype.shareText = function sdv_shareText(type) {
          '&url=' + encodeURIComponent(url));
       this.close();
 
+      break;
+
     default:
       throw 'Unknown shareDialogView type ' + type;
   }
