@@ -26,15 +26,11 @@
   <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="./assets/wordcloud.css">
 
-  <link rel="prefetch" type="application/l10n" href="./locales/locales.ini" />
+  <link rel="prefetch" type="application/l10n" href="./locales/locales.ini?_=@@timestamp" />
 
   <!-- For browser without Web Workers support, run the calculation
        on the main event loop with the worker script. -->
-  <!-- build:js assets/wordfreq/src/wordfreq.worker.js -->
-  <!-- For production, we also happen to minify and copy the
-       script here -->
-  <script src="./assets/wordfreq/src/wordfreq.worker.js" defer></script>
-  <!-- endbuild -->
+  <script src="./assets/wordfreq/src/wordfreq.worker.js?_=@@timestamp" defer></script>
 
   <!-- build:js assets/app.min.js -->
   <script src="./assets/vars.js" defer></script>

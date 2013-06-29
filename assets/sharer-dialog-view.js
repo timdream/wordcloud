@@ -46,7 +46,8 @@ var SharerDialogView = function SharerDialogView(opts) {
   if (!window.HTMLCanvasElement.prototype.toBlob) {
     // Load canvas-to-blob library to see if we could shim it.
     var el = document.createElement('script');
-    el.src = './assets/canvas-to-blob/canvas-to-blob.min.js';
+    el.src =
+      './assets/canvas-to-blob/canvas-to-blob.min.js?_=@@timestamp';
     document.documentElement.firstElementChild.appendChild(el);
   }
 

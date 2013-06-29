@@ -302,7 +302,7 @@ GooglePlusPanelView.prototype.beforeShow = function gppv_beforeShow() {
   this.loaded = true;
 
   var el = document.createElement('script');
-  el.src = './assets/go2/src/google-oauth2.js';
+  el.src = './assets/go2/src/google-oauth2.js?_=@@timestamp';
   el.onload = el.onerror = (function go2load() {
     el.onload = el.onerror = null;
 

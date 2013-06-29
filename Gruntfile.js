@@ -17,11 +17,33 @@ module.exports = function(grunt) {
       'canvas-to-blob': {
         expand: true,
         src: 'assets/canvas-to-blob/canvas-to-blob.min.js',
-        dest: 'production' },
-      'go2': {
-        expand: true,
-        src: 'assets/go2/src/google-oauth2.js',
         dest: 'production' }
+    },
+    replace: {
+      dist: {
+        options: {
+          variables: {
+            'timestamp': (new Date()).getTime().toString(36) }
+        },
+        files: [
+          { expand: true,
+            src: 'production/index.html', dist: 'production/index.html' },
+          { expand: true,
+            src: 'production/assets/*.js', dist: 'production/assets' },
+          { expand: true,
+            src: 'production/locales/locales.ini',
+            dist: 'production/locales/locales.ini' }]
+      }
+    },
+    rev: {
+      dist: {
+        files: {
+          src: [
+            'production/assets/*.js',
+            'production/assets/*.css'
+          ]
+        }
+      }
     },
     shell: {
       deploy: {
@@ -40,7 +62,9 @@ module.exports = function(grunt) {
                 ' <%= grunt.template.today("yyyy-mm-dd") %> */\n'
       },
       'production/assets/go2/src/google-oauth2.js':
-        'production/assets/go2/src/google-oauth2.js'
+        'assets/go2/src/google-oauth2.js',
+      'production/assets/wordfreq/src/wordfreq.worker.js':
+        'assets/wordfreq/src/wordfreq.worker.js'
     },
     useminPrepare: {
       html: 'index.html',
@@ -49,9 +73,9 @@ module.exports = function(grunt) {
       }
     },
     usemin: {
-      html: 'production/index.html',
+      html: 'production/*.html',
       options: {
-        dirs: ['assets']
+        dirs: ['production']
       }
     }
   });
@@ -60,12 +84,15 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-replace');
+  grunt.loadNpmTasks('grunt-rev');
   grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-useMin');
 
   // Build web app for production
-  grunt.registerTask('default',
-      ['clean', 'copy', 'useminPrepare', 'concat', 'uglify', 'usemin']);
+  grunt.registerTask('default', [
+    'clean', 'copy', 'useminPrepare',
+    'concat', 'uglify', 'rev', 'usemin', 'replace']);
 
   // Quick shell command to rsync the code to my site
   grunt.registerTask('deploy', ['shell:deploy']);

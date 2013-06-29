@@ -72,7 +72,7 @@ var WordCloudApp = function WordCloudApp() {
   ];
 
   this.wordfreqOption = {
-    workerUrl: './assets/wordfreq/src/wordfreq.worker.js'
+    workerUrl: './assets/wordfreq/src/wordfreq.worker.js?_=@@timestamp'
   };
 
   this.shapes = [

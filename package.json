@@ -11,6 +11,8 @@
     "grunt-contrib-copy": "~0.4.1",
     "grunt-contrib-uglify": "~0.2.2",
     "grunt-usemin": "~0.1.12",
+    "grunt-replace": "~0.4.4",
+    "grunt-rev": "~0.1.0",
     "grunt-shell": "~0.2.2"
   }
 }
