@@ -58,7 +58,9 @@ var SharerDialogView = function SharerDialogView(opts) {
     'image-uploaded',
     'click-to-share',
     'image-upload-failed',
-    'facebook-loading'
+    'facebook-loading',
+    'load-facebook-sdk',
+    'facebook-sdk-loading'
   ];
 };
 SharerDialogView.prototype = new View();
@@ -84,17 +86,18 @@ SharerDialogView.prototype.LABEL_IMAGE_UPLOADED = 4;
 SharerDialogView.prototype.LABEL_CLICK_TO_SHARE = 5;
 SharerDialogView.prototype.LABEL_IMAGE_UPLOAD_FAILED = 6;
 SharerDialogView.prototype.LABEL_FACEBOOK_LOADING = 7;
+SharerDialogView.prototype.LABEL_LOAD_FBSDK = 8;
+SharerDialogView.prototype.LABEL_FBSDK_LOADING = 9;
 SharerDialogView.prototype.beforeShow = function sdv_beforeShow() {
-  (new FacebookSDKLoader()).load((function sdv_bindFacebookSDK() {
-    if (this.facebookLoaded)
-      return;
-
-    this.facebookLoaded = true;
+  // If Facebook SDK is not loaded yet,
+  // Only load Facebook SDK explicitly until user clicks on the link.
+  if (window.FB && !this.facebookSDKReadyState) {
+    this.facebookSDKReadyState = 'complete';
 
     FB.getLoginStatus(this.updateFacebookStatus.bind(this));
     FB.Event.subscribe(
       'auth.authResponseChange', this.updateFacebookStatus.bind(this));
-  }).bind(this));
+  }
 
   this.uploadSupported = !!(window.HTMLCanvasElement.prototype.toBlob &&
     window.XMLHttpRequest && window.FormData);
@@ -124,6 +127,27 @@ SharerDialogView.prototype.getCloudList = function sdv_getCloudList() {
   return sharedItems.join(_('sep').replace(/"/g, '')) +
     ((list.length > this.SHARED_ITEM_LIMIT) ? _('frequent-terms-more') : '');
 };
+SharerDialogView.prototype.updateFacebookStatusElement =
+  function sdv_updateFacebookStatusElement(stringId, href) {
+    var el = this.facebookStatusElement;
+    switch (this.facebookSDKReadyState) {
+      case 'complete':
+        this.updateStatusElement(el, stringId, href);
+
+        break;
+
+      case 'loading':
+        this.updateStatusElement(el, this.LABEL_FBSDK_LOADING);
+
+        break;
+
+      default:
+        this.updateStatusElement(el, this.LABEL_LOAD_FBSDK, '#');
+
+        break;
+    }
+  };
+
 SharerDialogView.prototype.updateStatusElement =
   function sdv_updateStatusElement(el, stringId, href) {
     if (!href) {
@@ -142,8 +166,7 @@ SharerDialogView.prototype.updateUI = function sdv_updateUI() {
     this.reUploadBtnElement.disabled = true;
     this.updateStatusElement(
       this.imgurStatusElement, this.LABEL_IMAGE_UPLOADING);
-    this.updateStatusElement(
-      this.facebookStatusElement, this.LABEL_WAITING);
+    this.updateFacebookStatusElement(this.LABEL_WAITING);
     this.updateStatusElement(
       this.tumblrStatusElement, this.LABEL_WAITING);
     this.updateStatusElement(
@@ -167,8 +190,7 @@ SharerDialogView.prototype.updateUI = function sdv_updateUI() {
       this.updateStatusElement(
         this.facebookStatusElement, this.LABEL_FACEBOOK_LOADING);
     } else {
-      this.updateStatusElement(
-        this.facebookStatusElement, this.LABEL_CLICK_TO_SHARE, '#');
+      this.updateFacebookStatusElement(this.LABEL_CLICK_TO_SHARE, '#');
     }
     this.updateStatusElement(
       this.tumblrStatusElement, this.LABEL_CLICK_TO_SHARE, '#');
@@ -193,8 +215,7 @@ SharerDialogView.prototype.updateUI = function sdv_updateUI() {
         this.imgurStatusElement, this.LABEL_IMAGE_UPLOAD_NOT_SUPPORTED);
     }
 
-    this.updateStatusElement(
-      this.facebookStatusElement, this.LABEL_SHARE_TEXT_ONLY, '#');
+    this.updateFacebookStatusElement(this.LABEL_SHARE_TEXT_ONLY, '#');
     this.updateStatusElement(
       this.tumblrStatusElement, this.LABEL_SHARE_TEXT_ONLY, '#');
     this.updateStatusElement(
@@ -227,6 +248,24 @@ SharerDialogView.prototype.handleEvent = function sdv_handleEvent(evt) {
     case this.facebookStatusElement:
       if (this.facebookPhotoUrl)
         break;
+
+      if (!this.facebookSDKReadyState) {
+        this.facebookSDKReadyState = 'loading';
+        this.updateUI();
+        (new FacebookSDKLoader()).load((function sdv_bindFacebookSDK() {
+          if (this.facebookSDKReadyState === 'complete')
+            return;
+
+          this.facebookSDKReadyState = 'complete';
+
+          FB.getLoginStatus(this.updateFacebookStatus.bind(this));
+          FB.Event.subscribe(
+            'auth.authResponseChange', this.updateFacebookStatus.bind(this));
+        }).bind(this));
+
+        evt.preventDefault();
+        return;
+      }
 
       this.share('facebook');
       evt.preventDefault();
