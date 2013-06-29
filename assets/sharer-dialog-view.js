@@ -292,28 +292,20 @@ SharerDialogView.prototype.shareText = function sdv_shareText(type) {
 
   switch (type) {
     case 'facebook':
-      // Load Facebook SDK at this point;
-      // We won't wrap other FB.xxx calls in other functions
-      // because this is the only entry point for FacebookPanelView.
-      (new FacebookSDKLoader()).load((function sdv_bindFacebookSDK() {
-        var ogImageUrl =
-          document.querySelector('meta[property="og:image"]').content;
+      var ogImageUrl =
+        document.querySelector('meta[property="og:image"]').content;
 
-        FB.ui({
-          method: 'feed',
-          picture: (this.imgurData) ?
-            this.IMGUR_IMAGE_LARGE_URL.replace(/%id/, this.imgurData.id) :
-            ogImageUrl,
-          link: url,
-          // We cannot bring what the user had just typed in the sharer dialog
-          // because Facebook doesn't allow us to.
-          name: this.getCloudTitle(),
-          description: this.getCloudList() + ' -- ' + this.HASHTAG,
-          // This will be blocked by pop-up blocker
-          // so we will use iframe instead
-          display: 'iframe'
-        });
-      }).bind(this));
+      FB.ui({
+        method: 'feed',
+        picture: (this.imgurData) ?
+          this.IMGUR_IMAGE_LARGE_URL.replace(/%id/, this.imgurData.id) :
+          ogImageUrl,
+        link: url,
+        // We cannot bring what the user had just typed in the sharer dialog
+        // because Facebook doesn't allow us to.
+        name: this.getCloudTitle(),
+        description: this.getCloudList() + ' -- ' + this.HASHTAG
+      });
       break;
 
     case 'plurk':
@@ -477,7 +469,7 @@ SharerDialogView.prototype.shareImage = function sdv_shareImage(type) {
 
           // Note that we assume we have the permission already
           // if the user logged in through here.
-          // We have to overwrite this here so FacebookFetcher
+          // We have to overwrite this here so we could
           // could confirm the permission.
           this.hasFacebookPermission = true;
 
