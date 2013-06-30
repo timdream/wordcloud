@@ -209,13 +209,25 @@ FacebookPanelView.prototype.isReadyForFetch = function fbpv_isReadyForFetch() {
 FacebookPanelView.prototype.updateStatus = function fbpv_updateStatus(res) {
   this.facebookResponse = res;
   if (this.facebookResponse.status === 'connected') {
-    FB.api('/me/permissions', (function checkPermissions(res) {
-      this.hasPermission =
-        res && res.data && (res.data[0]['read_stream'] == 1);
+    FB.api('/me?fields=permissions,username', (function checkPermissions(res) {
+      this.hasPermission = res && res.permissions &&
+        res.permissions.data && res.permissions.data[0] &&
+        (res.permissions.data[0]['read_stream'] == 1);
+
+      this.facebookUsername = (res && res.username) || '';
+
       this.updateUI();
+
+      if (!this.submitted)
+        return;
+
+      this.submitted = false;
+      this.submit();
+
     }).bind(this));
   } else {
     this.hasPermission = false;
+    this.facebookUsername = '';
     this.updateUI();
   }
 };
@@ -234,42 +246,43 @@ FacebookPanelView.prototype.submit = function fbpv_submit() {
   if (!this.facebookResponse)
     return;
 
+  // XXX: There is no way to cancel the login pop-up midway if
+  // the user navigates away from the panel (or the source dialog).
+  // We shall do some checking here to avoid accidently switches the UI.
+  if (this.element.hasAttribute('hidden') ||
+      this.dialog.element.hasAttribute('hidden'))
+    return;
+
+
   // Show the login dialog if not logged in
   if (!this.isReadyForFetch()) {
-    FB.login((function fbpv_loggedIn(res) {
-      // XXX: There is no way to cancel the login pop-up midway if
-      // the user navigates away from the panel (or the source dialog).
-      // We shall do some checking here to avoid accidently switches the UI.
-      if (this.element.hasAttribute('hidden') ||
-          this.dialog.element.hasAttribute('hidden'))
-        return;
+    // Mark the status submitted
+    this.submitted = true;
 
+    FB.login((function fbpv_loggedIn(res) {
       this.facebookResponse = res;
 
-      if (res.status !== 'connected') {
-        this.dialog.app.
-          logAction('FacebookPanelView::login::cancelled');
+      if (!res) {
+        this.dialog.app.logAction('FacebookPanelView::login::error');
         return;
       }
 
-      this.dialog.app.
-        logAction('FacebookPanelView::login::success');
+      if (res.status !== 'connected') {
+        this.dialog.app.logAction('FacebookPanelView::login::cancelled');
+        return;
+      }
 
-      // Note that we assume we have the permission already
-      // if the user logged in through here.
-      // We have to overwrite this here so FacebookFetcher
-      // could confirm the permission.
-      this.hasPermission = true;
+      this.dialog.app.logAction('FacebookPanelView::login::success');
 
-      this.dialog.submit(
-        '#facebook:' + this.facebookResponse.authResponse.userID);
+      // Stop here, the submitted flag will carry on
+
     }).bind(this), { scope: 'read_stream' });
 
     return;
   }
 
-  this.dialog.submit(
-    '#facebook:' + this.facebookResponse.authResponse.userID);
+  var id = this.facebookUsername || this.facebookResponse.authResponse.userID;
+  this.dialog.submit('#facebook:' + id);
 };
 
 var GooglePlusPanelView = function GooglePlusPanelView(opts) {
