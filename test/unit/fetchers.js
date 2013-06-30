@@ -32,14 +32,17 @@ test('getData(\'base64\')', function() {
 test('stop()', function() {
   var fetcher = new TextFetcher();
   var data = 'Nubes,Nubia,Nubo,Nuvem,Nuvi,Nuvia,Nuvola,Nwaj,Nívol,Nóvvla';
+  var timer;
   stop();
   fetcher.app = {
     handleData: function gotData(d) {
       ok(false, 'handleData being called.');
+      clearTimeout(timer);
+
       start();
     }
   };
-  setTimeout(function() {
+  timer = setTimeout(function() {
     ok(true, 'stop() works.');
     start();
   }, 50);
@@ -48,8 +51,6 @@ test('stop()', function() {
 });
 
 module('FileFetcher');
-/* XXX: We cannot create a File object in web content,
-   so we will use the next best thing here -- a Blob. */
 
 test('getData(\'file\')', function() {
   var fetcher = new FileFetcher();
@@ -60,7 +61,7 @@ test('getData(\'file\')', function() {
       'source-dialog': {
         panels: {
           file: {
-            fileElement: { files: [new Blob([data], { type: 'text/xml' })] },
+            fileElement: { files: [ getFakeFile(data) ] },
             encodingElement: { value: 'UTF-8' } }
         }
       }
@@ -107,23 +108,26 @@ test('getData(\'file\'): empty input', function() {
 test('stop()', function() {
   var fetcher = new FileFetcher();
   var data = 'Nubes,Nubia,Nubo,Nuvem,Nuvi,Nuvia,Nuvola,Nwaj,Nívol,Nóvvla';
+  var timer;
   stop();
   fetcher.app = {
     views: {
       'source-dialog': {
         panels: {
           file: {
-            fileElement: { files: [new Blob([data], { type: 'text/xml' })] },
+            fileElement: { files: [ getFakeFile(data) ] },
             encodingElement: { value: 'UTF-8' } }
         }
       }
     },
     handleData: function gotData(d) {
       ok(false, 'handleData being called.');
+      clearTimeout(timer);
+
       start();
     }
   };
-  setTimeout(function() {
+  timer = setTimeout(function() {
     ok(true, 'stop() works.');
     start();
   }, 50);
@@ -176,14 +180,17 @@ test('getData(\'base64-list\')', function() {
 test('stop()', function() {
   var fetcher = new ListFetcher();
   var data = '2\tNubes\n200\tNubia\n30\tNubo';
+  var timer;
   stop();
   fetcher.app = {
     handleList: function gotData(d) {
       ok(false, 'handleData being called.');
+      clearTimeout(timer);
+
       start();
     }
   };
-  setTimeout(function() {
+  timer = setTimeout(function() {
     ok(true, 'stop() works.');
     start();
   }, 50);
@@ -211,15 +218,17 @@ test('getData(\'feed\')', function() {
 test('stop()', function() {
   var fetcher = new FeedFetcher();
   var data = 'http://blog.timc.idv.tw/feed/';
+  var timer;
   stop();
   fetcher.app = {
     handleData: function gotData(data) {
       ok(false, 'handleData being called.');
+      clearTimeout(timer);
 
       start();
     }
   };
-  setTimeout(function() {
+  timer = setTimeout(function() {
     ok(true, 'stop() works.');
 
     start();
@@ -247,15 +256,17 @@ test('getData(\'wikipedia\')', function() {
 test('stop()', function() {
   var fetcher = new WikipediaFetcher();
   var data = 'Happiness';
+  var timer;
   stop();
   fetcher.app = {
     handleData: function gotData(data) {
-      ok(false, 'Happiness');
+      ok(false, 'Received data, length: ' + data.length);
+      clearTimeout(timer);
 
       start();
     }
   };
-  setTimeout(function() {
+  timer = setTimeout(function() {
     ok(true, 'stop() works.');
 
     start();

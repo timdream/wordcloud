@@ -30,7 +30,7 @@ var FileFetcher = function FileFetcher() {
 };
 FileFetcher.prototype = new Fetcher();
 FileFetcher.prototype.stop = function ff_stop() {
-  if (!this.reader || this.reader.readyState !== this.reader.LOADING)
+  if (!this.reader)
     return;
 
   this.reader.abort();

@@ -8,6 +8,12 @@ test('isSupported', function() {
   app.uninit();
 });
 
+test('isFullySupported', function() {
+  var app = new WordCloudApp();
+  ok(app.isFullySupported, 'Passed!');
+  app.uninit();
+});
+
 test('handleData(\'text\')', function() {
   var app = new WordCloudApp();
   app.addView(new LoadingView({
