@@ -11,6 +11,12 @@ You'll need the following skill/tools
 * [Compass](http://compass-style.org/), preferably [Compass.app](http://compass.handlino.com/)
 * The ability to run a localhost HTTP server (Compass.app have that built-in, with Livereload)
 
+Additionally, would need to install the following for running tests
+
+* [`node`](http://nodejs.org/) (comes with [`npm`](http://npmjs.org/) built-in)
+* [`grunt`](http://gruntjs.com/)
+* [QUnit](http://qunitjs.com/)
+
 ### Install
 
 1. Clone the code base
@@ -24,6 +30,18 @@ You may set your own API Keys/IDs in `./assets/var.js` (`./assets/var-sample.js`
 However, you could save some trouble set them up simply by using the `timc.idv.tw` keys.
 **You must use the key correspond to the correct hostname/domain to test these functions.**
 To test your local code with keys associated with `timc.idv.tw`, you must connect to your working copy via `http://localhost.timc.idv.tw/`.
+
+## Running tests
+
+With `node` and `npm`, set up the environment by running
+
+    npm install
+
+To run tests, do
+
+    npm test # run |grunt test| with one keystroke less
+
+Tests require Internet access.
 
 ## Coding style
 

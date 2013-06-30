@@ -1,6 +1,6 @@
 ## Build for production
 
-Require `node` and `npm`. Run
+Require `node`, and `grunt`. Run
 
     npm install
     grunt

@@ -2,6 +2,8 @@
 
 module.exports = function(grunt) {
 
+  var HTTPD_PORT = 28080 + Math.floor(Math.random() * 10);
+
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     clean: {
@@ -77,6 +79,22 @@ module.exports = function(grunt) {
       options: {
         dirs: ['production']
       }
+    },
+    connect: {
+      test: {
+        options: {
+          port: HTTPD_PORT
+        }
+      }
+    },
+    qunit: {
+      test: {
+        options: {
+          urls: [
+            'http://localhost:' + HTTPD_PORT + '/test/'
+          ]
+        }
+      }
     }
   });
 
@@ -89,6 +107,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-useMin');
 
+  grunt.loadNpmTasks('grunt-contrib-qunit');
+  grunt.loadNpmTasks('grunt-contrib-connect');
+
   // Build web app for production
   grunt.registerTask('default', [
     'clean', 'copy', 'useminPrepare',
@@ -96,6 +117,9 @@ module.exports = function(grunt) {
 
   // Quick shell command to rsync the code to my site
   grunt.registerTask('deploy', ['shell:deploy']);
+
+  // Run the test suite with QUnit on PhantomJS
+  grunt.registerTask('test', ['connect', 'qunit']);
 
   // Simple target to check remaining client credit.
   grunt.registerTask('check-imgur-credit', function checkImgurCredit() {

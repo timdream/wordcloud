@@ -4,6 +4,9 @@
     "type": "git",
     "url": "https://github.com/timdream/wordcloud.git"
   },
+  "scripts": {
+    "test": "grunt test"
+  },
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-clean": "~0.4.1",
@@ -13,6 +16,8 @@
     "grunt-usemin": "~0.1.12",
     "grunt-replace": "~0.4.4",
     "grunt-rev": "~0.1.0",
-    "grunt-shell": "~0.2.2"
+    "grunt-shell": "~0.2.2",
+    "grunt-contrib-qunit": "~0.2.2",
+    "grunt-contrib-connect": "~0.3.0"
   }
 }
