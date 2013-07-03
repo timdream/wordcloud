@@ -134,6 +134,12 @@ window.onerror = function onerror(message, url, line) {
     inputElement: 'wc-panel-twitter-id',
     template: 'http://twitter.com/statuses/user_timeline/%s.rss'
   }));
+  sourceDialogView.addPanel(new FeedPanelView({
+    name: 'yamblog',
+    element: 'wc-panel-yamblog',
+    inputElement: 'wc-panel-yamblog-id',
+    template: 'http://blog.yam.com/rss.php?blog_id=%s&num=1000'
+  }));
 
   app.addFetcher(new TextFetcher());
   app.addFetcher(new FileFetcher());
