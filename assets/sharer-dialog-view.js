@@ -72,6 +72,8 @@ SharerDialogView.prototype.PLURK_SHARE_URL =
   'http://plurk.com/?status=';
 SharerDialogView.prototype.FACEBOOK_PHOTO_URL =
   'https://www.facebook.com/photo.php?fbid=';
+SharerDialogView.prototype.FACEBOOK_POST_URL =
+  'https://www.facebook.com/permalink.php?id=%uid&v=wall&story_fbid=%fbid';
 SharerDialogView.prototype.IMGUR_URL =
   'http://imgur.com/';
 SharerDialogView.prototype.IMGUR_API_URL =
@@ -181,10 +183,10 @@ SharerDialogView.prototype.updateUI = function sdv_updateUI() {
 
     this.updateStatusElement(
       this.imgurStatusElement, this.LABEL_IMAGE_UPLOADED, imgurPageUrl);
-    if (this.facebookPhotoUrl) {
+    if (this.facebookPostedUrl) {
       this.updateStatusElement(
         this.facebookStatusElement,
-        this.LABEL_IMAGE_UPLOADED, this.facebookPhotoUrl);
+        this.LABEL_IMAGE_UPLOADED, this.facebookPostedUrl);
     } else if (this.facebookLoading) {
       this.updateStatusElement(
         this.facebookStatusElement, this.LABEL_FACEBOOK_LOADING);
@@ -245,7 +247,7 @@ SharerDialogView.prototype.handleEvent = function sdv_handleEvent(evt) {
       break;
 
     case this.facebookStatusElement:
-      if (this.facebookPhotoUrl)
+      if (this.facebookPostedUrl)
         break;
 
       if (!this.facebookSDKReadyState) {
@@ -340,30 +342,45 @@ SharerDialogView.prototype.shareText = function sdv_shareText(type) {
       var ogImageUrl =
         document.querySelector('meta[property="og:image"]').content;
 
+      this.facebookLoading = true;
+      this.updateUI();
+
+      var feedDialogOpts;
+
       if (this.imgurData) {
         // Share link to Imgur instead.
-
-        var imgurPageUrl = this.IMGUR_URL + this.imgurData.id;
-
-        FB.ui({
+        feedDialogOpts = {
           method: 'feed',
-          link: imgurPageUrl,
+          link: this.IMGUR_URL + this.imgurData.id,
           display: 'popup'
-        });
-
-        break;
+        };
+      } else {
+        feedDialogOpts = {
+          method: 'feed',
+          picture: ogImageUrl,
+          link: url,
+          // We cannot bring what the user had just typed in the sharer dialog
+          // because Facebook doesn't allow us to.
+          name: this.getCloudTitle(),
+          description: this.getCloudList() + ' -- ' + this.HASHTAG,
+          display: 'popup'
+        };
       }
 
-      FB.ui({
-        method: 'feed',
-        picture: ogImageUrl,
-        link: url,
-        // We cannot bring what the user had just typed in the sharer dialog
-        // because Facebook doesn't allow us to.
-        name: this.getCloudTitle(),
-        description: this.getCloudList() + ' -- ' + this.HASHTAG,
-        display: 'popup'
-      });
+      FB.ui(feedDialogOpts, (function sdv_fbFeedDialogRes(res) {
+        this.facebookLoading = false;
+        if (!res || !res.post_id) {
+          this.updateUI();
+          return;
+        }
+
+        // Manually resolve the post URL
+        var vars = res.post_id.split('_');
+        this.facebookPostedUrl = this.FACEBOOK_POST_URL
+          .replace(/%uid/, vars[0]).replace(/%fbid/, vars[1]);
+
+        this.updateUI();
+      }).bind(this));
       break;
 
     case 'plurk':
@@ -412,7 +429,7 @@ SharerDialogView.prototype.uploadImage = function sdv_uploadImage() {
   this.app.logAction('SharerDialogView::uploadImage');
 
   this.imgurData = undefined;
-  this.facebookPhotoUrl = undefined;
+  this.facebookPostedUrl = undefined;
   this.imgLinkElement.href = '#';
   this.updateProgress(0.05, true);
 
@@ -562,7 +579,7 @@ SharerDialogView.prototype.shareImage = function sdv_shareImage(type) {
           return;
         }
 
-        this.facebookPhotoUrl = this.FACEBOOK_PHOTO_URL + res.id;
+        this.facebookPostedUrl = this.FACEBOOK_PHOTO_URL + res.id;
         this.updateUI();
       }).bind(this));
 
