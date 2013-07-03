@@ -74,8 +74,6 @@ SharerDialogView.prototype.FACEBOOK_PHOTO_URL =
   'https://www.facebook.com/photo.php?fbid=';
 SharerDialogView.prototype.IMGUR_URL =
   'http://imgur.com/';
-SharerDialogView.prototype.IMGUR_IMAGE_LARGE_URL =
-  'http://i.imgur.com/%idl.png';
 SharerDialogView.prototype.IMGUR_API_URL =
   'https://api.imgur.com/3/upload.json';
 SharerDialogView.prototype.SHARED_ITEM_LIMIT = 10;
@@ -314,6 +312,13 @@ SharerDialogView.prototype.updateProgress =
       'progress progress-striped' + (active ? ' active' : '');
   };
 SharerDialogView.prototype.share = function sdv_share(type) {
+  // XXX Facebook keep bugging me about the picture posted
+  // let's always use shareText() for that.
+  if (type === 'facebook' && !window.UPLOAD_PHOTO_TO_FACEBOOK) {
+    this.shareText(type);
+    return;
+  }
+
   if (this.imgurData) {
     this.shareImage(type);
   } else {
@@ -335,11 +340,22 @@ SharerDialogView.prototype.shareText = function sdv_shareText(type) {
       var ogImageUrl =
         document.querySelector('meta[property="og:image"]').content;
 
+      if (this.imgurData) {
+        // Share link to Imgur instead.
+
+        var imgurPageUrl = this.IMGUR_URL + this.imgurData.id;
+
+        FB.ui({
+          method: 'feed',
+          link: imgurPageUrl
+        });
+
+        break;
+      }
+
       FB.ui({
         method: 'feed',
-        picture: (this.imgurData) ?
-          this.IMGUR_IMAGE_LARGE_URL.replace(/%id/, this.imgurData.id) :
-          ogImageUrl,
+        picture: ogImageUrl,
         link: url,
         // We cannot bring what the user had just typed in the sharer dialog
         // because Facebook doesn't allow us to.
