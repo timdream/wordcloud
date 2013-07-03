@@ -347,7 +347,8 @@ SharerDialogView.prototype.shareText = function sdv_shareText(type) {
 
         FB.ui({
           method: 'feed',
-          link: imgurPageUrl
+          link: imgurPageUrl,
+          display: 'popup'
         });
 
         break;
@@ -360,7 +361,8 @@ SharerDialogView.prototype.shareText = function sdv_shareText(type) {
         // We cannot bring what the user had just typed in the sharer dialog
         // because Facebook doesn't allow us to.
         name: this.getCloudTitle(),
-        description: this.getCloudList() + ' -- ' + this.HASHTAG
+        description: this.getCloudList() + ' -- ' + this.HASHTAG,
+        display: 'popup'
       });
       break;
 
