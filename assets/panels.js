@@ -4,7 +4,7 @@ var PanelView = function PanelView() {
 };
 PanelView.prototype = new View();
 PanelView.prototype.beforeShow = function pv_beforeShow() {
-  this.menuItemElement.parentNode.className = 'active';
+  this.menuItemElement.parentNode.className += ' active';
   this.dialog.selectionElement.selectedIndex = this.selectionIndex;
 };
 PanelView.prototype.afterShow = function pv_afterShow() {
@@ -13,7 +13,8 @@ PanelView.prototype.afterShow = function pv_afterShow() {
     el.focus();
 };
 PanelView.prototype.beforeHide = function pv_beforeHide() {
-  this.menuItemElement.parentNode.className = '';
+  this.menuItemElement.parentNode.className =
+    this.menuItemElement.parentNode.className.replace(/ active/g, '');
 };
 
 var ExamplePanelView = function ExamplePanelView(opts) {
