@@ -145,6 +145,7 @@ window.onerror = function onerror(message, url, line) {
   app.addFetcher(new FileFetcher());
   app.addFetcher(new ListFetcher());
   app.addFetcher(new FeedFetcher());
+  app.addFetcher(new COSCUPFetcher());
   app.addFetcher(new WikipediaFetcher());
   app.addFetcher(new FacebookFetcher());
   app.addFetcher(new GooglePlusFetcher());

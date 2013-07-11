@@ -308,6 +308,39 @@ GooglePlusFetcher.prototype.handleResponse = function gpf_handleResponse(res) {
   this.app.handleData(text, _('google-plus-title'));
 };
 
+var COSCUPFetcher = function COSCUPFetcher(opts) {
+  this.types = ['coscup'];
+  this.fields = ['name', 'speaker', 'bio', 'abstract'];
+};
+COSCUPFetcher.prototype = new JSONPFetcher();
+COSCUPFetcher.prototype.API_URL = 'http://coscup.org/%year/api/program';
+COSCUPFetcher.prototype.HTML_REGEXP =
+  /<[^>]+?>|\(.+?\.\.\.\)|\&\w+\;|<script.+?\/script\>/ig;
+COSCUPFetcher.prototype.getData = function cf_getData(dataType, data) {
+  var year = this.year = data;
+  this.requestData(this.API_URL.replace(/%year/, year));
+};
+COSCUPFetcher.prototype.handleResponse = function cf_handleResponse(res) {
+  if (!res) {
+    this.app.handleData('');
+    return;
+  }
+
+  var text = [];
+  var fields = this.fields;
+  var HTML_REGEXP = this.HTML_REGEXP;
+  var programs = (Array.isArray(res)) ? res : res['program'];
+
+  programs.forEach(function cf_handleProgram(program) {
+    fields.forEach(function cf_fields_forEach(field) {
+      if (program[field])
+        text.push(program[field].replace(HTML_REGEXP, ''));
+    });
+  });
+
+  this.app.handleData(text.join('\n'), _('coscup-title', { year: this.year }));
+};
+
 var FacebookFetcher = function FacebookFetcher() {
   this.types = ['facebook'];
 };
