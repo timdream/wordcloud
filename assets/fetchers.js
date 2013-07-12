@@ -112,6 +112,10 @@ JSONPFetcher.prototype.handleEvent = function jpf_handleEvent(evt) {
   clearTimeout(this.timer);
 
   el.parentNode.removeChild(el);
+
+  if (evt.type === 'error') {
+    this.handleResponse();
+  }
 };
 JSONPFetcher.prototype.getNewCallback = function jpf_getNewCallback() {
   // Create a unique callback name for this request.

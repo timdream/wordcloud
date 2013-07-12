@@ -198,6 +198,30 @@ test('stop()', function() {
   fetcher.stop();
 });
 
+module('JSONPFetcher');
+
+test('requestData(url)', function() {
+  var fetcher = new JSONPFetcher();
+  fetcher.handleResponse = function handleResponse(res) {
+    ok(res && res.ip === '127.0.0.1', 'got data.');
+
+    start();
+  };
+  stop();
+  fetcher.requestData('http://freegeoip.net/json/127.0.0.1');
+});
+
+test('requestData(non-exist API)', function() {
+  var fetcher = new JSONPFetcher();
+  fetcher.handleResponse = function handleResponse(res) {
+    ok(!res, 'got empty response.');
+
+    start();
+  };
+  stop();
+  /* example.com:443 should refuse the connection. */
+  fetcher.requestData('https://example.com/');
+});
 
 module('FeedFetcher');
 
