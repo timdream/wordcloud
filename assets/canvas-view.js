@@ -3,16 +3,19 @@
 var CanvasView = function CanvasView(opts) {
   this.load(opts, {
     name: 'canvas',
-    element: 'wc-canvas'
+    element: 'wc-canvas',
+    canvasElement: 'wc-canvas-canvas',
+    hoverElement: 'wc-canvas-hover',
+    hoverLabelElement: 'wc-canvas-hover-label'
   });
 
   window.addEventListener('resize', this);
-  this.element.addEventListener('wordcloudstop', this);
+  this.canvasElement.addEventListener('wordcloudstop', this);
 
   this.documentWidth = window.innerWidth;
   this.documentHeight = window.innerHeight;
 
-  var style = this.element.style;
+  var style = this.canvasElement.style;
   ['transform',
    'webkitTransform',
    'msTransform',
@@ -93,7 +96,7 @@ CanvasView.prototype.handleEvent = function cv_handleEvent(evt) {
       break;
 
     case 'wordcloudstop':
-      this.element.removeEventListener('wordclouddrawn', this);
+      this.canvasElement.removeEventListener('wordclouddrawn', this);
 
       break;
 
@@ -103,29 +106,53 @@ CanvasView.prototype.handleEvent = function cv_handleEvent(evt) {
       var x = - (hw - evt.pageX) / hw * this.TILT_DEPTH;
       var y = (hh - evt.pageY) / hh * this.TILT_DEPTH;
 
-      this.element.style[this.cssTransformProperty] =
+      this.canvasElement.style[this.cssTransformProperty] =
         'scale(1.2) translateZ(0) rotateX(' + y + 'deg) rotateY(' + x + 'deg)';
 
       break;
   }
 };
 CanvasView.prototype.setDimension = function cv_setDimension(width, height) {
-  var el = this.element;
+  var el = this.canvasElement;
   width = width ? width : this.documentWidth;
   height = height ? height : this.documentHeight;
   el.setAttribute('width', width);
   el.setAttribute('height', height);
-  el.style.marginLeft = (- width / 2) + 'px';
-  el.style.marginTop = (- height / 2) + 'px';
+  this.element.style.marginLeft = (- width / 2) + 'px';
+  this.element.style.marginTop = (- height / 2) + 'px';
 };
 CanvasView.prototype.draw = function cv_draw(option) {
   // Have generic font selected based on UI language
-  this.element.lang = '';
+  this.canvasElement.lang = '';
 
-  WordCloud(this.element, option);
+  this.hoverElement.setAttribute('hidden', true);
+  option.hover = this.handleHover.bind(this);
+
+  WordCloud(this.canvasElement, option);
+};
+CanvasView.prototype.handleHover = function cv_handleHover(item,
+                                                           dimension, evt) {
+  var el = this.hoverElement;
+  if (!item) {
+    el.setAttribute('hidden', true);
+
+    return;
+  }
+
+  el.removeAttribute('hidden');
+  el.style.left = dimension.x + 'px';
+  el.style.top = dimension.y + 'px';
+  el.style.width = dimension.w + 'px';
+  el.style.height = dimension.h + 'px';
+
+  this.hoverDimension = dimension;
+
+  this.hoverLabelElement.setAttribute(
+    'data-l10n-args', JSON.stringify({ word: item[0], count: item[1] }));
+  __(this.hoverLabelElement);
 };
 CanvasView.prototype.drawIdleCloud = function cv_drawIdleCloud() {
-  var el = this.element;
+  var el = this.canvasElement;
   var width = this.documentWidth;
   var height = this.documentHeight;
 
@@ -133,7 +160,7 @@ CanvasView.prototype.drawIdleCloud = function cv_drawIdleCloud() {
   if (!('ontouchstart' in window))
     document.addEventListener('mousemove', this);
 
-  this.element.style[this.cssTransformProperty] = 'scale(1.2)';
+  this.canvasElement.style[this.cssTransformProperty] = 'scale(1.2)';
 
   this.setDimension(width, height);
   this.idleOption.gridSize = Math.round(16 * width / 1024);
@@ -149,12 +176,13 @@ CanvasView.prototype.drawIdleCloud = function cv_drawIdleCloud() {
   el.addEventListener('wordclouddrawn', this);
 
   WordCloud(el, this.idleOption);
+  this.hoverElement.setAttribute('hidden', true);
 };
 CanvasView.prototype.empty = function cv_empty() {
   document.removeEventListener('mousemove', this);
-  this.element.style[this.cssTransformProperty] = '';
+  this.canvasElement.style[this.cssTransformProperty] = '';
 
-  WordCloud(this.element, {
+  WordCloud(this.canvasElement, {
     backgroundColor: 'transparent'
   });
 };

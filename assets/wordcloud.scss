@@ -20,6 +20,27 @@ $transition-time: 0.5s;
   top: 50%; left: 50%;
 }
 
+#wc-canvas-hover {
+  position: absolute;
+  border: 2px solid #fff;
+  box-shadow: 0 0 4px 0 #008;
+  padding: 2px;
+  margin: -4px 0 0 -4px;
+  pointer-events: none;
+}
+
+#wc-canvas-hover-label {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: rgba(#fff, 0.8);
+  color: #333;
+  margin-top: 6px;
+  padding: 0 0.5em;
+  border-radius: 0.5em;
+  white-space: nowrap;
+}
+
 #wc-loading {
   transition:
     visibility $transition-time ease,
@@ -253,7 +274,7 @@ $shadow-length: $icon-width * 0.05;
 #wc-dashboard {
   position: absolute;
   top: 0; left: 0;
-  width: 100%; height: 100%;
+  width: 100%;
   > .container {
     margin-top: 10px;
   }

@@ -337,6 +337,9 @@ WordCloudApp.prototype.draw = function wca_draw() {
   this.logAction('WordCloudApp::draw::' + parsedHash[0],
                   parsedHash[1].substr(0, 128));
 };
+WordCloudApp.prototype.getCanvasElement = function wcp_getCanvasElement() {
+  return this.views['canvas'].canvasElement;
+};
 WordCloudApp.prototype.calculateWeightFactor =
   function wca_calculateWeightFactor(vol) {
     var width = this.views.canvas.documentWidth;

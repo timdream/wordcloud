@@ -305,7 +305,7 @@ SharerDialogView.prototype.close = function sdv_close() {
   this.app.switchUIState(this.app.UI_STATE_DASHBOARD);
 };
 SharerDialogView.prototype.getCanvasBlob = function sdv_getCanvasBlob(cb) {
-  this.app.views['canvas'].element.toBlob(cb.bind(this));
+  this.app.getCanvasElement().toBlob(cb.bind(this));
 };
 SharerDialogView.prototype.updateProgress =
   function sdv_updateProgress(progress, active) {
@@ -508,7 +508,7 @@ SharerDialogView.prototype.uploadImage = function sdv_uploadImage() {
     if (window.URL) {
       this.imgElement.src = window.URL.createObjectURL(blob);
     } else {
-      this.imgElement.src = this.app.views.canvas.element.toDataURL();
+      this.imgElement.src = this.app.getCanvasElement().toDataURL();
     }
     this.imgLinkElement.removeAttribute('hidden');
 

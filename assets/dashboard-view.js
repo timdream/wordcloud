@@ -106,7 +106,7 @@ DashboardView.prototype.handleEvent = function dv_handleEvent(evt) {
     case 'save':
       // We could use canvasElement.toBlob(callback) here,
       // but we will miss the default action (download).
-      var url = app.views.canvas.element.toDataURL();
+      var url = app.getCanvasElement().toDataURL();
       if ('download' in document.createElement('a')) {
         el.href = url;
 
