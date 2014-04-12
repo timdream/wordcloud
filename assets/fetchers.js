@@ -48,7 +48,7 @@ FileFetcher.prototype.getData = function ff_getData(dataType, data) {
   var file = fileElement.files[0];
   var reader = this.reader = new FileReader();
   reader.onloadend = (function fr_loadend(evt) {
-    if (reader !== this.reader)
+    if (reader !== this.reader || reader.result === null)
       return; // aborted
 
     var text = reader.result;
