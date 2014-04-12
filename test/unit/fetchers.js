@@ -203,12 +203,12 @@ module('JSONPFetcher');
 test('requestData(url)', function() {
   var fetcher = new JSONPFetcher();
   fetcher.handleResponse = function handleResponse(res) {
-    ok(res && res.ip === '127.0.0.1', 'got data.');
+    ok(res && res.hello === 'world', 'got data.');
 
     start();
   };
   stop();
-  fetcher.requestData('http://freegeoip.net/json/127.0.0.1');
+  fetcher.requestData('./fake-jsonp-hello.js');
 });
 
 test('requestData(non-exist API)', function() {
@@ -219,19 +219,19 @@ test('requestData(non-exist API)', function() {
     start();
   };
   stop();
-  /* example.com:443 should refuse the connection. */
-  fetcher.requestData('https://example.com/');
+  fetcher.requestData('./404');
 });
 
 module('FeedFetcher');
 
 test('getData(\'feed\')', function() {
   var fetcher = new FeedFetcher();
-  var data = 'http://blog.timc.idv.tw/feed/';
+  fetcher.FEED_API_LOAD_URL = './fake-jsonp-google-feed-api.js';
+  var data = 'http://foo.bar/feed/';
   stop();
   fetcher.app = {
     handleData: function gotData(data) {
-      ok(!!data, 'Received data, length: ' + data.length);
+      equal(data, 'title1\ncontent1\ncontent1 line 2\n\ntitle2\ncontent2\ncontent2 line 2\n');
 
       start();
     }
@@ -241,7 +241,8 @@ test('getData(\'feed\')', function() {
 
 test('stop()', function() {
   var fetcher = new FeedFetcher();
-  var data = 'http://blog.timc.idv.tw/feed/';
+  fetcher.FEED_API_LOAD_URL = './fake-jsonp-google-feed-api.js';
+  var data = 'http://foo.bar/feed/';
   var timer;
   stop();
   fetcher.app = {
@@ -265,6 +266,7 @@ module('WikipediaFetcher');
 
 test('getData(\'wikipedia\')', function() {
   var fetcher = new WikipediaFetcher();
+  fetcher.WIKIPEDIA_API_URL = './fake-jsonp-wikipedia-api.js';
   var data = 'Happiness';
   stop();
   fetcher.app = {
@@ -279,6 +281,7 @@ test('getData(\'wikipedia\')', function() {
 
 test('stop()', function() {
   var fetcher = new WikipediaFetcher();
+  fetcher.WIKIPEDIA_API_URL = './fake-jsonp-wikipedia-api.js';
   var data = 'Happiness';
   var timer;
   stop();
