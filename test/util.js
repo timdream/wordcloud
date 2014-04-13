@@ -7,26 +7,26 @@ document.webL10n = {
   setLanguage: function () { },
   get: function () { }
 };
-var _ = document.webL10n.get;
-var __ = document.webL10n.translate;
+window._ = document.webL10n.get;
+window.__ = document.webL10n.translate;
 
 // For PhantomJS
 // https://github.com/ariya/phantomjs/issues/10522
 if (!Function.prototype.bind) {
   Function.prototype.bind = function (oThis) {
-    if (typeof this !== "function") {
+    if (typeof this !== 'function') {
       // closest thing possible to the ECMAScript 5 internal IsCallable function
-      throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+      throw new TypeError('Function.prototype.bind - ' +
+        'what is trying to be bound is not callable');
     }
 
     var aArgs = Array.prototype.slice.call(arguments, 1),
         fToBind = this,
         fNOP = function () {},
         fBound = function () {
-          return fToBind.apply(this instanceof fNOP && oThis
-                                 ? this
-                                 : oThis,
-                               aArgs.concat(Array.prototype.slice.call(arguments)));
+          return fToBind.apply(this instanceof fNOP && oThis ? this : oThis,
+                                aArgs.concat(
+                                  Array.prototype.slice.call(arguments)));
         };
 
     fNOP.prototype = this.prototype;
@@ -38,7 +38,7 @@ if (!Function.prototype.bind) {
 
 /* XXX: We cannot create a File object in web content,
    so we will use the next best thing here -- a Blob. */
-var getFakeFile = function getBlob(data) {
+window.getFakeFile = function getBlob(data) {
   if (typeof Blob === 'function') {
     return new Blob([data], { type: 'text/plain' });
   }

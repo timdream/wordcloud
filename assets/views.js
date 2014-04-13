@@ -1,12 +1,15 @@
 'use strict';
 
+/* global __ */
+
 // Super light-weight prototype-based objects and inherences
 var View = function View() { };
 View.prototype.load = function v_load(properties, defaultProperties) {
   properties = properties || {};
   for (var name in defaultProperties) {
-    if (name in this)
+    if (name in this) {
       break;
+    }
 
     this[name] = (name in properties) ?
       properties[name] : defaultProperties[name];
@@ -58,8 +61,9 @@ var LanguageSwitcherView = function LanguageSwitcher(opts) {
   var langs = this.langs = [];
   Array.prototype.forEach.call(this.element.children, function lang(el) {
     langs.push(el.value);
-    if (el.value === defaultLanguage)
+    if (el.value === defaultLanguage) {
       el.selected = true;
+    }
   });
 
   if (langs.indexOf(defaultLanguage) === -1) {
@@ -115,8 +119,9 @@ LoadingView.prototype.beforeShow = function l_beforeShow(state, nextState) {
   }
 };
 LoadingView.prototype.updateLabel = function l_updateLabel(stringId) {
-  if (!this.stringIds[stringId])
+  if (!this.stringIds[stringId]) {
     throw 'Undefined stringId ' + stringId;
+  }
 
   this.labelElement.setAttribute('data-l10n-id', this.stringIds[stringId]);
   __(this.labelElement);
@@ -229,6 +234,7 @@ AboutDialogView.prototype.loadContent = function adv_loadContent(lang, first) {
     }
     container.appendChild(docFrag);
   }).bind(this);
+
   if (first) {
     iframe.onerror = (function contentLoadError() {
       this.loaded = false;
@@ -239,7 +245,6 @@ AboutDialogView.prototype.loadContent = function adv_loadContent(lang, first) {
   }
 
   if (window.DONATE_HTML) {
-    var lang = document.documentElement.lang;
     this.donateElement.removeAttribute('hidden');
     this.donateContentElement.innerHTML =
       window.DONATE_HTML.replace(/%lang/, lang.replace(/-/, '_'));
@@ -254,8 +259,9 @@ AboutDialogView.prototype.handleEvent = function adv_handleEvent(evt) {
 
   switch (evt.currentTarget) {
     case this.contentElement:
-      if (evt.target.tagName !== 'A')
+      if (evt.target.tagName !== 'A') {
         break;
+      }
 
       evt.preventDefault();
       window.open(evt.target.href);

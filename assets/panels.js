@@ -1,5 +1,8 @@
 'use strict';
 
+/* global View, _, __, FacebookSDKLoader, FB,
+          GOOGLE_CLIENT_ID, GO2 */
+
 var PanelView = function PanelView() {
 };
 PanelView.prototype = new View();
@@ -9,8 +12,9 @@ PanelView.prototype.beforeShow = function pv_beforeShow() {
 };
 PanelView.prototype.afterShow = function pv_afterShow() {
   var el = this.element.querySelector('input, button, select, textarea');
-  if (el)
+  if (el) {
     el.focus();
+  }
 };
 PanelView.prototype.beforeHide = function pv_beforeHide() {
   this.menuItemElement.parentNode.className =
@@ -30,11 +34,13 @@ ExamplePanelView.prototype = new PanelView();
 ExamplePanelView.prototype.beforeShow = function epv_beforeShow() {
   PanelView.prototype.beforeShow.apply(this, arguments);
 
-  if (this.checked)
+  if (this.checked) {
     return;
+  }
 
-  if (!this.dialog.app.isFullySupported)
+  if (!this.dialog.app.isFullySupported) {
     this.supportMsgElement.removeAttribute('hidden');
+  }
 
   this.checked = true;
 };
@@ -91,8 +97,9 @@ var FilePanelView = function FilePanelView(opts) {
     encodingElement: 'wc-panel-file-encoding'
   });
 
-  if (!this.isSupported)
+  if (!this.isSupported) {
     return;
+  }
 
   var count = this.fileElement.files.length;
   this.updateLabel(count);
@@ -137,8 +144,9 @@ FeedPanelView.prototype = new PanelView();
 FeedPanelView.prototype.submit = function fepv_submit() {
   var el = this.inputElement;
 
-  if (!el.value)
+  if (!el.value) {
     return;
+  }
 
   this.dialog.submit(
     '#feed:' + this.template.replace(/%s/g, el.value));
@@ -155,8 +163,9 @@ WikipediaPanelView.prototype = new PanelView();
 WikipediaPanelView.prototype.submit = function wpv_submit() {
   var el = this.inputElement;
 
-  if (!el.value)
+  if (!el.value) {
     return;
+  }
 
   // XXX maybe provide a <select> of largest Wikipedias here.
   // (automatically from this table or manually)
@@ -187,8 +196,9 @@ FacebookPanelView.prototype.LABEL_NOT_LOGGED_IN = 1;
 FacebookPanelView.prototype.beforeShow = function fbpv_beforeShow() {
   PanelView.prototype.beforeShow.apply(this, arguments);
 
-  if (this.loaded)
+  if (this.loaded) {
     return;
+  }
 
   this.loaded = true;
   this.hasPermission = false;
@@ -213,14 +223,15 @@ FacebookPanelView.prototype.updateStatus = function fbpv_updateStatus(res) {
     FB.api('/me?fields=permissions,username', (function checkPermissions(res) {
       this.hasPermission = res && res.permissions &&
         res.permissions.data && res.permissions.data[0] &&
-        (res.permissions.data[0]['read_stream'] == 1);
+        (res.permissions.data[0].read_stream == 1);
 
       this.facebookUsername = (res && res.username) || '';
 
       this.updateUI();
 
-      if (!this.submitted)
+      if (!this.submitted) {
         return;
+      }
 
       this.submitted = false;
       this.submit();
@@ -244,15 +255,17 @@ FacebookPanelView.prototype.updateUI = function fbpv_updateUI() {
 };
 FacebookPanelView.prototype.submit = function fbpv_submit() {
   // Return if the status is never updated.
-  if (!this.facebookResponse)
+  if (!this.facebookResponse) {
     return;
+  }
 
   // XXX: There is no way to cancel the login pop-up midway if
   // the user navigates away from the panel (or the source dialog).
   // We shall do some checking here to avoid accidently switches the UI.
   if (this.element.hasAttribute('hidden') ||
-      this.dialog.element.hasAttribute('hidden'))
+      this.dialog.element.hasAttribute('hidden')) {
     return;
+  }
 
 
   // Show the login dialog if not logged in
@@ -307,11 +320,13 @@ GooglePlusPanelView.prototype.LABEL_NOT_LOGGED_IN = 1;
 GooglePlusPanelView.prototype.beforeShow = function gppv_beforeShow() {
   PanelView.prototype.beforeShow.apply(this, arguments);
 
-  if (!GOOGLE_CLIENT_ID)
+  if (!GOOGLE_CLIENT_ID) {
     throw 'No GOOGLE_CLIENT_ID defined.';
+  }
 
-  if (this.loaded)
+  if (this.loaded) {
     return;
+  }
 
   this.loaded = true;
 
@@ -352,8 +367,9 @@ GooglePlusPanelView.prototype.beforeShow = function gppv_beforeShow() {
         // the user navigates away from the panel (or the source dialog).
         // We shall do some checking here to avoid accidently switches the UI.
         if (this.element.hasAttribute('hidden') ||
-            this.dialog.element.hasAttribute('hidden'))
+            this.dialog.element.hasAttribute('hidden')) {
           return;
+        }
 
         this.realSubmit();
       }
@@ -382,8 +398,9 @@ GooglePlusPanelView.prototype.updateUI = function gppv_updateUI() {
   __(this.statusElement);
 };
 GooglePlusPanelView.prototype.submit = function gppv_submit() {
-  if (!window.GO2 || !this.loaded)
+  if (!window.GO2 || !this.loaded) {
     return;
+  }
 
   if (!this.isReadyForFetch()) {
     this.submitted = true;
@@ -396,8 +413,9 @@ GooglePlusPanelView.prototype.submit = function gppv_submit() {
 };
 GooglePlusPanelView.prototype.realSubmit = function gppv_realSubmit() {
   var id = this.idElement.value;
-  if (!id)
+  if (!id) {
     id = 'me';
+  }
 
   // Remove everything after the first slash.
   id = id.replace(/\/.*$/, '');

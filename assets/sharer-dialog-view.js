@@ -1,5 +1,7 @@
 'use strict';
 
+/* global View, _, __, FB, FacebookSDKLoader, IMGUR_CLIENT_ID */
+
 var SharerDialogView = function SharerDialogView(opts) {
   this.load(opts, {
     name: 'sharer-dialog',
@@ -176,7 +178,6 @@ SharerDialogView.prototype.updateUI = function sdv_updateUI() {
       this.plurkStatusElement, this.LABEL_WAITING);
 
   } else if (this.imgurData) { // Uploaded
-    var imageUrl = this.imgurData.link;
     var imgurPageUrl = this.IMGUR_URL + this.imgurData.id;
 
     this.reUploadBtnElement.disabled = false;
@@ -203,8 +204,9 @@ SharerDialogView.prototype.updateUI = function sdv_updateUI() {
   } else { // text upload only
     // If upload is not supported, terms should match
     // the current on-canvas image.
-    if (!this.uploadSupported)
+    if (!this.uploadSupported) {
       this.updateTermsUI();
+    }
 
     this.reUploadBtnElement.disabled = true;
 
@@ -239,23 +241,26 @@ SharerDialogView.prototype.handleEvent = function sdv_handleEvent(evt) {
 
   switch (evt.currentTarget) {
     case this.imgLinkElement:
-      if (this.imgurData)
+      if (this.imgurData) {
         break;
+      }
 
       evt.preventDefault();
 
       break;
 
     case this.facebookStatusElement:
-      if (this.facebookPostedUrl)
+      if (this.facebookPostedUrl) {
         break;
+      }
 
       if (!this.facebookSDKReadyState) {
         this.facebookSDKReadyState = 'loading';
         this.updateUI();
         (new FacebookSDKLoader()).load((function sdv_bindFacebookSDK() {
-          if (this.facebookSDKReadyState === 'complete')
+          if (this.facebookSDKReadyState === 'complete') {
             return;
+          }
 
           this.facebookSDKReadyState = 'complete';
 
@@ -414,7 +419,7 @@ SharerDialogView.prototype.updateFacebookStatus =
       FB.api('/me/permissions', (function checkPermissions(res) {
         this.hasFacebookPermission =
           res && res.data && res.data[0] &&
-          (res.data[0]['publish_stream'] == 1);
+          (res.data[0].publish_stream == 1);
         this.updateUI();
       }).bind(this));
     } else {
@@ -423,8 +428,9 @@ SharerDialogView.prototype.updateFacebookStatus =
     this.updateUI();
   };
 SharerDialogView.prototype.uploadImage = function sdv_uploadImage() {
-  if (!window.IMGUR_CLIENT_ID)
+  if (!window.IMGUR_CLIENT_ID) {
     throw 'IMGUR_CLIENT_ID is not set.';
+  }
 
   this.app.logAction('SharerDialogView::uploadImage');
 
@@ -438,8 +444,9 @@ SharerDialogView.prototype.uploadImage = function sdv_uploadImage() {
     this.getCloudList() + '\n\n' + this.HASHTAG;
 
   var url = window.location.href;
-  if (url.length > 128)
+  if (url.length > 128) {
     url = url.replace(/#.*$/, '');
+  }
 
   this.cloudUrl = url;
 
@@ -461,8 +468,9 @@ SharerDialogView.prototype.uploadImage = function sdv_uploadImage() {
   }
 
   xhr.onreadystatechange = (function sdv_xhrFinish(evt) {
-    if (xhr.readyState !== XMLHttpRequest.DONE || this.xhr !== xhr)
+    if (xhr.readyState !== XMLHttpRequest.DONE || this.xhr !== xhr) {
       return;
+    }
 
     this.checkImgurCredits();
 
@@ -502,8 +510,9 @@ SharerDialogView.prototype.uploadImage = function sdv_uploadImage() {
   this.updateUI();
   this.updateTermsUI();
   this.getCanvasBlob(function sdv_gotBlob(blob) {
-    if (this.xhr !== xhr)
+    if (this.xhr !== xhr) {
       return;
+    }
 
     if (window.URL) {
       this.imgElement.src = window.URL.createObjectURL(blob);
@@ -539,8 +548,9 @@ SharerDialogView.prototype.shareImage = function sdv_shareImage(type) {
 
           this.app.logAction('SharerDialogView::facebook-login::success');
 
-          if (res.status !== 'connected')
+          if (res.status !== 'connected') {
             return;
+          }
 
           // Note that we assume we have the permission already
           // if the user logged in through here.
@@ -617,16 +627,18 @@ SharerDialogView.prototype.checkImgurCredits =
     xhr.open('GET', 'https://api.imgur.com/3/credits');
     xhr.setRequestHeader('Authorization', 'Client-ID ' + IMGUR_CLIENT_ID);
     xhr.onreadystatechange = (function sdv_xhrFinish(evt) {
-      if (xhr.readyState !== XMLHttpRequest.DONE)
+      if (xhr.readyState !== XMLHttpRequest.DONE) {
         return;
+      }
 
       var response;
       try {
         response = JSON.parse(xhr.responseText);
       } catch (e) {}
 
-      if (!response || !response.success)
+      if (!response || !response.success) {
         return;
+      }
 
       this.imgurCreditsData = response.data;
 

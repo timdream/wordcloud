@@ -72,7 +72,7 @@
   };
 
   FakeGoogleFeedAPIPScript.prototype.getCallbackName = function(searchParams) {
-    return searchParams['callback'];
+    return searchParams.callback;
   };
 
   FakeGoogleFeedAPIPScript.prototype.respond = function() {

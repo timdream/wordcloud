@@ -1,5 +1,8 @@
 'use strict';
 
+/* global WordCloud, FilePanelView, WordFreq, WordFreqSync,
+          FACEBOOK_APP_ID, FB, FACEBOOK_APP_ID */
+
 var WordCloudApp = function WordCloudApp() {
   // Special code here to handle non-supported browser case.
   if (!((window.WordFreq && window.WordFreq.isSupported) ||
@@ -29,12 +32,14 @@ var WordCloudApp = function WordCloudApp() {
   this.logAction('WordCloudApp::isSupported::true');
 
   this.isFullySupported = (function checkFullySupport() {
-    if (!FilePanelView.prototype.isSupported)
+    if (!FilePanelView.prototype.isSupported) {
       return false;
+    }
 
     // Check for real canvas.toBlob() method.
-    if (window.HTMLCanvasElement.prototype.toBlob)
+    if (window.HTMLCanvasElement.prototype.toBlob) {
       return true;
+    }
 
     // If not, see if we should shim it.
     var hasBlobConstructor = window.Blob && (function tryBlob() {
@@ -219,8 +224,9 @@ WordCloudApp.prototype.pushUrlHash = function wca_pushUrlHash(hash) {
   return true;
 };
 WordCloudApp.prototype.reset = function wca_reset() {
-  if (!window.location.hash.substr(1))
+  if (!window.location.hash.substr(1)) {
     return;
+  }
 
   if (this.backToReset) {
     // Go back
@@ -239,8 +245,9 @@ WordCloudApp.prototype.UI_STATE_ERROR_WITH_DASHBOARD = 5;
 WordCloudApp.prototype.UI_STATE_SHARER_DIALOG = 6;
 WordCloudApp.prototype.UI_STATE_ABOUT_DIALOG = 7;
 WordCloudApp.prototype.switchUIState = function wca_switchUIState(state) {
-  if (!this.UIStateViewMap[state])
+  if (!this.UIStateViewMap[state]) {
     throw 'Undefined state ' + state;
+  }
 
   if (document.activeElement &&
       document.activeElement !== document.body) {
@@ -297,8 +304,9 @@ WordCloudApp.prototype.handleData = function wca_handleData(text, title) {
   }
 };
 WordCloudApp.prototype.stopHandleData = function wca_stopHandleData() {
-  if (!this.wordfreq)
+  if (!this.wordfreq) {
     return;
+  }
 
   // Stop any current WordFreq async operation,
   // or the timer that would invoke WordFreqSync.
@@ -338,7 +346,7 @@ WordCloudApp.prototype.draw = function wca_draw() {
                   parsedHash[1].substr(0, 128));
 };
 WordCloudApp.prototype.getCanvasElement = function wcp_getCanvasElement() {
-  return this.views['canvas'].canvasElement;
+  return this.views.canvas.canvasElement;
 };
 WordCloudApp.prototype.calculateWeightFactor =
   function wca_calculateWeightFactor(vol) {
@@ -372,8 +380,9 @@ WordCloudApp.prototype.showSharer = function wca_showSharer() {
 WordCloudApp.prototype.route = function wca_route() {
   var hash = window.location.hash.substr(1);
 
-  if (this.backToReset && !this.lastUrlHashChangePushedByScript)
+  if (this.backToReset && !this.lastUrlHashChangePushedByScript) {
     this.backToReset = false;
+  }
 
   this.lastUrlHashChangePushedByScript = false;
 
@@ -413,8 +422,9 @@ WordCloudApp.prototype.route = function wca_route() {
   }
 };
 WordCloudApp.prototype.logAction = function wca_logAction(action, label, val) {
-  if (!window._gaq)
+  if (!window._gaq) {
     return;
+  }
 
   var msgs = ['_trackEvent', 'Word Cloud'];
   if (action !== undefined) {
@@ -469,14 +479,16 @@ WordCloudApp.prototype.uninit = function wca_uninit() {
 
 
 var FacebookSDKLoader = function FacebookSDKLoader() {
-  if (!FACEBOOK_APP_ID)
+  if (!FACEBOOK_APP_ID) {
     throw 'No FACEBOOK_APP_ID defined.';
+  }
 
   this.loaded = false;
 };
 FacebookSDKLoader.prototype.load = function fsl_load(callback) {
-  if (this.loaded)
+  if (this.loaded) {
     throw 'FacebookSDKLoader shouldn\'t be reused.';
+  }
   this.loaded = true;
 
   // If API is already available, run the callback synchronizely.

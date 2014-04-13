@@ -45,7 +45,7 @@
   };
 
   FakeJSONPScript.prototype.getCallbackName = function(searchParams) {
-    return searchParams['callback'];
+    return searchParams.callback;
   };
 
   FakeJSONPScript.prototype.respond = function() {

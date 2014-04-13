@@ -1,0 +1,10 @@
+{
+  "extends": "../.jshintrc",
+  "predef": [
+    "ok",
+    "equal",
+    "test",
+    "start",
+    "stop"
+  ]
+}

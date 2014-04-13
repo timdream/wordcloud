@@ -1,5 +1,7 @@
 'use strict';
 
+/* global View, _ */
+
 var DashboardView = function DashboardView(opts) {
   this.load(opts, {
     name: 'dashboard',
@@ -17,17 +19,17 @@ DashboardView.prototype.beforeShow =
 DashboardView.prototype.beforeHide =
   function dv_beforeShowHide(state, nextState) {
     var ctlBtns = this.element.querySelectorAll('[data-canvas-ctl]');
+    var i = ctlBtns.length;
+    var el;
 
     if (nextState === this.app.UI_STATE_DASHBOARD) {
-      var i = ctlBtns.length;
       while (i--) {
-        var el = ctlBtns[i];
+        el = ctlBtns[i];
         el.className = el.className.replace(/ disabled/g, '');
       }
     } else {
-      var i = ctlBtns.length;
       while (i--) {
-        var el = ctlBtns[i];
+        el = ctlBtns[i];
         // We might add extra disabled here, but all of them will be removed,
         // so don't worry.
         el.className += ' disabled';
@@ -36,8 +38,9 @@ DashboardView.prototype.beforeHide =
   };
 DashboardView.prototype.handleEvent = function dv_handleEvent(evt) {
   var el = evt.currentTarget;
-  if (el.className.indexOf('disabled') !== -1)
+  if (el.className.indexOf('disabled') !== -1) {
     return;
+  }
 
   var app = this.app;
   var action = el.getAttribute('data-action');
@@ -55,16 +58,18 @@ DashboardView.prototype.handleEvent = function dv_handleEvent(evt) {
 
     case 'theme':
       app.data.theme++;
-      if (app.data.theme >= app.themes.length)
+      if (app.data.theme >= app.themes.length) {
         app.data.theme = 0;
+      }
 
       app.draw();
       break;
 
     case 'shape':
       app.data.shape++;
-      if (app.data.shape >= app.shapes.length)
+      if (app.data.shape >= app.shapes.length) {
         app.data.shape = 0;
+      }
 
       app.draw();
       break;
@@ -80,8 +85,9 @@ DashboardView.prototype.handleEvent = function dv_handleEvent(evt) {
       break;
 
     case 'size-':
-      if (app.data.weightFactor <= 0.1)
+      if (app.data.weightFactor <= 0.1) {
         break;
+      }
 
       app.data.weightFactor -= 0.1;
 
@@ -95,8 +101,9 @@ DashboardView.prototype.handleEvent = function dv_handleEvent(evt) {
       break;
 
     case 'gap-':
-      if (app.data.gridSize <= 2)
+      if (app.data.gridSize <= 2) {
         break;
+      }
 
       app.data.gridSize--;
 
@@ -120,8 +127,9 @@ DashboardView.prototype.handleEvent = function dv_handleEvent(evt) {
                               'width=500,height=300,resizable=yes,menubar=yes');
         var loadImage = function loadImage() {
           win.removeEventListener('load', loadImage);
-          if (win.detachEvent)
+          if (win.detachEvent) {
             win.detachEvent('onload', loadImage);
+          }
 
           var doc = win.document;
 

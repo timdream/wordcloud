@@ -1,5 +1,7 @@
 'use strict';
 
+/* global View */
+
 var SourceDialogView = function SourceDialogView(opts) {
   this.load(opts, {
     name: 'source-dialog',
@@ -32,10 +34,13 @@ var SourceDialogView = function SourceDialogView(opts) {
 };
 SourceDialogView.prototype = new View();
 SourceDialogView.prototype.afterShow = function sdv_afterShow() {
-  if (this.currentPanel)
+  if (this.currentPanel) {
     this.currentPanel.show();
+  }
 };
 SourceDialogView.prototype.handleEvent = function sd_handleEvent(evt) {
+  var panelName;
+
   evt.preventDefault();
   if (evt.type == 'submit') {
     this.currentPanel.submit();
@@ -44,17 +49,19 @@ SourceDialogView.prototype.handleEvent = function sd_handleEvent(evt) {
 
   switch (evt.currentTarget) {
     case this.menuElement:
-      var panelName = evt.target.getAttribute('data-panel');
-      if (!panelName || !this.panels[panelName])
+      panelName = evt.target.getAttribute('data-panel');
+      if (!panelName || !this.panels[panelName]) {
         return;
+      }
 
       this.showPanel(this.panels[panelName]);
       break;
 
     case this.selectionElement:
-      var panelName = evt.target.value;
-      if (!panelName || !this.panels[panelName])
+      panelName = evt.target.value;
+      if (!panelName || !this.panels[panelName]) {
         return;
+      }
 
       this.showPanel(this.panels[panelName]);
       break;
@@ -72,13 +79,15 @@ SourceDialogView.prototype.submit = function sd_submit(hash) {
   return this.app.pushUrlHash(hash);
 };
 SourceDialogView.prototype.showPanel = function sd_showPanel(panel) {
-  if (this.currentPanel)
+  if (this.currentPanel) {
     this.currentPanel.hide();
+  }
 
   panel.show();
   this.currentPanel = panel;
-  if (this.app)
+  if (this.app) {
     this.app.logAction('SourceDialogView::showPanel', panel.name);
+  }
 };
 SourceDialogView.prototype.addPanel = function sd_addPanel(panel) {
   this.panels[panel.name] = panel;
@@ -87,8 +96,9 @@ SourceDialogView.prototype.addPanel = function sd_addPanel(panel) {
   panel.selectionIndex = Array.prototype.indexOf.call(
       this.menuElement.children, panel.menuItemElement.parentNode);
 
-  if (!panel.menuItemElement)
+  if (!panel.menuItemElement) {
     throw 'menuItemElement not found.';
+  }
 
   panel.menuItemElement.parentNode.removeAttribute('hidden');
   panel.dialog = this;
@@ -99,6 +109,7 @@ SourceDialogView.prototype.addPanel = function sd_addPanel(panel) {
     return;
   }
 
-  if (!this.currentPanel)
+  if (!this.currentPanel) {
     this.showPanel(panel);
+  }
 };

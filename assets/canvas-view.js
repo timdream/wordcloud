@@ -1,5 +1,7 @@
 'use strict';
 
+/* global View, WordCloud, __ */
+
 var CanvasView = function CanvasView(opts) {
   this.load(opts, {
     name: 'canvas',
@@ -20,8 +22,9 @@ var CanvasView = function CanvasView(opts) {
    'webkitTransform',
    'msTransform',
    'oTransform'].some((function findTransformProperty(prop) {
-    if (!(prop in style))
+    if (!(prop in style)) {
       return false;
+    }
 
     this.cssTransformProperty = prop;
     return true;
@@ -67,8 +70,9 @@ CanvasView.prototype.beforeShow =
 CanvasView.prototype.beforeHide = function cv_beforeShowHide(state, nextState) {
   switch (nextState) {
     case this.app.UI_STATE_SOURCE_DIALOG:
-      if (state == this.app.UI_STATE_ABOUT_DIALOG)
+      if (state == this.app.UI_STATE_ABOUT_DIALOG) {
         break;
+      }
       this.drawIdleCloud();
       break;
 
@@ -87,8 +91,9 @@ CanvasView.prototype.handleEvent = function cv_handleEvent(evt) {
       break;
 
     case 'wordclouddrawn':
-      if (evt.detail.drawn)
+      if (evt.detail.drawn) {
         break;
+      }
 
       // Stop the draw.
       evt.preventDefault();
@@ -157,8 +162,9 @@ CanvasView.prototype.drawIdleCloud = function cv_drawIdleCloud() {
   var height = this.documentHeight;
 
   // Only enable the rotation effect on non-touch capable browser.
-  if (!('ontouchstart' in window))
+  if (!('ontouchstart' in window)) {
     document.addEventListener('mousemove', this);
+  }
 
   this.canvasElement.style[this.cssTransformProperty] = 'scale(1.2)';
 

@@ -1,5 +1,7 @@
 'use strict';
 
+/* global LoadingView, _, FB */
+
 var Fetcher = function Fetcher() { };
 Fetcher.prototype.LABEL_VERB = LoadingView.prototype.LABEL_LOADING;
 
@@ -12,7 +14,7 @@ TextFetcher.prototype.stop = function tf_stop() {
 };
 TextFetcher.prototype.getData = function tf_getData(dataType, data) {
   if (dataType === 'text' && !data) {
-    data = this.app.views['source-dialog'].panels['cp'].textareaElement.value;
+    data = this.app.views['source-dialog'].panels.cp.textareaElement.value;
   } else if (dataType === 'base64') {
     data = decodeURIComponent(escape(window.atob(data)));
   } else {
@@ -30,14 +32,15 @@ var FileFetcher = function FileFetcher() {
 };
 FileFetcher.prototype = new Fetcher();
 FileFetcher.prototype.stop = function ff_stop() {
-  if (!this.reader)
+  if (!this.reader) {
     return;
+  }
 
   this.reader.abort();
   this.reader = null;
 };
 FileFetcher.prototype.getData = function ff_getData(dataType, data) {
-  var filePanelView = this.app.views['source-dialog'].panels['file'];
+  var filePanelView = this.app.views['source-dialog'].panels.file;
   var fileElement = filePanelView.fileElement;
   if (!fileElement.files.length) {
     this.app.reset();
@@ -48,8 +51,9 @@ FileFetcher.prototype.getData = function ff_getData(dataType, data) {
   var file = fileElement.files[0];
   var reader = this.reader = new FileReader();
   reader.onloadend = (function fr_loadend(evt) {
-    if (reader !== this.reader || reader.result === null)
+    if (reader !== this.reader || reader.result === null) {
       return; // aborted
+    }
 
     var text = reader.result;
     this.app.handleData(text);
@@ -78,12 +82,14 @@ ListFetcher.prototype.getData = function lf_getData(dataType, data) {
   var list = [];
   text.split('\n').forEach(function eachItem(line) {
     var item = line.split('\t').reverse();
-    if (!line || !item[0] || !item[1])
+    if (!line || !item[0] || !item[1]) {
       return;
+    }
 
     item[1] = parseInt(item[1], 10);
-    if (isNaN(item[1]))
+    if (isNaN(item[1])) {
       return;
+    }
 
     vol += item[0].length * item[1] * item[1];
     list.push(item);
@@ -125,8 +131,9 @@ JSONPFetcher.prototype.getNewCallback = function jpf_getNewCallback() {
   // Install the callback
   window[callbackName] = (function jpf_callback() {
     // Ignore any response that is not coming from the currentRequest.
-    if (this.currentRequest !== callbackName)
+    if (this.currentRequest !== callbackName) {
       return;
+    }
     this.currentRequest = undefined;
     clearTimeout(this.timer);
 
@@ -276,7 +283,7 @@ GooglePlusFetcher.prototype.POST_REGEXP =
   /<[^>]+?>|\(.+?\.\.\.\)|\&\w+\;|<script.+?\/script\>/ig;
 GooglePlusFetcher.prototype.getData = function gpf_getData(dataType, data) {
   var googlePlusPanelView =
-    this.app.views['source-dialog'].panels['googleplus'];
+    this.app.views['source-dialog'].panels.googleplus;
   var accessToken = googlePlusPanelView.accessToken;
 
   if (!accessToken) {
@@ -333,12 +340,13 @@ COSCUPFetcher.prototype.handleResponse = function cf_handleResponse(res) {
   var text = [];
   var fields = this.fields;
   var HTML_REGEXP = this.HTML_REGEXP;
-  var programs = (Array.isArray(res)) ? res : res['program'];
+  var programs = (Array.isArray(res)) ? res : res.program;
 
   programs.forEach(function cf_handleProgram(program) {
     fields.forEach(function cf_fields_forEach(field) {
-      if (program[field])
+      if (program[field]) {
         text.push(program[field].replace(HTML_REGEXP, ''));
+      }
     });
   });
 
@@ -360,7 +368,7 @@ FacebookFetcher.prototype.stop = function fbf_stop() {
   this.currentPath = undefined;
 };
 FacebookFetcher.prototype.getData = function fbf_getData(dataType, data) {
-  var facebookPanelView = this.app.views['source-dialog'].panels['facebook'];
+  var facebookPanelView = this.app.views['source-dialog'].panels.facebook;
 
   // If we are not ready, bring user back to the facebook panel.
   if (!facebookPanelView.isReadyForFetch()) {
@@ -378,8 +386,9 @@ FacebookFetcher.prototype.getData = function fbf_getData(dataType, data) {
 
   FB.api(path, (function gotFacebookAPIData(res) {
     // Ignore any response that does not match currentPath.
-    if (this.currentPath !== path)
+    if (this.currentPath !== path) {
       return;
+    }
     this.currentPath = undefined;
 
     this.handleResponse(res);
@@ -396,21 +405,25 @@ FacebookFetcher.prototype.handleResponse = function fbf_handleResponse(res) {
   if (res.notes && res.notes.data) {
     var NOTE_REGEXP = this.NOTE_REGEXP;
     res.notes.data.forEach(function forEachNote(note) {
-      if (note.subject)
+      if (note.subject) {
         text.push(note.subject);
-      if (note.message)
+      }
+      if (note.message) {
         text.push(note.message.replace(NOTE_REGEXP, ''));
+      }
     });
   }
 
   if (res.feed && res.feed.data) {
     res.feed.data.forEach(function forEachData(entry) {
       // Get rid of birthday messages on the wall.
-      if (entry.from.id !== res.id)
+      if (entry.from.id !== res.id) {
         return;
+      }
 
-      if (entry.message)
+      if (entry.message) {
         text.push(entry.message);
+      }
     });
   }
 

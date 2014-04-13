@@ -1,5 +1,15 @@
 'use strict';
 
+/* global WordFreq:true, WordFreqSync:true, WordCloudApp,
+          LanguageSwitcherView, SNSPushView, CanvasView,
+          LoadingView, DashboardView, ListDialogView,
+          SharerDialogView, AboutDialogView, SourceDialogView,
+          ExamplePanelView, CPPanelView, FilePanelView,
+          WikipediaPanelView, FacebookPanelView, GooglePlusPanelView,
+          FeedPanelView, TextFetcher, FileFetcher,
+          ListFetcher, FeedFetcher, COSCUPFetcher, WikipediaFetcher,
+          FacebookFetcher, GooglePlusFetcher */
+
 // Google Analytics
 var _gaq = _gaq || [];
 if (window.location.hostname === 'timc.idv.tw') {
@@ -29,9 +39,9 @@ window.onerror = function onerror(message, url, line) {
 };
 
 (function checkOgImages() {
-  var hostname = window.location.hostname;
-  if (!document.querySelectorAll || !window.console)
+  if (!document.querySelectorAll || !window.console) {
     return;
+  }
 
   var ogImage = document.querySelector('meta[property="og:image"]').content;
   var ogUrl = document.querySelector('meta[property="og:url"]').content;
@@ -65,8 +75,9 @@ window.onerror = function onerror(message, url, line) {
 
   // Start the app.
   var app = new WordCloudApp();
-  if (!app.isSupported)
+  if (!app.isSupported) {
     return;
+  }
 
   var langSwitcherView = new LanguageSwitcherView();
   langSwitcherView.app = app;
