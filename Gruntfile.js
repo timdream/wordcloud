@@ -21,6 +21,14 @@ module.exports = function(grunt) {
         src: 'assets/canvas-to-blob/canvas-to-blob.min.js',
         dest: 'production' }
     },
+    jshint: {
+      options: {
+        jshintrc: true,
+      },
+      all: [
+        'assets/*.js', 'test/**.js'
+      ]
+    },
     replace: {
       dist: {
         options: {
@@ -101,6 +109,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-replace');
   grunt.loadNpmTasks('grunt-rev');
@@ -118,8 +127,11 @@ module.exports = function(grunt) {
   // Quick shell command to rsync the code to my site
   grunt.registerTask('deploy', ['shell:deploy']);
 
+  // Test
+  grunt.registerTask('test', ['jshint', 'test-phantomjs']);
+
   // Run the test suite with QUnit on PhantomJS
-  grunt.registerTask('test', ['connect', 'qunit']);
+  grunt.registerTask('test-phantomjs', ['connect', 'qunit']);
 
   // Simple target to check remaining client credit.
   grunt.registerTask('check-imgur-credit', function checkImgurCredit() {

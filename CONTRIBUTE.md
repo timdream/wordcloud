@@ -7,7 +7,7 @@ Thank you for your interests about contributing HTML5 Word Cloud!
 You'll need the following skill/tools
 
 * [`git`](http://git-scm.com/)
-* [Closure Linter (`gjslint`)](https://developers.google.com/closure/utilities/)
+* [`jshint`](http://www.jshint.com/) for JavaScript linting
 * [Compass](http://compass-style.org/), preferably [Compass.app](http://compass.handlino.com/)
 * The ability to run a localhost HTTP server (Compass.app have that built-in, with Livereload)
 
@@ -46,7 +46,7 @@ Tests require Internet access.
 ## Coding style
 
 * You must agree to submit your contribution under [MIT License](./MIT-LICENSE.txt).
-* Javascript must pass `gjslint --nojsdoc`.
+* Javascript must pass `jshint`; `grunt test` will verify that.
 * Unique function names for each functions is strongly recommended for future profiling/stack tracing.
 * Early return is encouraged over indent.
 * Please do take care of possible race condition when working with async operations.
