@@ -58,7 +58,7 @@ module.exports = function(grunt) {
     shell: {
       deploy: {
         command: 'rsync -azzvP --delete --exclude .git ' +
-                 './production/ h2:timc-www/www/wordcloud/',
+                 './production/ kanazawa:timc-www/www/wordcloud/',
         options: {
           stdout: true,
           stderr: true,
