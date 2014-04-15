@@ -114,7 +114,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-replace');
   grunt.loadNpmTasks('grunt-rev');
   grunt.loadNpmTasks('grunt-shell');
-  grunt.loadNpmTasks('grunt-useMin');
+  grunt.loadNpmTasks('grunt-usemin');
 
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-connect');
