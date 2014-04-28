@@ -4,7 +4,7 @@
   var FakeJSONPScript = function() {
   };
 
-  FakeJSONPScript.prototype.FILENAME = 'fake-jsonp-wikipedia-api.js';
+  FakeJSONPScript.prototype.FILENAME = 'wikipedia-api.js';
 
   FakeJSONPScript.prototype.RESPONSE = {
      'query':{

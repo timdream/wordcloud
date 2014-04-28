@@ -101,17 +101,14 @@ ListFetcher.prototype.getData = function lf_getData(dataType, data) {
   }).bind(this), 0);
 };
 
-var JSONPFetcher = function JSONPFetcher() {};
-JSONPFetcher.prototype = new Fetcher();
-JSONPFetcher.prototype.LABEL_VERB = LoadingView.prototype.LABEL_DOWNLOADING;
-JSONPFetcher.prototype.CALLBACK_PREFIX = 'JSONPCallbackX';
-JSONPFetcher.prototype.TIMEOUT = 30 * 1000;
-JSONPFetcher.prototype.reset =
-JSONPFetcher.prototype.stop = function jpf_stop() {
+var JSONPScriptDownloader = function JSONPScriptDownloader() {};
+JSONPScriptDownloader.prototype.CALLBACK_PREFIX = 'JSONPCallbackX';
+JSONPScriptDownloader.prototype.reset =
+JSONPScriptDownloader.prototype.stop = function jpf_stop() {
   this.currentRequest = undefined;
   clearTimeout(this.timer);
 };
-JSONPFetcher.prototype.handleEvent = function jpf_handleEvent(evt) {
+JSONPScriptDownloader.prototype.handleEvent = function(evt) {
   var el = evt.target;
   window[el.getAttribute('data-callback-name')] = undefined;
   this.currentRequest = undefined;
@@ -120,16 +117,16 @@ JSONPFetcher.prototype.handleEvent = function jpf_handleEvent(evt) {
   el.parentNode.removeChild(el);
 
   if (evt.type === 'error') {
-    this.handleResponse();
+    this.fetcher.handleResponse();
   }
 };
-JSONPFetcher.prototype.getNewCallback = function jpf_getNewCallback() {
+JSONPScriptDownloader.prototype.getNewCallbackName = function() {
   // Create a unique callback name for this request.
   var callbackName = this.CALLBACK_PREFIX +
     Math.random().toString(36).substr(2, 8).toUpperCase();
 
   // Install the callback
-  window[callbackName] = (function jpf_callback() {
+  window[callbackName] = (function() {
     // Ignore any response that is not coming from the currentRequest.
     if (this.currentRequest !== callbackName) {
       return;
@@ -138,13 +135,13 @@ JSONPFetcher.prototype.getNewCallback = function jpf_getNewCallback() {
     clearTimeout(this.timer);
 
     // send the callback name and the data back
-    this.handleResponse.apply(this, arguments);
+    this.fetcher.handleResponse.apply(this.fetcher, arguments);
   }).bind(this);
 
-  return callbackName;
-};
-JSONPFetcher.prototype.requestData = function jpf_requestJSONData(url) {
-  var callbackName = this.currentRequest = this.getNewCallback();
+    return callbackName;
+  };
+JSONPScriptDownloader.prototype.requestData = function(url) {
+  var callbackName = this.currentRequest = this.getNewCallbackName();
 
   url += (url.indexOf('?') === -1) ? '?' : '&';
   url += 'callback=' + callbackName;
@@ -160,7 +157,81 @@ JSONPFetcher.prototype.requestData = function jpf_requestJSONData(url) {
   clearTimeout(this.timer);
   this.timer = setTimeout(function jpf_timeout() {
     window[callbackName]();
-  }, this.TIMEOUT);
+  }, this.fetcher.TIMEOUT);
+};
+
+var JSONPWorkerDownloader = function JSONPWorkerDownloader() {};
+JSONPWorkerDownloader.prototype.PATH = './assets/';
+JSONPWorkerDownloader.prototype.reset =
+JSONPWorkerDownloader.prototype.stop = function jpf_stop() {
+  if (!this.worker) {
+    return;
+  }
+
+  clearTimeout(this.timer);
+  this.worker.terminate();
+  this.worker = null;
+};
+JSONPWorkerDownloader.prototype.requestData = function(url) {
+  if (this.worker) {
+    this.stop();
+  }
+
+  this.worker = new Worker(this.PATH + 'downloader-worker.js');
+  this.worker.addEventListener('message', this);
+  this.worker.addEventListener('error', this);
+  this.worker.postMessage(url);
+
+  clearTimeout(this.timer);
+  this.timer = setTimeout((function() {
+    this.stop();
+    this.fetcher.handleResponse();
+  }).bind(this), this.fetcher.TIMEOUT);
+};
+JSONPWorkerDownloader.prototype.handleEvent = function(evt) {
+  var data;
+  switch (evt.type) {
+    case 'message':
+      data = evt.data;
+
+      break;
+
+    case 'error':
+      data = [];
+      // Stop error event on window.
+      evt.preventDefault();
+
+      break;
+  }
+  this.stop();
+  this.fetcher.handleResponse.apply(this.fetcher, data);
+};
+
+var JSONPFetcher = function JSONPFetcher() {};
+JSONPFetcher.prototype = new Fetcher();
+JSONPFetcher.prototype.LABEL_VERB = LoadingView.prototype.LABEL_DOWNLOADING;
+JSONPFetcher.prototype.USE_WORKER_WHEN_AVAILABLE = true;
+JSONPFetcher.prototype.TIMEOUT = 30 * 1000;
+JSONPFetcher.prototype.reset = function jpf_reset() {
+  if (this.downloader) {
+    this.downloader.reset();
+  }
+};
+JSONPFetcher.prototype.stop = function jpf_stop() {
+  if (this.downloader) {
+    this.downloader.stop();
+  }
+  this.downloader = null;
+};
+JSONPFetcher.prototype.requestData = function jpf_requestJSONData(url) {
+  if (this.USE_WORKER_WHEN_AVAILABLE && window.Worker) {
+    this.downloader = new JSONPWorkerDownloader();
+  } else {
+    this.downloader = new JSONPScriptDownloader();
+  }
+
+  this.downloader.fetcher = this;
+  this.downloader.requestData(url);
 };
 
 var FeedFetcher = function FeedFetcher() {

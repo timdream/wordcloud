@@ -4,7 +4,7 @@
   var FakeGoogleFeedAPIPScript = function() {
   };
 
-  FakeGoogleFeedAPIPScript.prototype.FILENAME = 'fake-jsonp-google-feed-api.js';
+  FakeGoogleFeedAPIPScript.prototype.FILENAME = 'google-feed-api.js';
 
   FakeGoogleFeedAPIPScript.prototype.RESPONSE = {
     'feed': {

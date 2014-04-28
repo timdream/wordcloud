@@ -198,21 +198,89 @@ test('stop()', function() {
   fetcher.stop();
 });
 
-module('JSONPFetcher');
+module('JSONPFetcher (<script>)');
 
 test('requestData(url)', function() {
   var fetcher = new JSONPFetcher();
+  fetcher.USE_WORKER_WHEN_AVAILABLE = false;
   fetcher.handleResponse = function handleResponse(res) {
-    ok(res && res.hello === 'world', 'got data.');
+    deepEqual(res, { 'hello': 'world' }, 'got data.');
 
     start();
   };
   stop();
-  fetcher.requestData('./fake-jsonp-hello.js');
+  fetcher.requestData('../test/fake-jsonp/hello.js');
+});
+
+test('stop()', function() {
+  var fetcher = new JSONPFetcher();
+  var timer;
+  fetcher.USE_WORKER_WHEN_AVAILABLE = false;
+  fetcher.handleResponse = function handleResponse(res) {
+    ok(false, 'handleData being called.');
+    clearTimeout(timer);
+
+    start();
+  };
+  stop();
+  fetcher.requestData('../test/fake-jsonp/hello.js');
+  timer = setTimeout(function() {
+    ok(true, 'stop() works.');
+
+    start();
+  }, 100);
+  fetcher.stop();
 });
 
 test('requestData(non-exist API)', function() {
   var fetcher = new JSONPFetcher();
+  fetcher.USE_WORKER_WHEN_AVAILABLE = false;
+  fetcher.handleResponse = function handleResponse(res) {
+    ok(!res, 'got empty response.');
+
+    start();
+  };
+  stop();
+  fetcher.requestData('./404');
+});
+
+module('JSONPFetcher (Worker)');
+
+test('requestData(url)', function() {
+  var fetcher = new JSONPFetcher();
+  JSONPWorkerDownloader.prototype.PATH = '../assets/';
+  fetcher.handleResponse = function handleResponse(res) {
+    deepEqual(res, { 'hello': 'world' }, 'got data.');
+
+    start();
+  };
+  stop();
+  fetcher.requestData('../test/fake-jsonp/hello-worker.js');
+});
+
+test('stop()', function() {
+  var fetcher = new JSONPFetcher();
+  var timer;
+  JSONPWorkerDownloader.prototype.PATH = '../assets/';
+  fetcher.handleResponse = function handleResponse(res) {
+    ok(false, 'handleData being called.');
+    clearTimeout(timer);
+
+    start();
+  };
+  stop();
+  fetcher.requestData('../test/fake-jsonp/hello-worker.js');
+  timer = setTimeout(function() {
+    ok(true, 'stop() works.');
+
+    start();
+  }, 100);
+  fetcher.stop();
+});
+
+test('requestData(non-exist API)', function() {
+  var fetcher = new JSONPFetcher();
+  JSONPWorkerDownloader.prototype.PATH = '../assets/';
   fetcher.handleResponse = function handleResponse(res) {
     ok(!res, 'got empty response.');
 
@@ -226,7 +294,8 @@ module('FeedFetcher');
 
 test('getData(\'feed\')', function() {
   var fetcher = new FeedFetcher();
-  fetcher.FEED_API_LOAD_URL = './fake-jsonp-google-feed-api.js';
+  fetcher.USE_WORKER_WHEN_AVAILABLE = false;
+  fetcher.FEED_API_LOAD_URL = './fake-jsonp/google-feed-api.js';
   var data = 'http://foo.bar/feed/';
   stop();
   fetcher.app = {
@@ -239,65 +308,20 @@ test('getData(\'feed\')', function() {
   fetcher.getData('feed', data);
 });
 
-test('stop()', function() {
-  var fetcher = new FeedFetcher();
-  fetcher.FEED_API_LOAD_URL = './fake-jsonp-google-feed-api.js';
-  var data = 'http://foo.bar/feed/';
-  var timer;
-  stop();
-  fetcher.app = {
-    handleData: function gotData(data) {
-      ok(false, 'handleData being called.');
-      clearTimeout(timer);
-
-      start();
-    }
-  };
-  timer = setTimeout(function() {
-    ok(true, 'stop() works.');
-
-    start();
-  }, 100);
-  fetcher.getData('feed', data);
-  fetcher.stop();
-});
-
 module('WikipediaFetcher');
 
 test('getData(\'wikipedia\')', function() {
   var fetcher = new WikipediaFetcher();
-  fetcher.WIKIPEDIA_API_URL = './fake-jsonp-wikipedia-api.js';
+  fetcher.USE_WORKER_WHEN_AVAILABLE = false;
+  fetcher.WIKIPEDIA_API_URL = './fake-jsonp/wikipedia-api.js';
   var data = 'Happiness';
   stop();
   fetcher.app = {
     handleData: function gotData(data) {
-      ok(!!data, 'Received data, length: ' + data.length);
+      equal(data, 'Several terms redirect here.  For other uses, see Happiness (disambiguation), Happy (disambiguation), and Jolly (disambiguation).');
 
       start();
     }
   };
   fetcher.getData('wikipedia', data);
-});
-
-test('stop()', function() {
-  var fetcher = new WikipediaFetcher();
-  fetcher.WIKIPEDIA_API_URL = './fake-jsonp-wikipedia-api.js';
-  var data = 'Happiness';
-  var timer;
-  stop();
-  fetcher.app = {
-    handleData: function gotData(data) {
-      ok(false, 'Received data, length: ' + data.length);
-      clearTimeout(timer);
-
-      start();
-    }
-  };
-  timer = setTimeout(function() {
-    ok(true, 'stop() works.');
-
-    start();
-  }, 100);
-  fetcher.getData('wikipedia', data);
-  fetcher.stop();
 });

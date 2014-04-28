@@ -4,7 +4,7 @@
   var FakeJSONPScript = function() {
   };
 
-  FakeJSONPScript.prototype.FILENAME = 'fake-jsonp-hello.js';
+  FakeJSONPScript.prototype.FILENAME = 'hello.js';
 
   FakeJSONPScript.prototype.RESPONSE = {
     'hello': 'world'
