@@ -121,7 +121,7 @@ module.exports = function(grunt) {
 
   // Build web app for production
   grunt.registerTask('default', [
-    'clean', 'copy', 'useminPrepare',
+    'checkvars', 'clean', 'copy', 'useminPrepare',
     'concat', 'uglify', 'rev', 'usemin', 'replace']);
 
   // Quick shell command to rsync the code to my site
@@ -132,6 +132,19 @@ module.exports = function(grunt) {
 
   // Run the test suite with QUnit on PhantomJS
   grunt.registerTask('test-phantomjs', ['connect', 'qunit']);
+
+  grunt.registerTask('checkvars', function() {
+    var done = this.async();
+
+    var fs = require('fs');
+    fs.exists('./assets/vars.js', function(exists) {
+      if (!exists) {
+        grunt.fail.fatal('./assets/vars.js does not exist.');
+      }
+
+      done();
+    });
+  });
 
   // Simple target to check remaining client credit.
   grunt.registerTask('check-imgur-credit', function checkImgurCredit() {
