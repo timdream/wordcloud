@@ -206,7 +206,7 @@ AboutDialogView.prototype.beforeShow = function adv_beforeShow() {
   this.app.logAction('AboutDialogView::view');
 
   this.loaded = true;
-  var lang = document.webL10n.getLanguage();
+  var lang = document.documentElement.lang;
   this.loadContent(lang, true);
 };
 AboutDialogView.prototype.loadContent = function adv_loadContent(lang, first) {
