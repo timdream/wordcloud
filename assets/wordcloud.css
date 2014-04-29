@@ -184,6 +184,12 @@ body {
     top: 0;
     right: 0; }
 
+#wc-psm > iframe {
+  display: block;
+  margin: 1em 0;
+  width: 250px;
+  height: 250px; }
+
 #wc-dashboard {
   position: absolute;
   top: 0;

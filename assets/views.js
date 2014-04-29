@@ -342,3 +342,39 @@ SNSPushView.prototype.handleEvent = function spv_handleEvent(evt) {
       break;
   }
 };
+
+var PSMView = function PSMView(opts) {
+  this.load(opts, {
+    name: 'psm',
+    element: 'wc-psm'
+  });
+
+  if (document.webL10n.getReadyState() === 'complete') {
+    this.loadFrame();
+  }
+  window.addEventListener('localized', this);
+};
+PSMView.prototype = new View();
+PSMView.prototype.URL = 'http://timdream.org/psm/#locale=%lang';
+PSMView.prototype.loadFrame = function pv_loadFrame() {
+  var lang = document.documentElement.lang;
+  var container = this.element;
+  while (container.firstElementChild) {
+    container.removeChild(container.firstElementChild);
+  }
+
+  var iframe = document.createElement('iframe');
+  iframe.src = this.URL.replace(/%lang/, lang);
+  iframe.setAttribute('scrolling', 'no');
+  iframe.setAttribute('frameborder', '0');
+  iframe.setAttribute('allowTransparency', 'true');
+  container.appendChild(iframe);
+};
+PSMView.prototype.handleEvent = function pv_handleEvent(evt) {
+  switch (evt.type) {
+    case 'localized':
+      this.loadFrame();
+
+      break;
+  }
+};

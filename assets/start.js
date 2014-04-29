@@ -8,7 +8,7 @@
           WikipediaPanelView, FacebookPanelView, GooglePlusPanelView,
           FeedPanelView, TextFetcher, FileFetcher,
           ListFetcher, FeedFetcher, COSCUPFetcher, WikipediaFetcher,
-          FacebookFetcher, GooglePlusFetcher */
+          FacebookFetcher, GooglePlusFetcher, PSMView */
 
 // Google Analytics
 var _gaq = _gaq || [];
@@ -84,6 +84,9 @@ window.onerror = function onerror(message, url, line) {
 
   var snsPushView = new SNSPushView();
   snsPushView.show();
+
+  var psmView = new PSMView();
+  psmView.show();
 
   app.addView(new CanvasView());
   app.addView(new LoadingView());
