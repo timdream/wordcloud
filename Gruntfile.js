@@ -49,7 +49,7 @@ module.exports = function(grunt) {
       dist: {
         files: {
           src: [
-            'production/assets/*.js',
+            'production/assets/app.min.js',
             'production/assets/*.css'
           ]
         }
@@ -74,7 +74,9 @@ module.exports = function(grunt) {
       'production/assets/go2/src/google-oauth2.js':
         'assets/go2/src/google-oauth2.js',
       'production/assets/wordfreq/src/wordfreq.worker.js':
-        'assets/wordfreq/src/wordfreq.worker.js'
+        'assets/wordfreq/src/wordfreq.worker.js',
+      'production/assets/downloader-worker.js':
+        'assets/downloader-worker.js'
     },
     useminPrepare: {
       html: 'index.html',
