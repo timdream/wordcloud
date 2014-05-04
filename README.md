@@ -17,7 +17,6 @@ Understand more on how this web application works by following the links below:
 * [wordfreq](https://github.com/timdream/wordfreq) - text corpus calculation in Javascript (with Web Workers)
 * [google-oauth2-web-client](https://github.com/timdream/google-oauth2-web-client) - Login with Google using OAuth2 for client-side web app
 
-
 ## Acknowledgement
 
 * Christopher McKenzie for Javascript implementation of [Porter Stemming Algorithm](http://tartarus.org/~martin/PorterStemmer/) (used in wordfreq)
@@ -30,5 +29,11 @@ Understand more on how this web application works by following the links below:
 
 ## Contributors
 
+Understand how to contribute by reading [./CONTRIBUTE.md](CONTRIBUTE.md).
+
 * [Grassboy Wu](https://github.com/Grassboy) for helping some of the work in the rewrite version
 * [Yuren Ju](https://github.com/yurenju) for initial version of Facebook status fetching support
+
+## Build
+
+See [./PRODUCTION.md](PRODUCTION.md) for instructions.
