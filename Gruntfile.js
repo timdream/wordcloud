@@ -40,14 +40,11 @@ module.exports = function(grunt) {
         },
         files: [
           { expand: true,
-            src: '<%= distDir %>/index.html',
-            dist: '<%= distDir %>/index.html' },
+            src: '<%= distDir %>/index.html' },
           { expand: true,
-            src: '<%= distDir %>/assets/*.js',
-            dist: '<%= distDir %>/assets' },
+            src: '<%= distDir %>/assets/*.js' },
           { expand: true,
-            src: '<%= distDir %>/locales/locales.ini',
-            dist: '<%= distDir %>/locales/locales.ini' }]
+            src: '<%= distDir %>/locales/locales.ini' }]
       }
     },
     rev: {
