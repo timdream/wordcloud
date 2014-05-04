@@ -344,19 +344,19 @@ GooglePlusPanelView.prototype.beforeShow = function gppv_beforeShow() {
       document.location.href.replace(/\/(index.html)?(#.*)?$/i,
                                      '/go2-redirect.html');
 
-    GO2.init({
+    var go2 = this.go2 = new GO2({
       client_id: GOOGLE_CLIENT_ID,
       scope: this.GOOGLE_API_SCOPE || '',
       redirect_uri: redirectUri
     });
 
-    GO2.login(false, true);
+    go2.login(false, true);
 
     // Update UI for the first time, as we might not
     // be able to log-in quietly.
     this.updateUI();
 
-    GO2.onlogin = (function go2_onlogin(token) {
+    go2.onlogin = (function go2_onlogin(token) {
       this.accessToken = token;
       this.updateUI();
 
@@ -375,7 +375,7 @@ GooglePlusPanelView.prototype.beforeShow = function gppv_beforeShow() {
       }
     }).bind(this);
 
-    GO2.onlogout = (function go2_onlogout() {
+    go2.onlogout = (function go2_onlogout() {
       this.accessToken = '';
       this.updateUI();
     }).bind(this);
@@ -404,7 +404,7 @@ GooglePlusPanelView.prototype.submit = function gppv_submit() {
 
   if (!this.isReadyForFetch()) {
     this.submitted = true;
-    GO2.login(true, false);
+    this.go2.login(true, false);
 
     return;
   }
