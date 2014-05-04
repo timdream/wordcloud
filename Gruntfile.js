@@ -2,11 +2,10 @@
 
 module.exports = function(grunt) {
 
-  var HTTPD_PORT = 28080 + Math.floor(Math.random() * 10);
-
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     distDir: 'production',
+    httpdPort: 28080 + Math.floor(Math.random() * 10),
     clean: {
       dist: '<%= distDir %>'
     },
@@ -107,7 +106,7 @@ module.exports = function(grunt) {
     connect: {
       test: {
         options: {
-          port: HTTPD_PORT
+          port: '<%= httpdPort %>'
         }
       }
     },
@@ -115,7 +114,7 @@ module.exports = function(grunt) {
       test: {
         options: {
           urls: [
-            'http://localhost:' + HTTPD_PORT + '/test/'
+            'http://localhost:<%= httpdPort %>/test/'
           ]
         }
       }
