@@ -6,20 +6,24 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+    distDir: 'production',
     clean: {
-      prodution: 'production'
+      dist: '<%= distDir %>'
     },
     copy: {
-      'htaccess': { expand: true, src: '.htaccess', dest: 'production'},
-      'root': { expand: true, src: '*', dest: 'production', filter: 'isFile' },
-      'locales': { expand: true, src: 'locales/*', dest: 'production' },
-      'css': { expand: true, src: 'assets/*.css',
-               dest: 'production', filter: 'isFile' },
-      'images': { expand: true, src: 'assets/images/*', dest: 'production' },
-      'canvas-to-blob': {
-        expand: true,
-        src: 'assets/canvas-to-blob/canvas-to-blob.min.js',
-        dest: 'production' }
+      dist: {
+        files: [
+          { expand: true, src: '.htaccess', dest: '<%= distDir %>' },
+          { expand: true, src: '*', dest: '<%= distDir %>', filter: 'isFile' },
+          { expand: true, src: 'locales/*', dest: '<%= distDir %>' },
+          { expand: true, src: 'assets/*.css',
+            dest: '<%= distDir %>', filter: 'isFile' },
+          { expand: true, src: 'assets/images/*', dest: '<%= distDir %>' },
+          { expand: true,
+            src: 'assets/canvas-to-blob/canvas-to-blob.min.js',
+            dest: '<%= distDir %>' }
+        ]
+      }
     },
     jshint: {
       options: {
@@ -37,20 +41,22 @@ module.exports = function(grunt) {
         },
         files: [
           { expand: true,
-            src: 'production/index.html', dist: 'production/index.html' },
+            src: '<%= distDir %>/index.html',
+            dist: '<%= distDir %>/index.html' },
           { expand: true,
-            src: 'production/assets/*.js', dist: 'production/assets' },
+            src: '<%= distDir %>/assets/*.js',
+            dist: '<%= distDir %>/assets' },
           { expand: true,
-            src: 'production/locales/locales.ini',
-            dist: 'production/locales/locales.ini' }]
+            src: '<%= distDir %>/locales/locales.ini',
+            dist: '<%= distDir %>/locales/locales.ini' }]
       }
     },
     rev: {
       dist: {
         files: {
           src: [
-            'production/assets/app.min.js',
-            'production/assets/*.css'
+            '<%= distDir %>/assets/app.min.js',
+            '<%= distDir %>/assets/*.css'
           ]
         }
       }
@@ -71,23 +77,31 @@ module.exports = function(grunt) {
         banner: '/*! <%= pkg.name %> ' +
                 ' <%= grunt.template.today("yyyy-mm-dd") %> */\n'
       },
-      'production/assets/go2/src/google-oauth2.js':
-        'assets/go2/src/google-oauth2.js',
-      'production/assets/wordfreq/src/wordfreq.worker.js':
-        'assets/wordfreq/src/wordfreq.worker.js',
-      'production/assets/downloader-worker.js':
-        'assets/downloader-worker.js'
+      dist: {
+        files: [{
+          src: 'assets/go2/src/google-oauth2.js',
+          dest: '<%= distDir %>/assets/go2/src/google-oauth2.js'
+        },
+        {
+          src: 'assets/wordfreq/src/wordfreq.worker.js',
+          dest: '<%= distDir %>/assets/wordfreq/src/wordfreq.worker.js'
+        },
+        {
+          src: 'assets/downloader-worker.js',
+          dest: '<%= distDir %>/assets/downloader-worker.js'
+        }]
+      }
     },
     useminPrepare: {
       html: 'index.html',
       options: {
-        dest: 'production'
+        dest: '<%= distDir %>'
       }
     },
     usemin: {
-      html: 'production/*.html',
+      html: '<%= distDir %>/*.html',
       options: {
-        dirs: ['production']
+        dirs: ['<%= distDir %>']
       }
     },
     connect: {
