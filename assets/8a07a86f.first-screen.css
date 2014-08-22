@@ -1,0 +1,110 @@
+html {
+  height: 100%;
+  overflow-x: hidden; }
+
+body {
+  font: 14px sans-serif;
+  line-height: 16px;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: #333;
+  min-height: 100%;
+  overflow-x: hidden;
+  background: #d9dddf;
+  background: linear-gradient(#b4bcbf, #ffffff) no-repeat;
+  background: -webkit-linear-gradient(#b4bcbf, white) no-repeat; }
+
+body:lang(zh-tw), body:lang(zh-tw) label, body:lang(zh-tw) input, body:lang(zh-tw) textarea, body:lang(zh-tw) select, body:lang(zh-tw) button,
+body:lang(zh-tw) .btn {
+  font-size: 15px; }
+
+*[hidden] {
+  display: none; }
+
+/*
+Based on <i> cloud, design by daneden
+
+http://dabblet.com/gist/2945570
+https://gist.github.com/2945570
+*/
+@keyframes shake {
+  0%, 50% {
+    transform: translateX(0); }
+
+  5%, 15%, 25%, 35%, 45% {
+    transform: translateX(-10px); }
+
+  10%, 20%, 30%, 40% {
+    transform: translateX(10px); } }
+
+@-webkit-keyframes shake {
+  0%, 50% {
+    -webkit-transform: translateX(0); }
+
+  5%, 15%, 25%, 35%, 45% {
+    -webkit-transform: translateX(-10px); }
+
+  10%, 20%, 30%, 40% {
+    -webkit-transform: translateX(10px); } }
+
+.wc-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -16.665px 0 0 -43.5px;
+  display: block;
+  width: 100px;
+  height: 33.33px;
+  font: 100px Times, serif;
+  font-weight: bold;
+  line-height: 1em;
+  text-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+  color: #000; }
+  .wc-icon::before, .wc-icon::after {
+    content: 'W';
+    position: absolute;
+    display: block;
+    top: -15.55178px;
+    overflow: hidden; }
+  .wc-icon::before {
+    left: -13px;
+    width: 38px; }
+  .wc-icon::after {
+    right: 13px;
+    width: 62px;
+    text-indent: -38px;
+    z-index: 3; }
+
+.wc-icon-cloud {
+  position: absolute;
+  display: block;
+  background-color: #fff;
+  width: 100px;
+  height: 33.33px;
+  border-radius: 33.33px;
+  box-shadow: inset 0 -2.5px rgba(255, 255, 255, 0.6), 0 5px 5px rgba(0, 0, 0, 0.1), inset 0 -5px 5px rgba(0, 100, 160, 0.1);
+  z-index: 2; }
+  #wc-loading:not(.error):not([hidden]) > .wc-icon > .wc-icon-cloud {
+    animation: shake 2s infinite;
+    -webkit-animation: shake 2s infinite; }
+  .wc-icon-cloud:before, .wc-icon-cloud:after {
+    content: '';
+    position: absolute;
+    background-color: #fff;
+    border-radius: 100%;
+    box-shadow: 0 -5px 5px rgba(0, 0, 0, 0.05); }
+  .wc-icon-cloud:before {
+    width: 31.11px;
+    height: 31.11px;
+    top: -13.332px;
+    left: 15.555px; }
+  .wc-icon-cloud:after {
+    width: 51.11px;
+    height: 51.11px;
+    top: -24.44089px;
+    right: 13.33px; }
+
+#popup-image {
+  width: 100%;
+  height: auto; }
