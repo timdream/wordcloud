@@ -12,8 +12,13 @@
 
 // Google Analytics
 var _gaq = _gaq || [];
-if (window.location.hostname === 'timc.idv.tw') {
-  _gaq.push(['_setAccount', 'UA-401106-1']);
+if (window.location.hostname === 'timc.idv.tw' ||
+    window.location.hostname === 'timdream.org') {
+  if (window.location.hostname === 'timc.idv.tw') {
+    _gaq.push(['_setAccount', 'UA-401106-1']);
+  } else {
+    _gaq.push(['_setAccount', 'UA-4623408-2']);
+  }
   _gaq.push(['_trackPageview']);
 
   (function loadGoogleAnalytics() {
