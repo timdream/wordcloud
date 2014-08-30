@@ -24,6 +24,12 @@ module.exports = function(grunt) {
         ]
       }
     },
+    'gh-pages': {
+      options: {
+        base: 'production'
+      },
+      src: '**/*'
+    },
     jshint: {
       options: {
         jshintrc: true,
@@ -131,13 +137,16 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-connect');
 
+  grunt.loadNpmTasks('grunt-gh-pages');
+
   // Build web app for production
   grunt.registerTask('default', [
     'checkvars', 'clean', 'copy', 'useminPrepare',
     'concat', 'uglify', 'rev', 'usemin', 'replace']);
 
   // Quick shell command to rsync the code to my site
-  grunt.registerTask('deploy', ['shell:deploy']);
+  grunt.registerTask('deploy-timc', ['shell:deploy']);
+  grunt.registerTask('deploy', ['gh-pages']);
 
   // Test
   grunt.registerTask('test', ['jshint', 'test-phantomjs']);
