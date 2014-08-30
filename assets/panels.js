@@ -345,9 +345,9 @@ GooglePlusPanelView.prototype.beforeShow = function gppv_beforeShow() {
                                      '/go2-redirect.html');
 
     var go2 = this.go2 = new GO2({
-      client_id: GOOGLE_CLIENT_ID,
+      clientId: GOOGLE_CLIENT_ID,
       scope: this.GOOGLE_API_SCOPE || '',
-      redirect_uri: redirectUri
+      redirectUri: redirectUri
     });
 
     go2.login(false, true);
