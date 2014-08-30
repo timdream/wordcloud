@@ -220,12 +220,18 @@ FacebookPanelView.prototype.isReadyForFetch = function fbpv_isReadyForFetch() {
 FacebookPanelView.prototype.updateStatus = function fbpv_updateStatus(res) {
   this.facebookResponse = res;
   if (this.facebookResponse.status === 'connected') {
-    FB.api('/me?fields=permissions,username', (function checkPermissions(res) {
-      this.hasPermission = res && res.permissions &&
-        res.permissions.data && res.permissions.data[0] &&
-        (res.permissions.data[0].read_stream == 1);
+    FB.api('/me?fields=permissions', (function checkPermissions(res) {
+      this.hasPermission = (function() {
+        if (!res || !res.permissions || !res.permissions.data) {
+          console.error(res || res.error);
+          return false;
+        }
 
-      this.facebookUsername = (res && res.username) || '';
+        return res.permissions.data.some(function(perm) {
+          return (perm.permission === 'read_stream' &&
+                  perm.status === 'granted');
+        });
+      })();
 
       this.updateUI();
 
@@ -239,7 +245,6 @@ FacebookPanelView.prototype.updateStatus = function fbpv_updateStatus(res) {
     }).bind(this));
   } else {
     this.hasPermission = false;
-    this.facebookUsername = '';
     this.updateUI();
   }
 };
@@ -268,8 +273,9 @@ FacebookPanelView.prototype.submit = function fbpv_submit() {
   }
 
 
-  // Show the login dialog if not logged in
-  if (!this.isReadyForFetch()) {
+  // Show the login dialog if not logged in,
+  // but don't loop if after logging we are still not ready for fetch.
+  if (!this.isReadyForFetch() && !this.submitted) {
     // Mark the status submitted
     this.submitted = true;
 
@@ -295,7 +301,7 @@ FacebookPanelView.prototype.submit = function fbpv_submit() {
     return;
   }
 
-  var id = this.facebookUsername || this.facebookResponse.authResponse.userID;
+  var id = this.facebookResponse.authResponse.userID;
   this.dialog.submit('#facebook:' + id);
 };
 
