@@ -40,15 +40,15 @@
   <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="./assets/5dcf3829.wordcloud.css">
 
-  <link rel="prefetch" type="application/l10n" href="./locales/locales.ini?_=i1zswuln" />
+  <link rel="prefetch" type="application/l10n" href="./locales/locales.ini?_=i1zut6c0" />
 
   <link rel="payment" href="https://flattr.com/submit/auto?url=https%3A%2F%2Fgithub.com%2Ftimdream%2Fwordcloud&amp;user_id=timdream" type="text/html" />
 
   <!-- For browser without Web Workers support, run the calculation
        on the main event loop with the worker script. -->
-  <script src="./assets/wordfreq/src/wordfreq.worker.js?_=i1zswuln" defer></script>
+  <script src="./assets/wordfreq/src/wordfreq.worker.js?_=i1zut6c0" defer></script>
 
-  <script defer src="assets/7cef3c85.app.min.js"></script>
+  <script defer src="assets/42f8a6bf.app.min.js"></script>
 
 </head>
 <body>
@@ -268,7 +268,6 @@
 
           <form id="wc-panel-facebook" hidden>
             <p id="wc-panel-facebook-status" data-l10n-id="loading"></p>
-            <div id="wp-panel-fb-login-button" class="fb-login-button" data-max-rows="2" data-size="large" data-show-faces="true" data-auto-logout-link="false"></div>
           </form>
 
           <form id="wc-panel-googleplus" hidden>
@@ -295,6 +294,8 @@
       </div>
 
       <button data-l10n-id="source-dialog-start-btn" id="wc-source-start-btn" class="btn btn-primary"></button>
+
+      <button id="wc-source-login-facebook-btn" class="btn btn-primary" hidden><i class="favicons-facebook"></i> <span data-l10n-id="source-dialog-login-facebook-btn"></span></button>
 
     </div>
   </div>
