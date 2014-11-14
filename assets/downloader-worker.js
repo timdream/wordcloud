@@ -1,2 +1,2 @@
-/*! wordcloud-app  2014-11-02 */
+/*! wordcloud-app  2014-11-15 */
 "use strict";self.callback=function(){var a=Array.prototype.slice.call(arguments);self.postMessage(a)},self.onmessage=function(a){var b=a.data;b+=-1===b.indexOf("?")?"?":"&",b+="callback=callback",self.importScripts(b)};
