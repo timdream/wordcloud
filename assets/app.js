@@ -185,7 +185,8 @@ var WordCloudApp = function WordCloudApp() {
     theme: 0,
     shape: 0,
     gridSize: undefined,
-    weightFactor: undefined
+    weightFactor: undefined,
+    drawOutOfBound: true
   };
 };
 WordCloudApp.prototype.addView = function wca_addView(view) {
