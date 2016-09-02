@@ -355,7 +355,7 @@ var PSMView = function PSMView(opts) {
   window.addEventListener('localized', this);
 };
 PSMView.prototype = new View();
-PSMView.prototype.URL = 'http://timdream.org/psm/#locale=%lang';
+PSMView.prototype.URL = '//timdream.org/psm/#locale=%lang';
 PSMView.prototype.loadFrame = function pv_loadFrame() {
   var lang = document.documentElement.lang;
   var container = this.element;
