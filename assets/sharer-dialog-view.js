@@ -71,13 +71,13 @@ SharerDialogView.prototype.HASHTAG = '#HTML5WordCloud';
 SharerDialogView.prototype.TWITTER_SHARE_URL =
   'https://twitter.com/home/?status=';
 SharerDialogView.prototype.PLURK_SHARE_URL =
-  'http://plurk.com/?status=';
+  'https://plurk.com/?status=';
 SharerDialogView.prototype.FACEBOOK_PHOTO_URL =
   'https://www.facebook.com/photo.php?fbid=';
 SharerDialogView.prototype.FACEBOOK_POST_URL =
   'https://www.facebook.com/permalink.php?id=%uid&v=wall&story_fbid=%fbid';
 SharerDialogView.prototype.IMGUR_URL =
-  'http://imgur.com/';
+  'https://imgur.com/';
 SharerDialogView.prototype.IMGUR_API_URL =
   'https://api.imgur.com/3/upload.json';
 SharerDialogView.prototype.SHARED_ITEM_LIMIT = 10;
@@ -401,7 +401,7 @@ SharerDialogView.prototype.shareText = function sdv_shareText(type) {
       break;
 
     case 'tumblr':
-      window.open('http://www.tumblr.com/share/link?=description=' +
+      window.open('https://www.tumblr.com/share/link?description=' +
          encodeURIComponent(desc) +
          '&name=' + encodeURIComponent(title) +
          '&url=' + encodeURIComponent(url));
@@ -610,7 +610,7 @@ SharerDialogView.prototype.shareImage = function sdv_shareImage(type) {
       break;
 
     case 'tumblr':
-      window.open('http://www.tumblr.com/share/photo?source=' +
+      window.open('https://www.tumblr.com/share/photo?source=' +
          encodeURIComponent(this.imgurData.link) +
          '&desc=' + encodeURIComponent(title + '\n' + desc + '\n\n' + url) +
          '&clickthru=' + encodeURIComponent(url));
