@@ -9,6 +9,7 @@ var SourceDialogView = function SourceDialogView(opts) {
     menuElement: 'wc-source-menu',
     selectionElement: 'wc-source-selection',
     startBtnElement: 'wc-source-start-btn',
+    loginFacebookBtnElement: 'wc-source-login-facebook-btn',
     panelContainerElement: 'wc-source-panels',
     aboutBtnElement: 'wc-source-about-btn'
   });
@@ -29,6 +30,7 @@ var SourceDialogView = function SourceDialogView(opts) {
   this.menuElement.addEventListener('click', this);
   this.selectionElement.addEventListener('change', this);
   this.startBtnElement.addEventListener('click', this);
+  this.loginFacebookBtnElement.addEventListener('click', this);
   this.panelContainerElement.addEventListener('submit', this);
   this.aboutBtnElement.addEventListener('click', this);
 };
@@ -71,6 +73,7 @@ SourceDialogView.prototype.handleEvent = function sd_handleEvent(evt) {
       break;
 
     case this.startBtnElement:
+    case this.loginFacebookBtnElement:
       this.currentPanel.submit();
       break;
   }
@@ -81,6 +84,16 @@ SourceDialogView.prototype.submit = function sd_submit(hash) {
 SourceDialogView.prototype.showPanel = function sd_showPanel(panel) {
   if (this.currentPanel) {
     this.currentPanel.hide();
+  }
+
+  // XXX special handling for Facebook.
+  // TODO: Update the button rendering when the permission status changes
+  if (panel.name === 'facebook' && !panel.hasPermission) {
+    this.startBtnElement.hidden = true;
+    this.loginFacebookBtnElement.hidden = false;
+  } else {
+    this.startBtnElement.hidden = false;
+    this.loginFacebookBtnElement.hidden = true;
   }
 
   panel.show();

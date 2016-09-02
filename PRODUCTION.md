@@ -1,12 +1,12 @@
 ## Build for production
 
-Require `node`, and `grunt`. Run
+Require `node`. Run
 
     npm install
-    grunt
+    npm run grunt
 
 and find the app in the `production` folder. Run
 
-    grunt deploy
+    npm run grunt deploy
 
-To push the files to `timc.idv.tw` hosting.
+To push the files to `gh-pages` hosting.
