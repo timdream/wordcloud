@@ -520,7 +520,7 @@ FacebookSDKLoader.prototype.load = function fsl_load(callback) {
     var js, fjs = d.getElementsByTagName(s)[0];
     if (d.getElementById(id)) {return;}
     js = d.createElement(s); js.id = id;
-    js.src = '//connect.facebook.com/en_US/sdk.js';
+    js.src = '//connect.facebook.net/en_US/all.js';
     fjs.parentNode.insertBefore(js, fjs);
   }(document, 'script', 'facebook-jssdk'));
   var channelUrl = window.FACEBOOK_CHANNEL_URL ||
@@ -532,8 +532,7 @@ FacebookSDKLoader.prototype.load = function fsl_load(callback) {
 
     FB.init({
       appId: FACEBOOK_APP_ID,
-      channelUrl: channelUrl,
-      version: 'v2.1'
+      channelUrl: channelUrl
     });
 
     callback();

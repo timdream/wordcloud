@@ -430,7 +430,8 @@ var FacebookFetcher = function FacebookFetcher() {
 FacebookFetcher.prototype = new Fetcher();
 FacebookFetcher.prototype.LABEL_VERB = LoadingView.prototype.LABEL_DOWNLOADING;
 FacebookFetcher.prototype.FACEBOOK_GRAPH_FIELDS =
-  'name,feed.limit(2500).fields(from.fields(id),message)';
+  'name,notes.limit(500).fields(subject,message),' +
+  'feed.limit(2500).fields(from.fields(id),message)';
 FacebookFetcher.prototype.NOTE_REGEXP =
   /<[^>]+?>|\(.+?\.\.\.\)|\&\w+\;|<script.+?\/script\>/ig;
 FacebookFetcher.prototype.stop = function fbf_stop() {
@@ -467,7 +468,6 @@ FacebookFetcher.prototype.getData = function fbf_getData(dataType, data) {
 FacebookFetcher.prototype.handleResponse = function fbf_handleResponse(res) {
   if (!res || res.error) {
     this.app.handleData('');
-    console.error(res || res.error);
     return;
   }
 
