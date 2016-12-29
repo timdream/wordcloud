@@ -39,13 +39,19 @@ if (!Function.prototype.bind) {
 /* XXX: We cannot create a File object in web content,
    so we will use the next best thing here -- a Blob. */
 window.getFakeFile = function getBlob(data) {
-  if (typeof Blob === 'function') {
+  // XXX: `typeof Blob` won't work because it would be an object,
+  // even if it's a constructor on PhantomJS.
+  try {
     return new Blob([data], { type: 'text/plain' });
-  }
+  } catch (e) { }
 
   // Use the old BlobBuilder (specifically for PhantomJS v1.9)
   var BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder ||
     window.MozBlobBuilder || window.MSBlobBuilder;
+
+  if (!BlobBuilder) {
+    throw new Error('No way to construct a Blob.');
+  }
 
   // This is a poor man's byte string converter
   var byteString = unescape(encodeURIComponent(data));
