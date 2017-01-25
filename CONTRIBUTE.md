@@ -14,15 +14,13 @@ You'll need the following skill/tools
 Additionally, would need to install the following for running tests
 
 * [`node`](http://nodejs.org/) (comes with [`npm`](http://npmjs.org/) built-in)
-* [`grunt`](http://gruntjs.com/)
-* [QUnit](http://qunitjs.com/)
 
 ### Install
 
 1. Clone the code base
 2. Run `git submodule init && git submodule update` to pull the required libraries
-3. Run your localhost httpd on the root of the cloned directory
-4. Go to `http://localhost.timc.idv.tw/`
+3. Run `npm run grunt connect:test:keepalive` to start the localhost server.
+4. Go to the localhost website with the port shown.
 
 ### API Keys
 

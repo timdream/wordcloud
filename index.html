@@ -10,8 +10,8 @@
   <meta name="apple-mobile-web-app-title" content="Word Cloud">
   <link rel="apple-touch-icon-precomposed" href="./assets/images/wordcloud-logo.png" />
 
-  <meta name="description" content="Get the most frequent terms of posts of feeds in an tag cloud representation, powered by HTML5.">
-  <meta property="og:description" content="Get the most frequent terms of posts of feeds in an tag cloud representation, powered by HTML5." />
+  <meta name="description" content="Get the most frequent terms in an tag cloud representation, powered by HTML5.">
+  <meta property="og:description" content="Get the most frequent terms in an tag cloud representation, powered by HTML5." />
 
   <!-- Unfortunately we need to hard-code these in HTML -->
   <meta property="og:url" content="http://timdream.org/wordcloud/" />
@@ -40,15 +40,15 @@
   <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="./assets/5dcf3829.wordcloud.css">
 
-  <link rel="prefetch" type="application/l10n" href="./locales/locales.ini?_=islkzzpi" />
+  <link rel="prefetch" type="application/l10n" href="./locales/locales.ini?_=iyceicjy" />
 
   <link rel="payment" href="https://flattr.com/submit/auto?url=https%3A%2F%2Fgithub.com%2Ftimdream%2Fwordcloud&amp;user_id=timdream" type="text/html" />
 
   <!-- For browser without Web Workers support, run the calculation
        on the main event loop with the worker script. -->
-  <script src="./assets/wordfreq/src/wordfreq.worker.js?_=islkzzpi" defer></script>
+  <script src="./assets/wordfreq/src/wordfreq.worker.js?_=iyceicjy" defer></script>
 
-  <script defer src="assets/9c953e26.app.min.js"></script>
+  <script defer src="assets/e71c089a.app.min.js"></script>
 
 </head>
 <body>
@@ -85,30 +85,7 @@
             </li>
 
             <li hidden>
-              <a href="#" data-l10n-id="source-facebook" data-panel="facebook"></a></li>
-
-            <li hidden>
               <a href="#" data-l10n-id="source-wikipedia" data-panel="wikipedia"></a></li>
-
-            <li hidden>
-              <a href="#" data-l10n-id="source-twitter" data-panel="twitter"></a></li>
-            <li hidden>
-              <a href="#" data-l10n-id="source-plurk" data-panel="plurk"></a></li>
-            <li hidden>
-              <a href="#" data-l10n-id="source-blogger" data-panel="blogger"></a></li>
-            <li hidden>
-              <a href="#" data-l10n-id="source-tumblr" data-panel="tumblr"></a></li>
-            <li hidden>
-              <a href="#" data-l10n-id="source-wordpresscom" data-panel="wordpresscom"></a></li>
-            <li class="only-zh-TW" hidden>
-              <a href="#" data-l10n-id="source-pixnet" data-panel="pixnet"></a></li>
-            <li class="only-zh-TW" hidden>
-              <a href="#" data-l10n-id="source-wretchcc" data-panel="wretchcc"></a></li>
-             <li class="only-zh-TW" hidden>
-              <a href="#" data-l10n-id="source-yamblog" data-panel="yamblog"></a></li>
-            <!-- In memory of Aaron Swartz -->
-            <li hidden>
-              <a href="#" data-l10n-id="source-feed" data-panel="feed"></a></li>
 
             <li hidden>
               <a href="#" data-l10n-id="source-googleplus" data-panel="googleplus"></a></li>
@@ -127,31 +104,20 @@
               <span data-l10n-id="browser-partial-support-message"></span>
             </div>
 
-            <label class="radio">
-              <input type="radio" name="example"
-                value="feed:http://www.nytimes.com/services/xml/rss/nyt/GlobalHome.xml" checked>
-              <span data-l10n-id="panel-example-nytimes-global"></span>
-            </label>
-            <label class="radio only-en-US">
-              <input type="radio" name="example"
-                value="feed:http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml">
-              <span data-l10n-id="panel-example-nytimes-us"></span>
-            </label>
-            <label class="radio only-zh-TW">
-              <input type="radio" name="example"
-                value="feed:http://tw.news.yahoo.com/rss/politics">
-              <span data-l10n-id="panel-example-ynews-politics"></span>
-            </label>
-            <label class="radio only-zh-TW">
-              <input type="radio" name="example"
-                value="feed:http://tw.news.yahoo.com/rss/entertainment">
-              <span data-l10n-id="panel-example-ynews-entertainment"></span>
-            </label>
-            <label class="radio only-en-US">
-              <input type="radio" name="example"
-                value="feed:http://daringfireball.net/index.xml">
-              <span data-l10n-id="panel-example-daringfireball"></span>
-            </label>
+            <div class="alert alert-block alert-info only-en-US">
+              <h4>How can I get my own world cloud?</h4>
+              <p>Unfortunately, Google and Facebook has closed their API services.
+Word Cloud can no longer access your data without these services.</p>
+              <p>In the meantime, you could supply text or file directly on the left.
+There is also a <a href="http://timdream.org/wordcloud2.js/">page</a> available for fine-grain control.</p>
+            </div>
+
+            <div class="alert alert-block alert-info only-zh-TW">
+              <h4>如何製作我自己的文字雲？</h4>
+              <p>很遺憾的，Google 和 Facebook 關閉了文字雲需要的 API 服務。文字雲無法直接抓取您的資料。</p>
+              <p>您可以改使用右方的選項直接提供文字或檔案給文字雲。<a href="http://timdream.org/wordcloud2.js/">有另一個網頁</a>可以提供進階使用者自訂文字雲。</p>
+            </div>
+
             <label class="radio only-en-US">
               <input type="radio" name="example"
                 value="wikipedia:Cloud">
@@ -162,26 +128,6 @@
                 value="wikipedia.zh:雲">
               <span data-l10n-id="panel-example-wikipedia-zh-cloud"></span>
             </label>
-            <label class="radio only-en-US">
-              <input type="radio" name="example"
-                value="feed:https://www.eff.org/rss/updates.xml">
-              <span data-l10n-id="panel-example-eff"></span>
-            </label>
-            <label class="radio only-zh-TW">
-              <input type="radio" name="example"
-                value="feed:http://www.president.gov.tw/RSS.aspx?tabid=1104&amp;moduleid=2074">
-              <span data-l10n-id="panel-example-roc-president"></span>
-            </label>
-            <label class="radio only-zh-TW">
-              <input type="radio" name="example"
-                value="feed:http://feeds.feedburner.com/Pansci">
-              <span data-l10n-id="panel-example-pansci"></span>
-            </label>
-            <label class="radio only-zh-TW">
-              <input type="radio" name="example"
-                value="feed:http://rss.ptt.cc/Boy-Girl.xml">
-              <span data-l10n-id="panel-example-ptt-bg"></span>
-            </label>
 
             <div id="wc-psm" hidden></div>
           </form>
@@ -189,63 +135,6 @@
           <form id="wc-panel-wikipedia" hidden>
             <label data-l10n-id="panel-wikipedia" for="wc-panel-wikipedia-title"></label>
             <input type="text" id="wc-panel-wikipedia-title" class="input-medium" />
-          </form>
-
-          <form id="wc-panel-blogger" hidden>
-            <label data-l10n-id="panel-blogger-label" for="wc-panel-blogger-id"></label>
-            <input type="text" id="wc-panel-blogger-id" class="input-small" />
-            <span data-l10n-id="panel-blogger-help" class="help-block"></span>
-          </form>
-
-          <form id="wc-panel-tumblr" hidden>
-            <label data-l10n-id="panel-tumblr-label" for="wc-panel-tumblr-id"></label>
-            <input type="text" id="wc-panel-tumblr-id" class="input-small" />
-            <span data-l10n-id="panel-tumblr-help" class="help-block"></span>
-          </form>
-
-          <form id="wc-panel-wordpresscom" hidden>
-            <label data-l10n-id="panel-wordpresscom-label" for="wc-panel-wordpresscom-id"></label>
-            <input type="text" id="wc-panel-wordpresscom-id" class="input-small" />
-            <span data-l10n-id="panel-wordpresscom-help" class="help-block"></span>
-          </form>
-
-          <form id="wc-panel-pixnet" hidden>
-            <label data-l10n-id="panel-pixnet-label" for="wc-panel-pixnet-id"></label>
-            <input type="text" id="wc-panel-pixnet-id" class="input-small" />
-            <span data-l10n-id="panel-pixnet-help" class="help-block"></span>
-          </form>
-
-          <form id="wc-panel-wretchcc" hidden>
-            <label data-l10n-id="panel-wretchcc-label" for="wc-panel-wretchcc-id"></label>
-            <input type="text" id="wc-panel-wretchcc-id" class="input-small" />
-            <span data-l10n-id="panel-wretchcc-help" class="help-block"></span>
-          </form>
-
-          <form id="wc-panel-yamblog" hidden>
-            <label data-l10n-id="panel-yamblog-label" for="wc-panel-yamblog-id"></label>
-            <input type="text" id="wc-panel-yamblog-id" class="input-small" />
-            <span data-l10n-id="panel-yamblog-help" class="help-block"></span>
-          </form>
-
-          <form id="wc-panel-plurk" hidden>
-            <label data-l10n-id="panel-plurk-label" for="wc-panel-plurk-id"></label>
-            <input type="text" id="wc-panel-plurk-id"  class="input-small" />
-            <span data-l10n-id="panel-plurk-help" class="help-block"></span>
-          </form>
-
-          <form id="wc-panel-twitter" hidden>
-            <label data-l10n-id="panel-twitter-label" for="wc-panel-twitter-id"></label>
-            <div class="input-prepend">
-              <span class="add-on">@</span>
-              <input type="text" id="wc-panel-twitter-id" class="input-small" />
-            </div>
-            <span data-l10n-id="panel-twitter-help" class="help-block"></span>
-          </form>
-
-          <form id="wc-panel-feed" hidden>
-            <label data-l10n-id="panel-feed-label" for="wc-panel-feed-url"></label>
-            <input type="url" id="wc-panel-feed-url"  class="input-block-level" />
-            <span data-l10n-id="panel-feed-help" class="help-block"></span>
           </form>
 
           <form id="wc-panel-cp" hidden>
@@ -264,20 +153,6 @@
             <label data-l10n-id="panel-file-encoding" for="wc-panel-file-encoding"></label>
             <input type="text" id="wc-panel-file-encoding" value="UTF-8">
             <span data-l10n-id="panel-file-encoding-help" class="help-block"></span>
-          </form>
-
-          <form id="wc-panel-facebook" hidden>
-            <div class="alert alert-block alert-warning only-en-US">
-              <h4>This feature to be disabled by Facebook on Apr 30th, 2015.</h4>
-              <span><a href="http://blog.timc.idv.tw/posts/html5-word-cloud-to-lost-access-to-facebook-news-feed-on-april-30th-2015/">Understand what happened</a>.</span>
-            </div>
-
-            <div class="alert alert-block alert-warning only-zh-TW">
-              <h4>此功能將於 2015 年 4 月 30 日被 Facebook 停用。</h4>
-              <span><a href="http://blog.timc.idv.tw/posts/html5-word-cloud-to-lost-access-to-facebook-news-feed-on-april-30th-2015/#zh-tw-content">了解原因</a>。</span>
-            </div>
-
-            <p id="wc-panel-facebook-status" data-l10n-id="loading"></p>
           </form>
 
           <form id="wc-panel-googleplus" hidden>
@@ -304,9 +179,6 @@
       </div>
 
       <button data-l10n-id="source-dialog-start-btn" id="wc-source-start-btn" class="btn btn-primary"></button>
-
-      <button id="wc-source-login-facebook-btn" class="btn btn-primary" hidden><i class="favicons-facebook"></i> <span data-l10n-id="source-dialog-login-facebook-btn"></span></button>
-
     </div>
   </div>
 

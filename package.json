@@ -9,19 +9,19 @@
     "grunt": "grunt"
   },
   "devDependencies": {
-    "grunt": "^0.4.5",
+    "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",
-    "grunt-contrib-clean": "~0.5.0",
-    "grunt-contrib-concat": "~0.4.0",
-    "grunt-contrib-connect": "~0.7.1",
-    "grunt-contrib-copy": "~0.5.0",
-    "grunt-contrib-jshint": "~0.10.0",
-    "grunt-contrib-qunit": "~0.4.0",
-    "grunt-contrib-uglify": "~0.4.0",
-    "grunt-gh-pages": "^0.9.1",
-    "grunt-replace": "~0.7.6",
-    "grunt-rev": "~0.1.0",
-    "grunt-shell": "~0.6.4",
-    "grunt-usemin": "~2.1.1"
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-connect": "^1.0.2",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-qunit": "^1.2.0",
+    "grunt-contrib-uglify": "^2.0.0",
+    "grunt-gh-pages": "^2.0.0",
+    "grunt-replace": "^1.0.1",
+    "grunt-rev": "^0.1.0",
+    "grunt-shell": "^2.1.0",
+    "grunt-usemin": "^3.1.1"
   }
 }
