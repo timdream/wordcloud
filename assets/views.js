@@ -310,7 +310,7 @@ SNSPushView.prototype.GOOGLEPLUS_BUTTON_URL =
   'https://plusone.google.com/u/0/_/+1/fastbutton?url=%url&' +
   'size=tall&count=true&annotation=bubble&lang=%lang';
 SNSPushView.prototype.beforeShow = function() {
-  return !(navigator.doNotTrack === '1');
+  return (navigator.doNotTrack !== '1');
 };
 SNSPushView.prototype.loadButtons = function spv_loadButtons() {
   var url = window.location.href;

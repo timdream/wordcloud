@@ -12,7 +12,7 @@
 
 // Google Analytics
 var _gaq = _gaq || [];
-if (!(navigator.doNotTrack === '1') &&
+if ((navigator.doNotTrack !== '1') &&
     (window.location.hostname === 'timc.idv.tw' ||
       window.location.hostname === 'timdream.org')) {
   if (window.location.hostname === 'timc.idv.tw') {
