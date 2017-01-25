@@ -290,24 +290,6 @@ test('requestData(non-exist API)', function() {
   fetcher.requestData('./404');
 });
 
-module('FeedFetcher');
-
-test('getData(\'feed\')', function() {
-  var fetcher = new FeedFetcher();
-  fetcher.USE_WORKER_WHEN_AVAILABLE = false;
-  fetcher.FEED_API_LOAD_URL = './fake-jsonp/google-feed-api.js';
-  var data = 'http://foo.bar/feed/';
-  stop();
-  fetcher.app = {
-    handleData: function gotData(data) {
-      equal(data, 'title1\ncontent1\ncontent1 line 2\n\ntitle2\ncontent2\ncontent2 line 2\n');
-
-      start();
-    }
-  };
-  fetcher.getData('feed', data);
-});
-
 module('WikipediaFetcher');
 
 test('getData(\'wikipedia\')', function() {

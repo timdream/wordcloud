@@ -132,26 +132,6 @@ FilePanelView.prototype.submit = function fpv_submit() {
   this.dialog.submit('#file');
 };
 
-var FeedPanelView = function FeedPanelView(opts) {
-  this.load(opts, {
-    name: 'feed',
-    element: 'wc-panel-feed',
-    inputElement: 'wc-panel-feed-url',
-    template: '%s'
-  });
-};
-FeedPanelView.prototype = new PanelView();
-FeedPanelView.prototype.submit = function fepv_submit() {
-  var el = this.inputElement;
-
-  if (!el.value) {
-    return;
-  }
-
-  this.dialog.submit(
-    '#feed:' + this.template.replace(/%s/g, el.value));
-};
-
 var WikipediaPanelView = function WikipediaPanelView(opts) {
   this.load(opts, {
     name: 'wikipedia',
