@@ -1,7 +1,6 @@
 'use strict';
 
-/* global View, _, __, FacebookSDKLoader, FB,
-          GOOGLE_CLIENT_ID, GO2 */
+/* global View, _, __, GOOGLE_CLIENT_ID, GO2 */
 
 var PanelView = function PanelView() {
 };
@@ -153,130 +152,6 @@ WikipediaPanelView.prototype.submit = function wpv_submit() {
   var lang = document.webL10n.getLanguage().substr(0, 2);
 
   this.dialog.submit('#wikipedia.' + lang + ':' + el.value);
-};
-
-var FacebookPanelView = function FacebookPanelView(opts) {
-  this.load(opts, {
-    name: 'facebook',
-    element: 'wc-panel-facebook',
-    statusElement: 'wc-panel-facebook-status'
-  });
-
-  this.stringIds = [
-    'facebook-ready',
-    'facebook-start-to-login'
-  ];
-
-  this.loaded = false;
-};
-FacebookPanelView.prototype = new PanelView();
-FacebookPanelView.prototype.LABEL_LOGGED_IN = 0;
-FacebookPanelView.prototype.LABEL_NOT_LOGGED_IN = 1;
-
-FacebookPanelView.prototype.beforeShow = function fbpv_beforeShow() {
-  PanelView.prototype.beforeShow.apply(this, arguments);
-
-  if (this.loaded) {
-    return;
-  }
-
-  this.loaded = true;
-  this.hasPermission = false;
-
-  // Load Facebook SDK at this point;
-  // We won't wrap other FB.xxx calls in other functions
-  // because this is the only entry point for FacebookPanelView.
-  (new FacebookSDKLoader()).load((function fbpv_bindFacebookSDK() {
-    FB.getLoginStatus(this.updateStatus.bind(this));
-    FB.Event.subscribe(
-      'auth.authResponseChange', this.updateStatus.bind(this));
-  }).bind(this));
-};
-FacebookPanelView.prototype.isReadyForFetch = function fbpv_isReadyForFetch() {
-  return (this.facebookResponse &&
-    this.facebookResponse.status === 'connected' &&
-    this.hasPermission);
-};
-FacebookPanelView.prototype.updateStatus = function fbpv_updateStatus(res) {
-  this.facebookResponse = res;
-  if (this.facebookResponse.status === 'connected') {
-    FB.api('/me?fields=permissions,username', (function checkPermissions(res) {
-      this.hasPermission = res && res.permissions &&
-        res.permissions.data && res.permissions.data[0] &&
-        (res.permissions.data[0].read_stream == 1);
-
-      this.facebookUsername = (res && res.username) || '';
-
-      this.updateUI();
-
-      if (!this.submitted) {
-        return;
-      }
-
-      this.submitted = false;
-      this.submit();
-
-    }).bind(this));
-  } else {
-    this.hasPermission = false;
-    this.facebookUsername = '';
-    this.updateUI();
-  }
-};
-FacebookPanelView.prototype.updateUI = function fbpv_updateUI() {
-  if (this.isReadyForFetch()) {
-    this.statusElement.setAttribute(
-      'data-l10n-id', this.stringIds[this.LABEL_LOGGED_IN]);
-  } else {
-    this.statusElement.setAttribute(
-      'data-l10n-id', this.stringIds[this.LABEL_NOT_LOGGED_IN]);
-  }
-  __(this.statusElement);
-};
-FacebookPanelView.prototype.submit = function fbpv_submit() {
-  // Return if the status is never updated.
-  if (!this.facebookResponse) {
-    return;
-  }
-
-  // XXX: There is no way to cancel the login pop-up midway if
-  // the user navigates away from the panel (or the source dialog).
-  // We shall do some checking here to avoid accidently switches the UI.
-  if (this.element.hasAttribute('hidden') ||
-      this.dialog.element.hasAttribute('hidden')) {
-    return;
-  }
-
-
-  // Show the login dialog if not logged in
-  if (!this.isReadyForFetch()) {
-    // Mark the status submitted
-    this.submitted = true;
-
-    FB.login((function fbpv_loggedIn(res) {
-      this.facebookResponse = res;
-
-      if (!res) {
-        this.dialog.app.logAction('FacebookPanelView::login::error');
-        return;
-      }
-
-      if (res.status !== 'connected') {
-        this.dialog.app.logAction('FacebookPanelView::login::cancelled');
-        return;
-      }
-
-      this.dialog.app.logAction('FacebookPanelView::login::success');
-
-      // Stop here, the submitted flag will carry on
-
-    }).bind(this), { scope: 'read_stream' });
-
-    return;
-  }
-
-  var id = this.facebookUsername || this.facebookResponse.authResponse.userID;
-  this.dialog.submit('#facebook:' + id);
 };
 
 var GooglePlusPanelView = function GooglePlusPanelView(opts) {

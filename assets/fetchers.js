@@ -1,6 +1,6 @@
 'use strict';
 
-/* global LoadingView, _, FB */
+/* global LoadingView, _ */
 
 var Fetcher = function Fetcher() { };
 Fetcher.prototype.LABEL_VERB = LoadingView.prototype.LABEL_LOADING;
@@ -372,81 +372,4 @@ COSCUPFetcher.prototype.handleResponse = function cf_handleResponse(res) {
   });
 
   this.app.handleData(text.join('\n'), _('coscup-title', { year: this.year }));
-};
-
-var FacebookFetcher = function FacebookFetcher() {
-  this.types = ['facebook'];
-};
-FacebookFetcher.prototype = new Fetcher();
-FacebookFetcher.prototype.LABEL_VERB = LoadingView.prototype.LABEL_DOWNLOADING;
-FacebookFetcher.prototype.FACEBOOK_GRAPH_FIELDS =
-  'name,notes.limit(500).fields(subject,message),' +
-  'feed.limit(2500).fields(from.fields(id),message)';
-FacebookFetcher.prototype.NOTE_REGEXP =
-  /<[^>]+?>|\(.+?\.\.\.\)|\&\w+\;|<script.+?\/script\>/ig;
-FacebookFetcher.prototype.stop = function fbf_stop() {
-  // FB.api doesn't comes with a method to cancel the request.
-  this.currentPath = undefined;
-};
-FacebookFetcher.prototype.getData = function fbf_getData(dataType, data) {
-  var facebookPanelView = this.app.views['source-dialog'].panels.facebook;
-
-  // If we are not ready, bring user back to the facebook panel.
-  if (!facebookPanelView.isReadyForFetch()) {
-
-    // XXX: can we login user from here?
-    // User would lost the id kept in hash here.
-    this.app.logAction('FacebookFetcher::getData::reset');
-    this.app.reset();
-    this.app.views['source-dialog'].showPanel(facebookPanelView);
-    return;
-  }
-
-  var path = this.currentPath = '/' + encodeURIComponent(data) +
-    '?fields=' + this.FACEBOOK_GRAPH_FIELDS;
-
-  FB.api(path, (function gotFacebookAPIData(res) {
-    // Ignore any response that does not match currentPath.
-    if (this.currentPath !== path) {
-      return;
-    }
-    this.currentPath = undefined;
-
-    this.handleResponse(res);
-  }).bind(this));
-};
-FacebookFetcher.prototype.handleResponse = function fbf_handleResponse(res) {
-  if (!res || res.error) {
-    this.app.handleData('');
-    return;
-  }
-
-  var text = [];
-
-  if (res.notes && res.notes.data) {
-    var NOTE_REGEXP = this.NOTE_REGEXP;
-    res.notes.data.forEach(function forEachNote(note) {
-      if (note.subject) {
-        text.push(note.subject);
-      }
-      if (note.message) {
-        text.push(note.message.replace(NOTE_REGEXP, ''));
-      }
-    });
-  }
-
-  if (res.feed && res.feed.data) {
-    res.feed.data.forEach(function forEachData(entry) {
-      // Get rid of birthday messages on the wall.
-      if (entry.from.id !== res.id) {
-        return;
-      }
-
-      if (entry.message) {
-        text.push(entry.message);
-      }
-    });
-  }
-
-  this.app.handleData(text.join('\n'), _('facebook-title', { name: res.name }));
 };
