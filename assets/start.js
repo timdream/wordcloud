@@ -12,8 +12,9 @@
 
 // Google Analytics
 var _gaq = _gaq || [];
-if (window.location.hostname === 'timc.idv.tw' ||
-    window.location.hostname === 'timdream.org') {
+if (!(navigator.doNotTrack === '1') &&
+    (window.location.hostname === 'timc.idv.tw' ||
+      window.location.hostname === 'timdream.org')) {
   if (window.location.hostname === 'timc.idv.tw') {
     _gaq.push(['_setAccount', 'UA-401106-1']);
   } else {

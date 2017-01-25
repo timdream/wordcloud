@@ -292,6 +292,10 @@ var SNSPushView = function SNSPushView(opts) {
     googlePlusElement: 'wc-sns-google-plus'
   });
 
+  if (navigator.doNotTrack === '1') {
+    return;
+  }
+
   if (document.webL10n.getReadyState() === 'complete') {
     this.loadButtons();
   }
@@ -305,6 +309,9 @@ SNSPushView.prototype.FACEBOOK_BUTTON_URL =
 SNSPushView.prototype.GOOGLEPLUS_BUTTON_URL =
   'https://plusone.google.com/u/0/_/+1/fastbutton?url=%url&' +
   'size=tall&count=true&annotation=bubble&lang=%lang';
+SNSPushView.prototype.beforeShow = function() {
+  return !(navigator.doNotTrack === '1');
+};
 SNSPushView.prototype.loadButtons = function spv_loadButtons() {
   var url = window.location.href;
   if (url.indexOf('#') !== -1) {
