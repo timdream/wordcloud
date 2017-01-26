@@ -1,6 +1,6 @@
 # HTML5 文字雲
 
-版權所有 2011, 2013 [Timothy Guan-tin Chien](http://timdream.org/) 與其他貢獻者。
+版權所有 2011, 2013-2017 [Timothy Guan-tin Chien](http://timdream.org/) 與其他貢獻者。
 本作品使用 [MIT 公眾授權](./MIT-LICENSE.txt)釋出。
 
 [程式碼](https://github.com/timdream/wordcloud)可於 Github 取得。
@@ -21,6 +21,8 @@
 
 這些資訊不會透漏給本站作者與貢獻者以外的第三方。
 閱讀 [Google Analytics 安全性與隱私權原則](https://www.google.com/analytics/learn/privacy.html)以了解 Google 如何使用此類資訊。
+
+**這些資料收集可以從瀏覽器的 [Do Not Track](https://en.wikipedia.org/wiki/Do_Not_Track) 設定關閉。**
 
 ### 第三方網路服務
 
