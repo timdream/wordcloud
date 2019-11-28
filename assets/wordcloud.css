@@ -244,14 +244,11 @@ body {
     width: 50px;
     padding: 10px;
     text-align: center;
+    border-radius: 5px;
     margin: 3px;
     right: 0;
     opacity: 1;
     box-shadow: rgba(0, 0, 0, 0.3) 0px 3px 7px 0px; }
-    #wc-sns-push > .button:first-child {
-      border-radius: 5px 5px 0 0; }
-    #wc-sns-push > .button:last-child {
-      border-radius: 0 0 5px 5px; }
     #wc-sns-push > .button > iframe {
       border: none;
       overflow: hidden;

@@ -351,17 +351,12 @@ $shadow-length: $icon-width * 0.05;
     width: 50px;
     padding: 10px;
     text-align: center;
+    border-radius: 5px;
     margin: 3px;
     right: 0;
     opacity: 1;
     box-shadow: rgba(0, 0, 0, 0.3) 0px 3px 7px 0px;
 
-    &:first-child {
-      border-radius: 5px 5px 0 0;
-    }
-    &:last-child {
-      border-radius: 0 0 5px 5px;
-    }
     > iframe {
       border: none;
       overflow: hidden;
