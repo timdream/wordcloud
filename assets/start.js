@@ -10,16 +10,15 @@
           ListFetcher, WikipediaFetcher,
           PSMView */
 
+if (window.location.hostname === 'timdream.org') {
+  window.location.href =
+    'https://wordcloud.timdream.org/' + window.location.hash;
+}
+
 // Google Analytics
 var _gaq = _gaq || [];
-if ((navigator.doNotTrack !== '1') &&
-    (window.location.hostname === 'timc.idv.tw' ||
-      window.location.hostname === 'timdream.org')) {
-  if (window.location.hostname === 'timc.idv.tw') {
-    _gaq.push(['_setAccount', 'UA-401106-1']);
-  } else {
-    _gaq.push(['_setAccount', 'UA-4623408-2']);
-  }
+if (navigator.doNotTrack !== '1') {
+  _gaq.push(['_setAccount', 'UA-4623408-2']);
   _gaq.push(['_trackPageview']);
 
   (function loadGoogleAnalytics() {
