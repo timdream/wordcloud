@@ -2,7 +2,7 @@
 
 Create a tag [Wordle](http://www.wordle.net/) presentation on a HTML5 canvas element for a given article, powered by [wordfreq](https://github.com/timdream/wordfreq), remote data fetching through public APIs, and sharing tools.
 
-**Visit [the web app](http://timc.idv.tw/wordcloud/).**
+**Visit [the web app](https://wordcloud.timdream.org/).**
 
 ## Author & Copyright
 
