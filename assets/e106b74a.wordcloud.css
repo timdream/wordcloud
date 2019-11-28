@@ -155,10 +155,10 @@ body {
   line-height: 20px; }
 
 .error .wc-icon-cloud {
-  background-color: #d8d8d8;
-  box-shadow: inset 0 -2.5px rgba(216, 216, 216, 0.6), 0 5px 5px rgba(0, 0, 0, 0.1), inset 0 -5px 5px rgba(0, 85, 136, 0.1); }
+  background-color: #d9d9d9;
+  box-shadow: inset 0 -2.5px rgba(217, 217, 217, 0.6), 0 5px 5px rgba(0, 0, 0, 0.1), inset 0 -5px 5px rgba(0, 85, 136, 0.1); }
 .error .wc-icon-cloud:before, .error .wc-icon-cloud:after {
-  background-color: #d8d8d8; }
+  background-color: #d9d9d9; }
 
 #wc-loading-label {
   position: absolute;
@@ -244,14 +244,11 @@ body {
     width: 50px;
     padding: 10px;
     text-align: center;
+    border-radius: 5px;
     margin: 3px;
     right: 0;
     opacity: 1;
     box-shadow: rgba(0, 0, 0, 0.3) 0px 3px 7px 0px; }
-    #wc-sns-push > .button:first-child {
-      border-radius: 5px 5px 0 0; }
-    #wc-sns-push > .button:last-child {
-      border-radius: 0 0 5px 5px; }
     #wc-sns-push > .button > iframe {
       border: none;
       overflow: hidden;
@@ -259,22 +256,23 @@ body {
       height: 65px; }
 
 .favicons-sprite, .favicons-facebook, .favicons-imgur, .favicons-plurk, .favicons-tumblr, .favicons-twitter {
-  background: url('images/favicons-s3f88cc8510.png') no-repeat; }
+  background-image: url('images/favicons-se4a04700e4.png');
+  background-repeat: no-repeat; }
 
 .favicons-facebook {
-  background-position: 0 -48px; }
-
-.favicons-imgur {
   background-position: 0 0; }
 
-.favicons-plurk {
-  background-position: 0 -64px; }
+.favicons-imgur {
+  background-position: 0 -16px; }
 
-.favicons-tumblr {
+.favicons-plurk {
   background-position: 0 -32px; }
 
+.favicons-tumblr {
+  background-position: 0 -48px; }
+
 .favicons-twitter {
-  background-position: 0 -16px; }
+  background-position: 0 -64px; }
 
 [class^="favicons-"], [class*=" favicons-"] {
   display: inline-block;
@@ -288,3 +286,5 @@ body {
   -o-transform: scale(0.8);
   -ms-transform: scale(0.8);
   -webkit-transform: scale(0.8); }
+
+/*# sourceMappingURL=wordcloud.css.map */

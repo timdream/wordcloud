@@ -14,41 +14,41 @@
   <meta property="og:description" content="Get the most frequent terms in an tag cloud representation, powered by HTML5." />
 
   <!-- Unfortunately we need to hard-code these in HTML -->
-  <meta property="og:url" content="http://timdream.org/wordcloud/" />
+  <meta property="og:url" content="https://wordcloud.timdream.org/" />
   <meta property="og:title" content="HTML5 Word Cloud" />
   <meta property="fb:admins" content="541998202" />
   <meta property="fb:app_id" content="221493074531416" />
 
-  <meta property="og:image" content="http://timdream.org/wordcloud/assets/images/wordcloud-logo.png" />
+  <meta property="og:image" content="https://wordcloud.timdream.org/assets/images/wordcloud-logo.png" />
   <meta property="og:image:width" content="432" />
   <meta property="og:image:height" content="432" />
-  <meta property="og:image" content="http://timdream.org/wordcloud/assets/images/wordcloud-logo-128.png" />
+  <meta property="og:image" content="https://wordcloud.timdream.org/assets/images/wordcloud-logo-128.png" />
   <meta property="og:image:width" content="128" />
   <meta property="og:image:height" content="128" />
-  <meta property="og:image" content="http://timdream.org/wordcloud/assets/images/wordcloud-logo-75.png" />
+  <meta property="og:image" content="https://wordcloud.timdream.org/assets/images/wordcloud-logo-75.png" />
   <meta property="og:image:width" content="75" />
   <meta property="og:image:height" content="75" />
-  <meta property="og:image" content="http://timdream.org/wordcloud/assets/images/wordcloud-logo-16.png" />
+  <meta property="og:image" content="https://wordcloud.timdream.org/assets/images/wordcloud-logo-16.png" />
   <meta property="og:image:width" content="16" />
   <meta property="og:image:height" content="16" />
 
   <link rel="shortcut icon" href="./favicon.ico" />
 
-  <link rel="stylesheet" type="text/css" href="./assets/8a07a86f.first-screen.css">
+  <link rel="stylesheet" type="text/css" href="./assets/2c8297f4.first-screen.css">
   <!-- Le styles -->
   <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css" rel="stylesheet">
   <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="./assets/5dcf3829.wordcloud.css">
+  <link rel="stylesheet" type="text/css" href="./assets/e106b74a.wordcloud.css">
 
-  <link rel="prefetch" type="application/l10n" href="./locales/locales.ini?_=izl3s1km" />
+  <link rel="prefetch" type="application/l10n" href="./locales/locales.ini?_=k3ifur8p" />
 
   <link rel="payment" href="https://flattr.com/submit/auto?url=https%3A%2F%2Fgithub.com%2Ftimdream%2Fwordcloud&amp;user_id=timdream" type="text/html" />
 
   <!-- For browser without Web Workers support, run the calculation
        on the main event loop with the worker script. -->
-  <script src="./assets/wordfreq/src/wordfreq.worker.js?_=izl3s1km" defer></script>
+  <script src="./assets/wordfreq/src/wordfreq.worker.js?_=k3ifur8p" defer></script>
 
-  <script defer src="assets/6de11940.app.min.js"></script>
+  <script defer src="assets/88ccfa37.app.min.js"></script>
 
 </head>
 <body>
@@ -85,15 +85,11 @@
             </li>
 
             <li hidden>
-              <a href="#" data-l10n-id="source-wikipedia" data-panel="wikipedia"></a></li>
-
-            <li hidden>
-              <a href="#" data-l10n-id="source-googleplus" data-panel="googleplus"></a></li>
-
-            <li hidden>
               <a href="#" data-l10n-id="source-cp" data-panel="cp"></a></li>
             <li hidden>
               <a href="#" data-l10n-id="source-file" data-panel="file"></a></li>
+            <li hidden>
+              <a href="#" data-l10n-id="source-wikipedia" data-panel="wikipedia"></a></li>
           </ul>
         </div>
         <div id="wc-source-panels" class="span9">
@@ -106,22 +102,20 @@
 
             <div class="alert alert-block alert-info only-en-US">
               <h4>How can I get my own word cloud?</h4>
-              <p>Unfortunately, Google and Facebook has closed their API services.
-Word Cloud can no longer access your data without these services.</p>
-              <p>In the meantime, you could supply text or file directly on the left.
+              <p>Please copy-and-paste or select a file by choosing an option on the left.
+Word Cloud can no longer fetch Google/Facebook data automatically.</p>
             </div>
             <div class="alert alert-block alert-info only-en-US">
-              <h4><a href="http://timdream.org/wordcloud2.js/">Word cloud for developers</a></h4>
+              <h4><a href="https://wordcloud2-js.timdream.org/">Word cloud for developers</a></h4>
 A demo page is available for fine-grain control of the backend library.</p>
             </div>
 
             <div class="alert alert-block alert-info only-zh-TW">
               <h4>如何製作我自己的文字雲？</h4>
-              <p>很遺憾的，Google 和 Facebook 關閉了文字雲需要的 API 服務。文字雲無法直接抓取您的資料。</p>
-              <p>您可以改使用右方的選項直接提供文字或檔案給文字雲。<a href="http://timdream.org/wordcloud2.js/">有另一個網頁</a>可以提供進階使用者自訂文字雲。</p>
+              <p>您可以使用右方的選項直接提供文字或檔案給文字雲。文字雲無法直接抓取您在 Facebook 或是 Google 的資料。</p>
             </div>
             <div class="alert alert-block alert-info only-zh-TW">
-              <h4><a href="http://timdream.org/wordcloud2.js/">進階開發者的文字雲</a></h4>
+              <h4><a href="https://wordcloud2-js.timdream.org/">進階開發者的文字雲</a></h4>
 您可以使用函式庫的範例頁面做文字雲產生的細節設定。</p>
             </div>
 
@@ -137,11 +131,6 @@ A demo page is available for fine-grain control of the backend library.</p>
             </label>
 
             <div id="wc-psm" hidden></div>
-          </form>
-
-          <form id="wc-panel-wikipedia" hidden>
-            <label data-l10n-id="panel-wikipedia" for="wc-panel-wikipedia-title"></label>
-            <input type="text" id="wc-panel-wikipedia-title" class="input-medium" />
           </form>
 
           <form id="wc-panel-cp" hidden>
@@ -162,14 +151,9 @@ A demo page is available for fine-grain control of the backend library.</p>
             <span data-l10n-id="panel-file-encoding-help" class="help-block"></span>
           </form>
 
-          <form id="wc-panel-googleplus" hidden>
-            <label data-l10n-id="panel-googleplus-label" for="wc-panel-googleplus-id"></label>
-            <div class="input-prepend">
-              <span class="add-on">https://plus.google.com/</span>
-              <input type="text" id="wc-panel-googleplus-id" class="input-medium" placeholder="me" />
-            </div>
-            <span data-l10n-id="panel-googleplus-help" class="help-block"></span>
-            <p id="wc-panel-googleplus-status" data-l10n-id="loading"></p>
+          <form id="wc-panel-wikipedia" hidden>
+              <label data-l10n-id="panel-wikipedia" for="wc-panel-wikipedia-title"></label>
+              <input type="text" id="wc-panel-wikipedia-title" class="input-medium" />
           </form>
 
         </div>
@@ -324,9 +308,6 @@ A demo page is available for fine-grain control of the backend library.</p>
 
   <div id="wc-sns-push" hidden>
     <div class="button" id="wc-sns-facebook">
-      <iframe id="-iframe" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
-    </div>
-    <div class="button" id="wc-sns-google-plus">
       <iframe id="-iframe" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
     </div>
   </div>

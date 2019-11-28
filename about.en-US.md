@@ -1,6 +1,6 @@
 # HTML5 Word Cloud
 
-Copyright 2011, 2013 [Timothy Guan-tin Chien](http://timdream.org/) and other contributors.
+Copyright 2011, 2013-2019 [Timothy Guan-tin Chien](https://timdream.org/) and other contributors.
 Released under [the MIT license](./MIT-LICENSE.txt).
 
 [Source code](https://github.com/timdream/wordcloud) available on Github.
