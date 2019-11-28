@@ -1,15 +1,15 @@
 .PHONY: all
 all:
-	@grunt
+	@npx grunt
 
 .PHONY: deploy
 deploy:
-	@grunt deploy
+	@npx grunt deploy
 
 .PHONY: test
 test:
-	@grunt test
+	@npx grunt test
 
 .PHONY: check-imgur-credit
 check-imgur-credit:
-	@grunt check-imgur-credit
+	@npx grunt check-imgur-credit
