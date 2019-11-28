@@ -1,4 +1,4 @@
-# HTML5 Word Cloud [![Build Status](https://secure.travis-ci.org/timdream/wordcloud.png)](http://travis-ci.org/timdream/wordcloud)
+# HTML5 Word Cloud
 
 Create a tag [Wordle](http://www.wordle.net/) presentation on a HTML5 canvas element for a given article, powered by [wordfreq](https://github.com/timdream/wordfreq), remote data fetching through public APIs, and sharing tools.
 
