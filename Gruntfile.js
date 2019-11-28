@@ -63,17 +63,6 @@ module.exports = function(grunt) {
         }
       }
     },
-    shell: {
-      deploy: {
-        command: 'rsync -azzvP --delete --exclude .git ' +
-                 './production/ kanazawa:timc-www/www/wordcloud/',
-        options: {
-          stdout: true,
-          stderr: true,
-          failOnError: true
-        }
-      }
-    },
     uglify: {
       options: {
         banner: '/*! <%= pkg.name %> ' +
@@ -131,7 +120,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-replace');
   grunt.loadNpmTasks('grunt-rev');
-  grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-usemin');
 
   grunt.loadNpmTasks('grunt-contrib-qunit');
@@ -144,8 +132,7 @@ module.exports = function(grunt) {
     'checkvars', 'clean', 'copy', 'useminPrepare',
     'concat', 'uglify', 'rev', 'usemin', 'replace']);
 
-  // Quick shell command to rsync the code to my site
-  grunt.registerTask('deploy-timc', ['shell:deploy']);
+  // Quick command to deploy to GitHub Pages
   grunt.registerTask('deploy', ['gh-pages']);
 
   // Test

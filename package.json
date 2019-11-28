@@ -21,7 +21,6 @@
     "grunt-gh-pages": "^2.0.0",
     "grunt-replace": "^1.0.1",
     "grunt-rev": "^0.1.0",
-    "grunt-shell": "^2.1.0",
     "grunt-usemin": "^3.1.1"
   }
 }
