@@ -99,12 +99,11 @@
             </li>
 
             <li hidden>
-              <a href="#" data-l10n-id="source-wikipedia" data-panel="wikipedia"></a></li>
-
-            <li hidden>
               <a href="#" data-l10n-id="source-cp" data-panel="cp"></a></li>
             <li hidden>
               <a href="#" data-l10n-id="source-file" data-panel="file"></a></li>
+            <li hidden>
+              <a href="#" data-l10n-id="source-wikipedia" data-panel="wikipedia"></a></li>
           </ul>
         </div>
         <div id="wc-source-panels" class="span9">
@@ -117,22 +116,20 @@
 
             <div class="alert alert-block alert-info only-en-US">
               <h4>How can I get my own word cloud?</h4>
-              <p>Unfortunately, Google and Facebook has closed their API services.
-Word Cloud can no longer access your data without these services.</p>
-              <p>In the meantime, you could supply text or file directly on the left.
+              <p>Please copy-and-paste or select a file by choosing an option on the left.
+Word Cloud can no longer fetch Google/Facebook data automatically.</p>
             </div>
             <div class="alert alert-block alert-info only-en-US">
-              <h4><a href="http://timdream.org/wordcloud2.js/">Word cloud for developers</a></h4>
+              <h4><a href="http://wordcloud2-js.timdream.org/">Word cloud for developers</a></h4>
 A demo page is available for fine-grain control of the backend library.</p>
             </div>
 
             <div class="alert alert-block alert-info only-zh-TW">
               <h4>如何製作我自己的文字雲？</h4>
-              <p>很遺憾的，Google 和 Facebook 關閉了文字雲需要的 API 服務。文字雲無法直接抓取您的資料。</p>
-              <p>您可以改使用右方的選項直接提供文字或檔案給文字雲。<a href="http://timdream.org/wordcloud2.js/">有另一個網頁</a>可以提供進階使用者自訂文字雲。</p>
+              <p>您可以使用右方的選項直接提供文字或檔案給文字雲。文字雲無法直接抓取您在 Facebook 或是 Google 的資料。</p>
             </div>
             <div class="alert alert-block alert-info only-zh-TW">
-              <h4><a href="http://timdream.org/wordcloud2.js/">進階開發者的文字雲</a></h4>
+              <h4><a href="http://wordcloud2-js.timdream.org/">進階開發者的文字雲</a></h4>
 您可以使用函式庫的範例頁面做文字雲產生的細節設定。</p>
             </div>
 
@@ -148,11 +145,6 @@ A demo page is available for fine-grain control of the backend library.</p>
             </label>
 
             <div id="wc-psm" hidden></div>
-          </form>
-
-          <form id="wc-panel-wikipedia" hidden>
-            <label data-l10n-id="panel-wikipedia" for="wc-panel-wikipedia-title"></label>
-            <input type="text" id="wc-panel-wikipedia-title" class="input-medium" />
           </form>
 
           <form id="wc-panel-cp" hidden>
@@ -171,6 +163,11 @@ A demo page is available for fine-grain control of the backend library.</p>
             <label data-l10n-id="panel-file-encoding" for="wc-panel-file-encoding"></label>
             <input type="text" id="wc-panel-file-encoding" value="UTF-8">
             <span data-l10n-id="panel-file-encoding-help" class="help-block"></span>
+          </form>
+
+          <form id="wc-panel-wikipedia" hidden>
+              <label data-l10n-id="panel-wikipedia" for="wc-panel-wikipedia-title"></label>
+              <input type="text" id="wc-panel-wikipedia-title" class="input-medium" />
           </form>
 
         </div>
