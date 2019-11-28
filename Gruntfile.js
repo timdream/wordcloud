@@ -140,10 +140,15 @@ module.exports = function(grunt) {
   grunt.registerTask('checkvars', function() {
     var done = this.async();
 
+
     var fs = require('fs');
     fs.exists('./assets/vars.js', function(exists) {
       if (!exists) {
-        grunt.fail.fatal('./assets/vars.js does not exist.');
+        if (process.env.CI) {
+          fs.copyFileSync('./assets/vars-sample.js', './assets/vars.js');
+        } else {
+          grunt.fail.fatal('./assets/vars.js does not exist.');
+        }
       }
 
       done();
