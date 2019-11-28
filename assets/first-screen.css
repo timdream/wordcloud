@@ -11,8 +11,8 @@ body {
   color: #333;
   min-height: 100%;
   overflow-x: hidden;
-  background: #d9dddf;
-  background: linear-gradient(#b4bcbf, #ffffff) no-repeat;
+  background: #dadedf;
+  background: linear-gradient(#b4bcbf, white) no-repeat;
   background: -webkit-linear-gradient(#b4bcbf, white) no-repeat; }
 
 body:lang(zh-tw), body:lang(zh-tw) label, body:lang(zh-tw) input, body:lang(zh-tw) textarea, body:lang(zh-tw) select, body:lang(zh-tw) button,
@@ -31,23 +31,17 @@ https://gist.github.com/2945570
 @keyframes shake {
   0%, 50% {
     transform: translateX(0); }
-
   5%, 15%, 25%, 35%, 45% {
     transform: translateX(-10px); }
-
   10%, 20%, 30%, 40% {
     transform: translateX(10px); } }
-
 @-webkit-keyframes shake {
   0%, 50% {
     -webkit-transform: translateX(0); }
-
   5%, 15%, 25%, 35%, 45% {
     -webkit-transform: translateX(-10px); }
-
   10%, 20%, 30%, 40% {
     -webkit-transform: translateX(10px); } }
-
 .wc-icon {
   position: absolute;
   top: 50%;
@@ -108,3 +102,5 @@ https://gist.github.com/2945570
 #popup-image {
   width: 100%;
   height: auto; }
+
+/*# sourceMappingURL=first-screen.css.map */

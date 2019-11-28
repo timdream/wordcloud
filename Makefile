@@ -1,5 +1,7 @@
 .PHONY: all
 all:
+	@sass --compass assets/first-screen.scss assets/first-screen.css
+	@sass --compass assets/wordcloud.scss assets/wordcloud.css
 	@npx grunt
 
 .PHONY: deploy
