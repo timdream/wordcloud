@@ -1,6 +1,6 @@
 # HTML5 文字雲
 
-版權所有 2011, 2013 [Timothy Guan-tin Chien](http://timdream.org/) 與其他貢獻者。
+版權所有 2011, 2013-2019 [Timothy Guan-tin Chien](https://timdream.org/) 與其他貢獻者。
 本作品使用 [MIT 公眾授權](./MIT-LICENSE.txt)釋出。
 
 [程式碼](https://github.com/timdream/wordcloud)可於 Github 取得。
