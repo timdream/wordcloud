@@ -70,10 +70,6 @@ module.exports = function(grunt) {
       },
       dist: {
         files: [{
-          src: 'assets/go2/src/google-oauth2.js',
-          dest: '<%= distDir %>/assets/go2/src/google-oauth2.js'
-        },
-        {
           src: 'assets/wordfreq/src/wordfreq.worker.js',
           dest: '<%= distDir %>/assets/wordfreq/src/wordfreq.worker.js'
         },

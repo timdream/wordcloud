@@ -288,58 +288,6 @@ WikipediaFetcher.prototype.handleResponse = function wf_handleResponse(res) {
   this.app.handleData(text, _('wikipedia-title', { title: page.title }));
 };
 
-var GooglePlusFetcher = function GooglePlusFetcher(opts) {
-  this.types = ['googleplus'];
-
-  this.params = [
-    ['maxResults', '100'],
-    ['alt', 'json'],
-    ['pp', '1']
-  ];
-};
-GooglePlusFetcher.prototype = new JSONPFetcher();
-GooglePlusFetcher.prototype.GOOGLE_PLUS_API_URL =
-  'https://www.googleapis.com/plus/v1/people/%source/activities/public';
-GooglePlusFetcher.prototype.POST_REGEXP =
-  /<[^>]+?>|\(.+?\.\.\.\)|\&\w+\;|<script.+?\/script\>/ig;
-GooglePlusFetcher.prototype.getData = function gpf_getData(dataType, data) {
-  var googlePlusPanelView =
-    this.app.views['source-dialog'].panels.googleplus;
-  var accessToken = googlePlusPanelView.accessToken;
-
-  if (!accessToken) {
-    // XXX: can we login user from here?
-    // User would lost the id kept in hash here.
-    this.app.logAction('GooglePlusFetcher::getData::reset');
-    this.app.reset();
-    this.app.views['source-dialog'].showPanel(googlePlusPanelView);
-    return;
-  }
-
-  var params = [].concat(this.params);
-  params.push(['access_token', accessToken]);
-
-  var url = this.GOOGLE_PLUS_API_URL.replace(/%source/, data) + '?' +
-  params.map(function kv(param) {
-    return param[0] + '=' + encodeURIComponent(param[1]);
-  }).join('&');
-
-  this.requestData(url);
-};
-GooglePlusFetcher.prototype.handleResponse = function gpf_handleResponse(res) {
-  if (!res || res.error || !res.items) {
-    this.app.handleData('');
-    return;
-  }
-
-  var text = res.items.map((function gpf_map(item) {
-    return item.object.content.replace(this.POST_REGEXP, '');
-  }).bind(this)).join('');
-
-  // XXX: we cannot get the user's name from this request
-  this.app.handleData(text, _('google-plus-title'));
-};
-
 var COSCUPFetcher = function COSCUPFetcher(opts) {
   this.types = ['coscup'];
   this.fields = ['name', 'speaker', 'bio', 'abstract'];

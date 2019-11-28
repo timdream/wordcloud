@@ -5,10 +5,10 @@
           LoadingView, DashboardView, ListDialogView,
           SharerDialogView, AboutDialogView, SourceDialogView,
           ExamplePanelView, CPPanelView, FilePanelView,
-          WikipediaPanelView, GooglePlusPanelView,
+          WikipediaPanelView,
           TextFetcher, FileFetcher,
           ListFetcher, COSCUPFetcher, WikipediaFetcher,
-          GooglePlusFetcher, PSMView */
+          PSMView */
 
 // Google Analytics
 var _gaq = _gaq || [];
@@ -108,12 +108,10 @@ window.onerror = function onerror(message, url, line) {
   sourceDialogView.addPanel(new CPPanelView());
   sourceDialogView.addPanel(new FilePanelView());
   sourceDialogView.addPanel(new WikipediaPanelView());
-  sourceDialogView.addPanel(new GooglePlusPanelView());
 
   app.addFetcher(new TextFetcher());
   app.addFetcher(new FileFetcher());
   app.addFetcher(new ListFetcher());
   app.addFetcher(new COSCUPFetcher());
   app.addFetcher(new WikipediaFetcher());
-  app.addFetcher(new GooglePlusFetcher());
 })();

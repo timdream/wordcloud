@@ -4,9 +4,6 @@
 [submodule "assets/wordcloud2.js"]
 	path = assets/wordcloud2.js
 	url = git://github.com/timdream/wordcloud2.js.git
-[submodule "assets/go2"]
-	path = assets/go2
-	url = git://github.com/timdream/google-oauth2-web-client.git
 [submodule "assets/canvas-to-blob"]
 	path = assets/canvas-to-blob
 	url = git://github.com/blueimp/JavaScript-Canvas-to-Blob.git
