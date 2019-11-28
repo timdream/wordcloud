@@ -41,6 +41,9 @@ ExamplePanelView.prototype.beforeShow = function epv_beforeShow() {
     this.supportMsgElement.removeAttribute('hidden');
   }
 
+  var els = this.element.querySelectorAll('[name="example"]');
+  els[0].checked = true;
+
   this.checked = true;
 };
 ExamplePanelView.prototype.submit = function epv_submit() {
