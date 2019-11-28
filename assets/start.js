@@ -7,7 +7,7 @@
           ExamplePanelView, CPPanelView, FilePanelView,
           WikipediaPanelView,
           TextFetcher, FileFetcher,
-          ListFetcher, COSCUPFetcher, WikipediaFetcher,
+          ListFetcher, WikipediaFetcher,
           PSMView */
 
 // Google Analytics
@@ -112,6 +112,5 @@ window.onerror = function onerror(message, url, line) {
   app.addFetcher(new TextFetcher());
   app.addFetcher(new FileFetcher());
   app.addFetcher(new ListFetcher());
-  app.addFetcher(new COSCUPFetcher());
   app.addFetcher(new WikipediaFetcher());
 })();
