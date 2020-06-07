@@ -6,7 +6,7 @@ Create a tag [Wordle](http://www.wordle.net/) presentation on a HTML5 canvas ele
 
 ## Author & Copyright
 
-Copyright 2011, 2013 [Timothy Guan-tin Chien](http://timdream.org/) and other contributors.
+Copyright 2011, 2013 [Timothy Guan-tin Chien](https://timdream.org/) and other contributors.
 Released under [the MIT license](./MIT-LICENSE.txt).
 
 ## Libraries used
