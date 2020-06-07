@@ -16,11 +16,10 @@ Everything is processed on your computer directly, employed technologies in the 
 
 ### Information collected
 
-In order to improve user experience based on the usage, Google Analytics is used to collect common website metrics, and record usage of other non-identifiable operations (e.g. Sharing image).
+In order to improve user experience based on the usage, this website collects common metrics, and record usage of other non-identifiable operations (e.g. Sharing image).
 Additionally, the identifier of the source selected to generated the image will be collected.
 
 These information will not be shared with people other than the author and contributors.
-Read [Google Analytics security and privacy principles](https://www.google.com/analytics/learn/privacy.html) on how Google utilize these data.
 
 ### External Services
 
