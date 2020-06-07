@@ -423,11 +423,11 @@ WordCloudApp.prototype.route = function wca_route() {
   }
 };
 WordCloudApp.prototype.logAction = function wca_logAction(action, label, val) {
-  if (!window._gaq) {
+  if (!window._paq) {
     return;
   }
 
-  var msgs = ['_trackEvent', 'Word Cloud'];
+  var msgs = ['trackEvent', 'Word Cloud'];
   if (action !== undefined) {
     msgs.push(action.toString());
     if (label !== undefined) {
@@ -437,7 +437,7 @@ WordCloudApp.prototype.logAction = function wca_logAction(action, label, val) {
       }
     }
   }
-  window._gaq.push(msgs);
+  window._paq.push(msgs);
 };
 WordCloudApp.prototype.parseHash = function wca_parseHash() {
   var hash = window.location.hash.substr(1);

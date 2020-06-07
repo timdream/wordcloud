@@ -15,23 +15,21 @@ if (window.location.hostname === 'timdream.org') {
     'https://wordcloud.timdream.org/' + window.location.hash;
 }
 
-// Google Analytics
-var _gaq = _gaq || [];
+// Matomo
+var _paq = window._paq || [];
 if (navigator.doNotTrack !== '1') {
-  _gaq.push(['_setAccount', 'UA-4623408-2']);
-  _gaq.push(['_trackPageview']);
-
-  (function loadGoogleAnalytics() {
-    var ga = document.createElement('script');
-    ga.type = 'text/javascript';
-    ga.async = true;
-    ga.src = ('https:' == document.location.protocol ?
-              'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0];
-    s.parentNode.insertBefore(ga, s);
+  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//timc.idv.tw/matomo/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '7']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
   })();
 } else if (window.console) {
-  _gaq.push = function pushWithLog() {
+  _paq.push = function pushWithLog() {
     // console.log.apply() does not exist on IE9
     Function.prototype.apply.call(console.log, console, arguments);
     Array.prototype.push.apply(this, arguments);
@@ -39,7 +37,7 @@ if (navigator.doNotTrack !== '1') {
 }
 
 window.onerror = function onerror(message, url, line) {
-  _gaq.push(['_trackEvent',
+  _paq.push(['trackEvent',
             'JavaScript Exceptions', message, (url + ' (' + line + ')')]);
 };
 
